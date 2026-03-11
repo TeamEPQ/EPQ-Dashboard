@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — EPQ Project & Lab Management</title>
+<title>Dashboard — GDC Lab Management</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -296,7 +296,7 @@
 
 <!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
-  <div class="page-header"><h1>Dashboard</h1><p>Overview of all projects and lab activity</p></div>
+  <div class="page-header"><h1>EPQ Dashboard</h1><p>Overview of all projects and lab Utilization</p></div>
   <div class="stats-row" id="stats-row"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
     <div class="table-card">
@@ -316,7 +316,7 @@
   <div class="form-card">
     <h2>➕ Add New Project</h2>
     <div class="form-grid">
-      <div class="form-group"><label>Project Name</label><input type="text" id="p-name" placeholder="e.g. 1.5TR 3 STAR"></div>
+      <div class="form-group"><label>Project Name</label><input type="text" id="p-name" placeholder="e.g. Protein Analysis Study"></div>
       <div class="form-group"><label>Lab Name</label><select id="p-lab"><option value="">— Select Lab —</option>
               <option>RAC APF-3</option>
               <option>RAC APF-4</option>
@@ -344,7 +344,7 @@
       <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="p-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual End Date (dd/mm/yyyy)</label><input type="text" id="p-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>TTM Date (dd/mm/yyyy)</label><input type="text" id="p-ttm" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><label>Assigned To</label><input type="text" id="p-assigned" placeholder="Name"></div>
+      <div class="form-group"><label>Assigned To</label><input type="text" id="p-assigned" placeholder="e.g. Vel, Team Alpha"></div>
       <div class="form-group"><label>Project Type</label>
         <select id="p-type"><option value="">— Select Type —</option><option>RAC</option><option>WAC</option><option>VRF</option></select>
       </div>
@@ -401,9 +401,9 @@
               <option>GDC RAC Sound LAB</option>
               <option>GDC Software LAB</option>
               <option>GDC Structure Test Lab</option></select></div>
-      <div class="form-group"><label>Project Name</label><input type="text" id="o-project" placeholder="e.g. 1.5 TR 3 STAR"></div>
+      <div class="form-group"><label>Project Name</label><input type="text" id="o-project" placeholder="e.g. Protein Analysis"></div>
       <div class="form-group"><label>Test Name</label><input type="text" id="o-test" placeholder="e.g. Product SIT"></div>
-      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="o-who" placeholder="Name"></div>
+      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="o-who" placeholder="e.g. Vel"></div>
       <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="o-date" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="o-enddate" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="o-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
@@ -438,8 +438,8 @@
 <!-- REPORTS -->
 <div class="page" id="page-reports">
   <div class="page-header">
-    <h1>Reports & Analytics</h1>
-    <p>Colorful summaries, charts and exports for projects & lab utilisation</p>
+    <h1>EPQ DASHBOARD</h1>
+    <p>Overview of projects & lab utilisation</p>
   </div>
 
   <!-- MASTER EXPORT BAR -->
@@ -631,7 +631,7 @@
       <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="ep-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual End Date (dd/mm/yyyy)</label><input type="text" id="ep-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>TTM Date (dd/mm/yyyy)</label><input type="text" id="ep-ttm" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><label>Assigned To</label><input type="text" id="ep-assigned" placeholder="Name"></div>
+      <div class="form-group"><label>Assigned To</label><input type="text" id="ep-assigned" placeholder="e.g. Vel"></div>
       <div class="form-group"><label>Project Type</label>
         <select id="ep-type"><option value="">— Select Type —</option><option>RAC</option><option>WAC</option><option>VRF</option></select>
       </div>
@@ -682,7 +682,7 @@
               <option>GDC Structure Test Lab</option></select></div>
       <div class="form-group"><label>Project Name</label><input type="text" id="eo-project" placeholder="Project name"></div>
       <div class="form-group"><label>Test Name</label><input type="text" id="eo-test" placeholder="Test name"></div>
-      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="eo-who" placeholder="Name"></div>
+      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="eo-who" placeholder="e.g. Vel"></div>
       <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="eo-date" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="eo-enddate" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="eo-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
@@ -713,7 +713,7 @@ let Utilization = [];
 
 // ── SUPABASE CONFIG ───────────────────────────────────────────────────────
 const SUPA_URL = 'https://zgyvqgkawfdxcxyanyik.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpneXZxcWthd2ZkeGN4eWFueWlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMDg2NTEsImV4cCI6MjA4ODc4NDY1MX0.Fb9_ezyZW8jgmF5AgYlucrqKzH0DRMxGR0Gf0EwoPog';
+const SUPA_KEY = 'sb_publishable__jokEMsUe_K2ywYIRWlbfw_nPd7np9h';
 
 async function supaFetch(endpoint, options={}) {
   const res = await fetch(SUPA_URL + '/rest/v1/' + endpoint, {
@@ -723,6 +723,7 @@ async function supaFetch(endpoint, options={}) {
       'Authorization': 'Bearer ' + SUPA_KEY,
       'Content-Type': 'application/json',
       'Prefer': options.prefer || 'return=representation',
+      'X-Client-Info': 'supabase-js/2.0.0',
       ...(options.headers||{})
     }
   });
