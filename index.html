@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — GDC Lab Management</title>
+<title>EPQ Dashboard — EPQ Project Lab Management</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -282,9 +282,9 @@
 <div class="layout">
 
 <aside class="sidebar">
-  <div class="logo"><span>Dashboard</span><small>v2.0 ☁️ Cloud</small><div id="srv-status" style="font-size:10px;margin-top:8px;display:flex;align-items:center;gap:4px;color:var(--yellow)">🟡 <span>Checking server...</span></div></div>
+  <div class="logo"><span>EPQ Dashboard</span><small>v2.0 ☁️ Cloud</small><div id="srv-status" style="font-size:10px;margin-top:8px;display:flex;align-items:center;gap:4px;color:var(--yellow)">🟡 <span>Checking server...</span></div></div>
   <nav class="nav">
-    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">⬡</span><span>Dashboard</span></div>
+    <div class="nav-item active" onclick="showPage('EPQ Dashboard',this)"><span class="icon">⬡</span><span>EPQ Dashboard</span></div>
     <div class="nav-item" onclick="showPage('projects',this)"><span class="icon">◈</span><span>Projects</span></div>
     <div class="nav-item" onclick="showPage('occupancy',this)"><span class="icon">◉</span><span>Lab Occupancy</span></div>
     <div class="nav-item" onclick="showPage('reports',this)"><span class="icon">▦</span><span>Reports</span></div>
@@ -294,9 +294,9 @@
 
 <main class="main">
 
-<!-- DASHBOARD -->
-<div class="page active" id="page-dashboard">
-  <div class="page-header"><h1>Dashboard</h1><p>Overview of all projects and lab activity</p></div>
+<!-- EPQ Dashboard -->
+<div class="page active" id="page-EPQ Dashboard">
+  <div class="page-header"><h1>EPQ Dashboard</h1><p>Overview of all projects and lab activity</p></div>
   <div class="stats-row" id="stats-row"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
     <div class="table-card">
@@ -316,7 +316,7 @@
   <div class="form-card">
     <h2>➕ Add New Project</h2>
     <div class="form-grid">
-      <div class="form-group"><label>Project Name</label><input type="text" id="p-name" placeholder="e.g. Protein Analysis Study"></div>
+      <div class="form-group"><label>Project Name</label><input type="text" id="p-name" placeholder="e.g.1.5 TR 3 STAR Study"></div>
       <div class="form-group"><label>Lab Name</label><select id="p-lab"><option value="">— Select Lab —</option>
               <option>RAC APF-3</option>
               <option>RAC APF-4</option>
@@ -337,14 +337,14 @@
               <option>GDC Safety Lab</option>
               <option>GDC PAC Sound LAB</option>
               <option>GDC RAC Sound LAB</option>
-              <option>GDC Software DQA LAB</option>
+              <option>GDC Software LAB</option>
               <option>GDC Structure Test Lab</option></select></div>
       <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="p-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="p-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="p-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual End Date (dd/mm/yyyy)</label><input type="text" id="p-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>TTM Date (dd/mm/yyyy)</label><input type="text" id="p-ttm" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><label>Assigned To</label><input type="text" id="p-assigned" placeholder="e.g. Dr. Smith, Team Alpha"></div>
+      <div class="form-group"><label>Assigned To</label><input type="text" id="p-assigned" placeholder="e.g. Karan, Team Alpha"></div>
       <div class="form-group"><label>Project Type</label>
         <select id="p-type"><option value="">— Select Type —</option><option>RAC</option><option>WAC</option><option>VRF</option></select>
       </div>
@@ -399,11 +399,11 @@
               <option>GDC Safety Lab</option>
               <option>GDC PAC Sound LAB</option>
               <option>GDC RAC Sound LAB</option>
-              <option>GDC Software DQA LAB</option>
+              <option>GDC Software  LAB</option>
               <option>GDC Structure Test Lab</option></select></div>
-      <div class="form-group"><label>Project Name</label><input type="text" id="o-project" placeholder="e.g. Protein Analysis"></div>
-      <div class="form-group"><label>Test Name</label><input type="text" id="o-test" placeholder="e.g. PCR Run, pH Calibration"></div>
-      <div class="form-group"><label>Researcher / Team</label><input type="text" id="o-who" placeholder="e.g. Dr. Smith"></div>
+      <div class="form-group"><label>Project Name</label><input type="text" id="o-project" placeholder="e.g.1.5 TR 3 STAR"></div>
+      <div class="form-group"><label>Test Name</label><input type="text" id="o-test" placeholder="e.g. Product SIT"></div>
+      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="o-who" placeholder="e.g. Karan"></div>
       <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="o-date" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="o-enddate" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="o-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
@@ -429,7 +429,7 @@
   <div class="table-card">
     <div class="table-header"><h2>Occupancy Log</h2><span id="occ-count" style="font-size:12px;color:var(--muted)"></span></div>
     <table>
-      <thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Researcher</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time Slot</th><th>Test Hrs</th><th>Downtime Hrs</th><th>Utilisation %</th><th>Total Tests</th><th>Tests Done</th><th>Test %</th><th>Status</th><th>Action</th></tr></thead>
+      <thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time Slot</th><th>Test Hrs</th><th>Downtime Hrs</th><th>Utilisation %</th><th>Total Tests</th><th>Tests Done</th><th>Test %</th><th>Status</th><th>Action</th></tr></thead>
       <tbody id="occupancy-table"></tbody>
     </table>
   </div>
@@ -547,7 +547,7 @@
         <button class="section-print-btn blue no-print" onclick="printSection('occupancy')">🖨 Print</button>
       </div>
       <div class="no-print" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);">
-        <input type="text"   id="rf-occ-search"  placeholder="🔍 Search lab / test / researcher..." oninput="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
+        <input type="text"   id="rf-occ-search"  placeholder="🔍 Search lab / test / Assigned To..." oninput="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
         <select id="rf-occ-status"  onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
           <option value="">All Statuses</option>
           <option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option>
@@ -566,7 +566,7 @@
       </div>
       <div style="padding:6px 16px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;border-bottom:1px solid var(--border);background:var(--surface)" id="rf-occ-count"></div>
       <table>
-        <thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Researcher</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time Slot</th><th>Test Hrs</th><th>Downtime</th><th>Utilisation</th><th>Total Tests</th><th>Tests Done</th><th>Test %</th><th>Status</th></tr></thead>
+        <thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time Slot</th><th>Test Hrs</th><th>Downtime</th><th>Utilisation</th><th>Total Tests</th><th>Tests Done</th><th>Test %</th><th>Status</th></tr></thead>
         <tbody id="rpt-occ-table"></tbody>
       </table>
     </div>
@@ -624,14 +624,14 @@
               <option>GDC Safety Lab</option>
               <option>GDC PAC Sound LAB</option>
               <option>GDC RAC Sound LAB</option>
-              <option>GDC Software DQA LAB</option>
+              <option>GDC Software LAB</option>
               <option>GDC Structure Test Lab</option></select></div>
       <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="ep-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="ep-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="ep-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual End Date (dd/mm/yyyy)</label><input type="text" id="ep-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>TTM Date (dd/mm/yyyy)</label><input type="text" id="ep-ttm" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><label>Assigned To</label><input type="text" id="ep-assigned" placeholder="e.g. Dr. Smith"></div>
+      <div class="form-group"><label>Assigned To</label><input type="text" id="ep-assigned" placeholder="e.g. Karan"></div>
       <div class="form-group"><label>Project Type</label>
         <select id="ep-type"><option value="">— Select Type —</option><option>RAC</option><option>WAC</option><option>VRF</option></select>
       </div>
@@ -678,11 +678,11 @@
               <option>GDC Safety Lab</option>
               <option>GDC PAC Sound LAB</option>
               <option>GDC RAC Sound LAB</option>
-              <option>GDC Software DQA LAB</option>
+              <option>GDC Software LAB</option>
               <option>GDC Structure Test Lab</option></select></div>
       <div class="form-group"><label>Project Name</label><input type="text" id="eo-project" placeholder="Project name"></div>
       <div class="form-group"><label>Test Name</label><input type="text" id="eo-test" placeholder="Test name"></div>
-      <div class="form-group"><label>Researcher / Team</label><input type="text" id="eo-who" placeholder="e.g. Dr. Smith"></div>
+      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="eo-who" placeholder="e.g. Karan"></div>
       <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="eo-date" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="eo-enddate" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
       <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="eo-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
@@ -748,7 +748,7 @@ function mapProject(r) {
 function mapOccupancy(r) {
   return {
     id: r.id, lab: r.lab||'', project: r.project||'',
-    test: r.test||'', who: r.researcher||'',
+    test: r.test||'', who: r.Assigned To||'',
     status: r.status||'Scheduled',
     date: r.planned_start||'', enddate: r.planned_end||'',
     actualStart: r.actual_start||'', actualEnd: r.actual_end||'',
@@ -772,7 +772,7 @@ async function loadData() {
     console.error('Supabase load error:', e);
     setStatus('error');
   }
-  renderDashboard();
+  renderEPQ Dashboard();
 }
 
 // Save is now handled per-operation (insert/update/delete)
@@ -804,7 +804,7 @@ setInterval(async () => {
     ]);
     projects  = (pRows||[]).map(mapProject);
     occupancy = (oRows||[]).map(mapOccupancy);
-    renderDashboard();
+    renderEPQ Dashboard();
   } catch(e) {}
 }, 30000);
 
@@ -837,7 +837,7 @@ function showPage(name, el) {
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if(el) el.classList.add('active');
-  if(name==='dashboard') renderDashboard();
+  if(name==='EPQ Dashboard') renderEPQ Dashboard();
   if(name==='projects')  renderProjects();
   if(name==='occupancy') renderOccupancy();
   if(name==='reports')   renderReports();
@@ -917,7 +917,7 @@ async function addOccupancy(){
   const obj = {
     lab, test,
     project:      document.getElementById('o-project').value.trim(),
-    researcher:   document.getElementById('o-who').value.trim(),
+    Assigned To:   document.getElementById('o-who').value.trim(),
     planned_start:document.getElementById('o-date').value.trim(),
     planned_end:  document.getElementById('o-enddate').value.trim(),
     actual_start: document.getElementById('o-actual-start').value.trim(),
@@ -975,8 +975,8 @@ function renderOccupancy(){
   </tr>`).join('');
 }
 
-// ── DASHBOARD ─────────────────────────────────────────
-function renderDashboard(){
+// ── EPQ Dashboard ─────────────────────────────────────────
+function renderEPQ Dashboard(){
   const total=projects.length, active=projects.filter(p=>p.status==='In Progress').length;
   const issues=projects.filter(p=>p.issues).length, occ=occupancy.filter(o=>o.status==='In Progress').length;
   document.getElementById('stats-row').innerHTML=`
@@ -1163,7 +1163,7 @@ function exportCSV(type){
     r=projects.map(p=>{const tt=p.totalTests||0,td=p.testsDone||0;return[p.name,p.type||'',p.lab,p.start,p.end,p.actualStart||'',p.actualEnd||'',p.ttm,p.assigned,tt,td,tt>0?Math.round(td/tt*100)+'%':'—',p.status,p.issues,p.notes];});
     fn='projects_export.csv';
   } else {
-    h=['Lab','Project','Test','Researcher','Planned Start','Planned End','Actual Start','Actual End','Start Time','End Time','Test Hours','Downtime Hours','Utilisation %','Total Tests','Tests Done','Test Completion %','Status'];
+    h=['Lab','Project','Test','Assigned To','Planned Start','Planned End','Actual Start','Actual End','Start Time','End Time','Test Hours','Downtime Hours','Utilisation %','Total Tests','Tests Done','Test Completion %','Status'];
     r=occupancy.map(o=>{const th=o.testHours||0,dt=o.downtime||0,tot=th+dt,tt=o.totalTests||0,td=o.testsDone||0;return[o.lab,o.project,o.test,o.who,o.date,o.enddate,o.actualStart||'',o.actualEnd||'',o.start,o.end,th,dt,tot>0?Math.round(th/tot*100)+'%':'—',tt,td,tt>0?Math.round(td/tt*100)+'%':'—',o.status];});
     fn='occupancy_export.csv';
   }
@@ -1299,7 +1299,7 @@ function renderTimeline(){
           </tr>`).join('');
           html+=`</tbody></table>`;
         } else {
-          html+=`<table><thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Researcher</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time</th><th>Status</th></tr></thead><tbody>`;
+          html+=`<table><thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time</th><th>Status</th></tr></thead><tbody>`;
           html+=wi.map(o=>`<tr>
             <td>${o.lab}</td><td>${o.project||'—'}</td><td>${o.test}</td><td>${o.who||'—'}</td>
             <td style="font-family:'DM Mono',monospace;font-size:11px">${o.date||'—'}</td>
@@ -1427,7 +1427,7 @@ async function saveOccupancyEdit() {
   const upd = {
     lab, test,
     project:      document.getElementById('eo-project').value.trim(),
-    researcher:   document.getElementById('eo-who').value.trim(),
+    Assigned To:   document.getElementById('eo-who').value.trim(),
     planned_start:document.getElementById('eo-date').value.trim(),
     planned_end:  document.getElementById('eo-enddate').value.trim(),
     actual_start: document.getElementById('eo-actual-start').value.trim(),
@@ -1445,7 +1445,7 @@ async function saveOccupancyEdit() {
       method:'PATCH', body: JSON.stringify(upd), prefer:'return=minimal', noJson:true
     });
     occupancy[idx] = {...occupancy[idx], ...mapOccupancy({id:editingOccId,
-      ...upd, researcher:upd.researcher,
+      ...upd, Assigned To:upd.Assigned To,
       planned_start:upd.planned_start, planned_end:upd.planned_end,
       actual_start:upd.actual_start, actual_end:upd.actual_end,
       start_time:upd.start_time, end_time:upd.end_time,
@@ -1536,7 +1536,7 @@ function printTimeline(mode) {
     return `<tr><th>Project</th><th>Type</th><th>Lab</th><th>Assigned</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Status</th><th>Issues</th></tr>`;
   }
   function occHeader() {
-    return `<tr><th>Lab</th><th>Project</th><th>Test</th><th>Researcher</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time</th><th>Test Hrs</th><th>Downtime</th><th>Util%</th><th>Status</th></tr>`;
+    return `<tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time</th><th>Test Hrs</th><th>Downtime</th><th>Util%</th><th>Status</th></tr>`;
   }
 
   function statusSummary(items) {
@@ -1674,7 +1674,7 @@ function exportTimelineCSV() {
       return [d?d.getFullYear():'',d?MONTHS[d.getMonth()]:'',p.name,p.type||'',p.lab,p.assigned||'',p.start||'',p.end||'',p.actualStart||'',p.actualEnd||'',p.ttm||'',p.status,p.issues||''];
     });
   } else {
-    headers = ['Year','Month','Lab','Project','Test','Researcher','Planned Start','Planned End','Actual Start','Actual End','Start Time','End Time','Test Hours','Downtime','Utilisation%','Status'];
+    headers = ['Year','Month','Lab','Project','Test','Assigned To','Planned Start','Planned End','Actual Start','Actual End','Start Time','End Time','Test Hours','Downtime','Utilisation%','Status'];
     rows = data.filter(o=>tlDateOf(o)).map(o => {
       const d=parseDate(tlDateOf(o));
       const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
