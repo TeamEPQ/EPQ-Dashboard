@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard — GDC Project Lab Management</title>
+<title>EPQ Dashboard — GDC Project and  Lab Management</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -37,7 +37,7 @@
   .stat-card.blue::before { background: var(--accent2); }
   .stat-card.red::before { background: var(--warn); }
   .stat-card.yellow::before { background: var(--yellow); }
-  .stat-Label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
   .stat-value { font-size: 32px; font-weight: 700; margin-top: 8px; }
   .stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
   .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
@@ -45,7 +45,7 @@
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group.full { grid-column: 1 / -1; }
-  Label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.8px; }
+  label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.8px; }
   input, select, textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-family: 'Sora', sans-serif; font-size: 13px; transition: border-color 0.2s; outline: none; }
   input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   textarea { resize: vertical; min-height: 80px; }
@@ -81,7 +81,7 @@
   .report-chart h3 { font-size: 13px; font-weight: 600; margin-bottom: 16px; color: var(--muted); text-transform: uppercase; font-family: 'DM Mono', monospace; letter-spacing: 1px; }
   .bar-chart { display: flex; flex-direction: column; gap: 10px; }
   .bar-row { display: flex; align-items: center; gap: 10px; }
-  .bar-Label { font-size: 11px; color: var(--muted); width: 110px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+  .bar-label { font-size: 11px; color: var(--muted); width: 110px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
   .bar-track { flex: 1; background: var(--bg); border-radius: 4px; height: 22px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 600; font-family: 'DM Mono', monospace; transition: width 0.6s ease; min-width: 24px; }
   .donut-legend { display: flex; flex-direction: column; gap: 8px; }
@@ -192,7 +192,7 @@
     body { background: #fff !important; color: #111 !important; }
     .stat-card, .report-chart, .table-card { border: 1px solid #ddd !important; background: #fff !important; box-shadow: none !important; }
     .stat-value { color: #111 !important; }
-    .stat-Label, .stat-sub { color: #555 !important; }
+    .stat-label, .stat-sub { color: #555 !important; }
     th { color: #333 !important; border-bottom: 1px solid #ccc !important; }
     td { border-bottom: 1px solid #eee !important; color: #111 !important; }
     .bar-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -229,7 +229,7 @@
   .kpi-card.c7 { border-top: 3px solid #a78bfa; } .kpi-card.c7::after { background: #a78bfa; }
   .kpi-card.c8 { border-top: 3px solid #06b6d4; } .kpi-card.c8::after { background: #06b6d4; }
   .kpi-icon { font-size: 28px; margin-bottom: 10px; display: block; }
-  .kpi-Label { font-size: 10px; color: var(--muted); font-family: 'DM Mono',monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .kpi-label { font-size: 10px; color: var(--muted); font-family: 'DM Mono',monospace; text-transform: uppercase; letter-spacing: 1px; }
   .kpi-value { font-size: 36px; font-weight: 800; margin: 6px 0 4px; line-height: 1; }
   .kpi-sub { font-size: 11px; color: var(--muted); }
   .kpi-card.c1 .kpi-value { color: #00e5c3; }
@@ -254,7 +254,7 @@
   .charts-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 20px; }
   .charts-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
   .bar-row2 { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .bar-Label2 { font-size: 11px; color: var(--muted); width: 100px; text-align: right; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-label2 { font-size: 11px; color: var(--muted); width: 100px; text-align: right; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .bar-track2 { flex: 1; background: rgba(255,255,255,0.05); border-radius: 6px; height: 24px; overflow: hidden; }
   .bar-fill2 { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 700; font-family: 'DM Mono',monospace; transition: width 0.7s ease; min-width: 28px; }
   .donut-wrap { display: flex; gap: 16px; align-items: center; }
@@ -263,7 +263,7 @@
   .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
   .legend-sq { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
   .progress-bar-wrap { margin-bottom: 12px; }
-  .progress-Label-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
+  .progress-label-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
   .progress-track { height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 5px; transition: width 0.7s ease; }
 
@@ -284,8 +284,8 @@
 <aside class="sidebar">
   <div class="logo"><span>EPQ Dashboard</span><small>v2.0 ☁️ Cloud</small><div id="srv-status" style="font-size:10px;margin-top:8px;display:flex;align-items:center;gap:4px;color:var(--accent2)">🔵 <span>Connecting...</span></div></div>
   <nav class="nav">
-    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">⬡</span><span>Dashboard</span></div>
-    <div class="nav-item" onclick="showPage('Projects',this)"><span class="icon">◈</span><span>Projects</span></div>
+    <div class="nav-item active" onclick="showPage('EPQ Dashboard',this)"><span class="icon">⬡</span><span>EPQ Dashboard</span></div>
+    <div class="nav-item" onclick="showPage('projects',this)"><span class="icon">◈</span><span>Projects</span></div>
     <div class="nav-item" onclick="showPage('occupancy',this)"><span class="icon">◉</span><span>Lab Occupancy</span></div>
     <div class="nav-item" onclick="showPage('reports',this)"><span class="icon">▦</span><span>Reports</span></div>
     <div class="nav-item" onclick="showPage('timeline',this)"><span class="icon">◫</span><span>Timeline Report</span></div>
@@ -294,14 +294,14 @@
 
 <main class="main">
 
-<!-- DASHBOARD -->
-<div class="page active" id="page-dashboard">
-  <div class="page-header"><h1>EPQ Dashboard</h1><p>Overview of all Projects and Lab uilization</p></div>
+<!-- EPQ Dashboard -->
+<div class="page active" id="page-EPQ Dashboard">
+  <div class="page-header"><h1>EPQ Dashboard</h1><p>Overview of all projects and lab activity</p></div>
   <div class="stats-row" id="stats-row"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
     <div class="table-card">
       <div class="table-header"><h2>Recent Projects</h2></div>
-      <table><thead><tr><th>Project</th><th>Status</th><th>End Date</th></tr></thead><tbody id="dash-Projects"></tbody></table>
+      <table><thead><tr><th>Project</th><th>Status</th><th>End Date</th></tr></thead><tbody id="dash-projects"></tbody></table>
     </div>
     <div class="table-card">
       <div class="table-header"><h2>Lab Occupancy</h2></div>
@@ -310,14 +310,14 @@
   </div>
 </div>
 
-<!-- Projects -->
-<div class="page" id="page-Projects">
-  <div class="page-header"><h1>Projects</h1><p>Add and manage research Projects</p></div>
+<!-- PROJECTS -->
+<div class="page" id="page-projects">
+  <div class="page-header"><h1>Projects</h1><p>Add and manage research projects</p></div>
   <div class="form-card">
     <h2>➕ Add New Project</h2>
     <div class="form-grid">
-      <div class="form-group"><Label>Project Name</Label><input type="text" id="p-name" placeholder="e.g. 1.5TR 3 STAR"></div>
-      <div class="form-group"><Label>Lab Name</Label><select id="p-Lab"><option value="">— Select Lab —</option>
+      <div class="form-group"><label>Project Name</label><input type="text" id="p-name" placeholder="e.g. 1.5TR 3 STAR"></div>
+      <div class="form-group"><label>Lab Name</label><select id="p-lab"><option value="">— Select Lab —</option>
               <option>RAC APF-3</option>
               <option>RAC APF-4</option>
               <option>VRF APF</option>
@@ -328,38 +328,38 @@
               <option>GDC PAC APF Lab-4</option>
               <option>GDC PAC APF Lab-5</option>
               <option>GDC RAC APF Lab-1</option>
-              <option>GDC PAC HALT Lab-1</option>
-              <option>GDC PAC HALT Lab-2</option>
-              <option>GDC PAC HALT Lab-3</option>
-              <option>GDC PAC HALT Lab-4</option>
-              <option>GDC PAC HALT Lab-5</option>
-              <option>GDC PAC EMC Lab</option>
+              <option>GDC PAC HALT LAB-1</option>
+              <option>GDC PAC HALT LAB-2</option>
+              <option>GDC PAC HALT LAB-3</option>
+              <option>GDC PAC HALT LAB-4</option>
+              <option>GDC PAC HALT LAB-5</option>
+              <option>GDC PAC EMC LAB</option>
               <option>GDC Safety Lab</option>
-              <option>GDC PAC Sound Lab</option>
-              <option>GDC RAC Sound Lab</option>
+              <option>GDC PAC Sound LAB</option>
+              <option>GDC RAC Sound LAB</option>
               <option>GDC Software LAB</option>
               <option>GDC Structure Test Lab</option></select></div>
-      <div class="form-group"><Label>Planned Start Date (dd/mm/yyyy)</Label><input type="text" id="p-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Planned End Date (dd/mm/yyyy)</Label><input type="text" id="p-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Actual Start Date (dd/mm/yyyy)</Label><input type="text" id="p-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Actual End Date (dd/mm/yyyy)</Label><input type="text" id="p-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>TTM Date (dd/mm/yyyy)</Label><input type="text" id="p-ttm" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Assigned To</Label><input type="text" id="p-assigned" placeholder="e.g. Name, Team Alpha"></div>
-      <div class="form-group"><Label>Project Type</Label>
+      <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="p-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="p-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="p-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Actual End Date (dd/mm/yyyy)</label><input type="text" id="p-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>TTM Date (dd/mm/yyyy)</label><input type="text" id="p-ttm" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Assigned To</label><input type="text" id="p-assigned" placeholder="Name, Team Alpha"></div>
+      <div class="form-group"><label>Project Type</label>
         <select id="p-type"><option value="">— Select Type —</option><option>RAC</option><option>WAC</option><option>VRF</option></select>
       </div>
-      <div class="form-group"><Label>Status</Label>
+      <div class="form-group"><label>Status</label>
         <select id="p-status"><option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option></select>
       </div>
-      <div class="form-group"><Label>Issue List (comma separated)</Label><input type="text" id="p-issues" placeholder="e.g. Equipment delay, Data gap"></div>
-      <div class="form-group"><Label>Total No. of Tests</Label><input type="number" id="p-total-tests" placeholder="e.g. 10" min="0"></div>
-      <div class="form-group"><Label>No. of Tests Completed</Label><input type="number" id="p-tests-done" placeholder="e.g. 6" min="0"></div>
-      <div class="form-group full"><Label>Notes</Label><textarea id="p-notes" placeholder="Any additional details..."></textarea></div>
+      <div class="form-group"><label>Issue List (comma separated)</label><input type="text" id="p-issues" placeholder="e.g. Equipment delay, Data gap"></div>
+      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="p-total-tests" placeholder="e.g. 10" min="0"></div>
+      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="p-tests-done" placeholder="e.g. 6" min="0"></div>
+      <div class="form-group full"><label>Notes</label><textarea id="p-notes" placeholder="Any additional details..."></textarea></div>
     </div>
     <div class="btn-row"><button class="btn btn-primary" onclick="addProject()">Add Project</button></div>
   </div>
   <div class="search-bar">
-    <input type="text" id="proj-search" placeholder="Search Projects..." oninput="renderProjects()">
+    <input type="text" id="proj-search" placeholder="Search projects..." oninput="renderProjects()">
     <select id="proj-filter" onchange="renderProjects()">
       <option value="">All Statuses</option><option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option>
     </select>
@@ -368,18 +368,18 @@
     <div class="table-header"><h2>All Projects</h2><span id="proj-count" style="font-size:12px;color:var(--muted)"></span></div>
     <table>
       <thead><tr><th>Project</th><th>Type</th><th>Lab</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>TTM Date</th><th>Assigned To</th><th>Status</th><th>Issues</th><th>Action</th></tr></thead>
-      <tbody id="Projects-table"></tbody>
+      <tbody id="projects-table"></tbody>
     </table>
   </div>
 </div>
 
 <!-- OCCUPANCY -->
 <div class="page" id="page-occupancy">
-  <div class="page-header"><h1>Lab Occupancy</h1><p>Track who is using which Lab, when, and for what</p></div>
+  <div class="page-header"><h1>Lab Occupancy</h1><p>Track who is using which lab, when, and for what</p></div>
   <div class="form-card">
     <h2>➕ Add Occupancy Entry</h2>
     <div class="form-grid">
-      <div class="form-group"><Label>Lab Name</Label><select id="o-Lab"><option value="">— Select Lab —</option>
+      <div class="form-group"><label>Lab Name</label><select id="o-lab"><option value="">— Select Lab —</option>
               <option>RAC APF-3</option>
               <option>RAC APF-4</option>
               <option>VRF APF</option>
@@ -390,38 +390,38 @@
               <option>GDC PAC APF Lab-4</option>
               <option>GDC PAC APF Lab-5</option>
               <option>GDC RAC APF Lab-1</option>
-              <option>GDC PAC HALT Lab-1</option>
-              <option>GDC PAC HALT Lab-2</option>
-              <option>GDC PAC HALT Lab-3</option>
-              <option>GDC PAC HALT Lab-4</option>
-              <option>GDC PAC HALT Lab-5</option>
-              <option>GDC PAC EMC Lab</option>
+              <option>GDC PAC HALT LAB-1</option>
+              <option>GDC PAC HALT LAB-2</option>
+              <option>GDC PAC HALT LAB-3</option>
+              <option>GDC PAC HALT LAB-4</option>
+              <option>GDC PAC HALT LAB-5</option>
+              <option>GDC PAC EMC LAB</option>
               <option>GDC Safety Lab</option>
-              <option>GDC PAC Sound Lab</option>
-              <option>GDC RAC Sound Lab</option>
+              <option>GDC PAC Sound LAB</option>
+              <option>GDC RAC Sound LAB</option>
               <option>GDC Software LAB</option>
               <option>GDC Structure Test Lab</option></select></div>
-      <div class="form-group"><Label>Project Name</Label><input type="text" id="o-project" placeholder="e.g. Protein Analysis"></div>
-      <div class="form-group"><Label>Test Name</Label><input type="text" id="o-test" placeholder="e.g. PCR Run, pH Product SIT"></div>
-      <div class="form-group"><Label>Assigned To / Team</Label><input type="text" id="o-who" placeholder="e.g. Name"></div>
-      <div class="form-group"><Label>Planned Start Date (dd/mm/yyyy)</Label><input type="text" id="o-date" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Planned End Date (dd/mm/yyyy)</Label><input type="text" id="o-enddate" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Actual Start Date (dd/mm/yyyy)</Label><input type="text" id="o-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Actual End Date (dd/mm/yyyy)</Label><input type="text" id="o-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Start Time</Label><input type="time" id="o-start"></div>
-      <div class="form-group"><Label>End Time</Label><input type="time" id="o-end"></div>
-      <div class="form-group"><Label>Test Hours</Label><input type="number" id="o-testhours" placeholder="e.g. 8" min="0" step="0.5"></div>
-      <div class="form-group"><Label>Downtime Hours</Label><input type="number" id="o-downtime" placeholder="e.g. 2" min="0" step="0.5"></div>
-      <div class="form-group"><Label>Total No. of Tests</Label><input type="number" id="o-total-tests" placeholder="e.g. 10" min="0"></div>
-      <div class="form-group"><Label>No. of Tests Completed</Label><input type="number" id="o-tests-done" placeholder="e.g. 6" min="0"></div>
-      <div class="form-group"><Label>Status</Label>
+      <div class="form-group"><label>Project Name</label><input type="text" id="o-project" placeholder="e.g. Protein Analysis"></div>
+      <div class="form-group"><label>Test Name</label><input type="text" id="o-test" placeholder="e.g. PCR Run, pH Product SIT"></div>
+      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="o-who" placeholder="Name"></div>
+      <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="o-date" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="o-enddate" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="o-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Actual End Date (dd/mm/yyyy)</label><input type="text" id="o-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Start Time</label><input type="time" id="o-start"></div>
+      <div class="form-group"><label>End Time</label><input type="time" id="o-end"></div>
+      <div class="form-group"><label>Test Hours</label><input type="number" id="o-testhours" placeholder="e.g. 8" min="0" step="0.5"></div>
+      <div class="form-group"><label>Downtime Hours</label><input type="number" id="o-downtime" placeholder="e.g. 2" min="0" step="0.5"></div>
+      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="o-total-tests" placeholder="e.g. 10" min="0"></div>
+      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="o-tests-done" placeholder="e.g. 6" min="0"></div>
+      <div class="form-group"><label>Status</label>
         <select id="o-status"><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option></select>
       </div>
     </div>
     <div class="btn-row"><button class="btn btn-primary" onclick="addOccupancy()">Add Entry</button></div>
   </div>
   <div class="search-bar">
-    <input type="text" id="occ-search" placeholder="Search by Lab, project, test..." oninput="renderOccupancy()">
+    <input type="text" id="occ-search" placeholder="Search by lab, project, test..." oninput="renderOccupancy()">
     <select id="occ-filter" onchange="renderOccupancy()">
       <option value="">All Statuses</option><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option>
     </select>
@@ -438,9 +438,8 @@
 <!-- REPORTS -->
 <div class="page" id="page-reports">
   <div class="page-header">
-    <h1>EPQ Dashboard  </h1>
-    <p>Summary of Projects & Lab Utilization</p>
-    <p>Summary of Projects & Lab Utilization</p>
+    <h1>EPQ Dashboard</h1>
+    <p>Overview of Projects & Lab Utilization</p>
   </div>
 
   <!-- MASTER EXPORT BAR -->
@@ -448,11 +447,11 @@
     <div class="sep-actions">
       <span style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Overall</span>
       <button class="section-print-btn green" onclick="printSection('all')">🖨 Print Full Report</button>
-      <button class="btn-outline" onclick="exportCSV('Projects')">⬇ Projects CSV</button>
+      <button class="btn-outline" onclick="exportCSV('projects')">⬇ Projects CSV</button>
       <button class="btn-outline" onclick="exportCSV('occupancy')">⬇ Occupancy CSV</button>
     </div>
     <div class="sep-actions">
-      <button class="section-print-btn" onclick="printSection('Projects')">🖨 Print Project Report</button>
+      <button class="section-print-btn" onclick="printSection('projects')">🖨 Print Project Report</button>
       <button class="section-print-btn blue" onclick="printSection('occupancy')">🖨 Print Lab Utilization Report</button>
     </div>
   </div>
@@ -461,7 +460,7 @@
   <div class="kpi-grid" id="rpt-kpi"></div>
 
   <!-- ═══ SECTION 1: PROJECT REPORT ═══ -->
-  <div id="section-Projects">
+  <div id="section-projects">
     <div class="report-section-title"><span>◈</span> Project Report</div>
     <div class="charts-3col">
       <div class="chart-card">
@@ -490,7 +489,7 @@
     <div class="table-card">
       <div class="table-header">
         <h2>📋 Project Details</h2>
-        <button class="section-print-btn no-print" onclick="printSection('Projects')">🖨 Print</button>
+        <button class="section-print-btn no-print" onclick="printSection('projects')">🖨 Print</button>
       </div>
       <div class="no-print" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);">
         <input type="text"   id="rf-proj-search"  placeholder="🔍 Search project / assigned..." oninput="filterReportProjects()" style="font-size:12px;padding:8px 12px;">
@@ -502,7 +501,7 @@
           <option value="">All Types</option>
           <option>RAC</option><option>WAC</option><option>VRF</option>
         </select>
-        <select id="rf-proj-Lab"     onchange="filterReportProjects()" style="font-size:12px;padding:8px 12px;">
+        <select id="rf-proj-lab"     onchange="filterReportProjects()" style="font-size:12px;padding:8px 12px;">
           <option value="">All Labs</option>
         </select>
         <button onclick="clearReportProjFilters()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'Sora',sans-serif;transition:all 0.2s" onmouseover="this.style.color='var(--warn)';this.style.borderColor='var(--warn)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">✕ Clear</button>
@@ -515,13 +514,13 @@
     </div>
   </div>
 
-  <!-- ═══ SECTION 2: Lab Utilization REPORT ═══ -->
+  <!-- ═══ SECTION 2: LAB Utilization REPORT ═══ -->
   <div id="section-occupancy" style="margin-top:8px;">
     <div class="report-section-title"><span>◉</span> Lab Utilization Report</div>
     <div class="charts-3col">
       <div class="chart-card">
         <h3><span class="dot" style="background:#5b8cff"></span>Occupancy per Lab</h3>
-        <div id="rpt-occ-Lab"></div>
+        <div id="rpt-occ-lab"></div>
       </div>
       <div class="chart-card">
         <h3><span class="dot" style="background:#fbbf24"></span>Test Activity</h3>
@@ -535,11 +534,11 @@
     <div class="charts-2col" style="margin-bottom:20px">
       <div class="chart-card">
         <h3><span class="dot" style="background:#00e5c3"></span>Lab Utilization % (Test Hrs / Total Hrs)</h3>
-        <div id="rpt-Lab-util"></div>
+        <div id="rpt-lab-util"></div>
       </div>
       <div class="chart-card">
         <h3><span class="dot" style="background:#5b8cff"></span>Test Hours vs Downtime per Lab</h3>
-        <div id="rpt-Lab-hours"></div>
+        <div id="rpt-lab-hours"></div>
       </div>
     </div>
     <div class="table-card">
@@ -548,12 +547,12 @@
         <button class="section-print-btn blue no-print" onclick="printSection('occupancy')">🖨 Print</button>
       </div>
       <div class="no-print" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);">
-        <input type="text"   id="rf-occ-search"  placeholder="🔍 Search Lab / test / Assigned To..." oninput="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
+        <input type="text"   id="rf-occ-search"  placeholder="🔍 Search lab / test / Assigned To..." oninput="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
         <select id="rf-occ-status"  onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
           <option value="">All Statuses</option>
           <option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option>
         </select>
-        <select id="rf-occ-Lab"     onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
+        <select id="rf-occ-lab"     onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
           <option value="">All Labs</option>
         </select>
         <select id="rf-occ-util"    onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
@@ -579,7 +578,7 @@
   <div class="page-header"><h1>Timeline Report</h1><p>Drill down: Year → Month → Week with status breakdown</p></div>
   <div class="tl-controls">
     <div class="period-tabs">
-      <div class="period-tab active" id="tab-proj" onclick="switchType('Projects')">📁 Projects</div>
+      <div class="period-tab active" id="tab-proj" onclick="switchType('projects')">📁 Projects</div>
       <div class="period-tab" id="tab-occ" onclick="switchType('occupancy')">🔬 Occupancy</div>
     </div>
     <div class="breadcrumb" id="tl-bc"></div>
@@ -604,8 +603,8 @@
       <button class="modal-close" onclick="closeModal('edit-proj-modal')">✕</button>
     </div>
     <div class="form-grid">
-      <div class="form-group"><Label>Project Name</Label><input type="text" id="ep-name" placeholder="Project name"></div>
-      <div class="form-group"><Label>Lab Name</Label><select id="ep-Lab"><option value="">— Select Lab —</option>
+      <div class="form-group"><label>Project Name</label><input type="text" id="ep-name" placeholder="Project name"></div>
+      <div class="form-group"><label>Lab Name</label><select id="ep-lab"><option value="">— Select Lab —</option>
               <option>RAC APF-3</option>
               <option>RAC APF-4</option>
               <option>VRF APF</option>
@@ -616,33 +615,33 @@
               <option>GDC PAC APF Lab-4</option>
               <option>GDC PAC APF Lab-5</option>
               <option>GDC RAC APF Lab-1</option>
-              <option>GDC PAC HALT Lab-1</option>
-              <option>GDC PAC HALT Lab-2</option>
-              <option>GDC PAC HALT Lab-3</option>
-              <option>GDC PAC HALT Lab-4</option>
-              <option>GDC PAC HALT Lab-5</option>
-              <option>GDC PAC EMC Lab</option>
+              <option>GDC PAC HALT LAB-1</option>
+              <option>GDC PAC HALT LAB-2</option>
+              <option>GDC PAC HALT LAB-3</option>
+              <option>GDC PAC HALT LAB-4</option>
+              <option>GDC PAC HALT LAB-5</option>
+              <option>GDC PAC EMC LAB</option>
               <option>GDC Safety Lab</option>
-              <option>GDC PAC Sound Lab</option>
-              <option>GDC RAC Sound Lab</option>
+              <option>GDC PAC Sound LAB</option>
+              <option>GDC RAC Sound LAB</option>
               <option>GDC Software LAB</option>
               <option>GDC Structure Test Lab</option></select></div>
-      <div class="form-group"><Label>Planned Start Date (dd/mm/yyyy)</Label><input type="text" id="ep-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Planned End Date (dd/mm/yyyy)</Label><input type="text" id="ep-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Actual Start Date (dd/mm/yyyy)</Label><input type="text" id="ep-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Actual End Date (dd/mm/yyyy)</Label><input type="text" id="ep-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>TTM Date (dd/mm/yyyy)</Label><input type="text" id="ep-ttm" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Assigned To</Label><input type="text" id="ep-assigned" placeholder="e.g. Name"></div>
-      <div class="form-group"><Label>Project Type</Label>
+      <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="ep-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="ep-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="ep-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Actual End Date (dd/mm/yyyy)</label><input type="text" id="ep-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>TTM Date (dd/mm/yyyy)</label><input type="text" id="ep-ttm" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Assigned To</label><input type="text" id="ep-assigned" placeholder="Name"></div>
+      <div class="form-group"><label>Project Type</label>
         <select id="ep-type"><option value="">— Select Type —</option><option>RAC</option><option>WAC</option><option>VRF</option></select>
       </div>
-      <div class="form-group"><Label>Status</Label>
+      <div class="form-group"><label>Status</label>
         <select id="ep-status"><option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option></select>
       </div>
-      <div class="form-group"><Label>Issue List (comma separated)</Label><input type="text" id="ep-issues" placeholder="e.g. Equipment delay"></div>
-      <div class="form-group"><Label>Total No. of Tests</Label><input type="number" id="ep-total-tests" placeholder="e.g. 10" min="0"></div>
-      <div class="form-group"><Label>No. of Tests Completed</Label><input type="number" id="ep-tests-done" placeholder="e.g. 6" min="0"></div>
-      <div class="form-group full"><Label>Notes</Label><textarea id="ep-notes" placeholder="Additional notes..."></textarea></div>
+      <div class="form-group"><label>Issue List (comma separated)</label><input type="text" id="ep-issues" placeholder="e.g. Equipment delay"></div>
+      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="ep-total-tests" placeholder="e.g. 10" min="0"></div>
+      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="ep-tests-done" placeholder="e.g. 6" min="0"></div>
+      <div class="form-group full"><label>Notes</label><textarea id="ep-notes" placeholder="Additional notes..."></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal('edit-proj-modal')">Cancel</button>
@@ -659,7 +658,7 @@
       <button class="modal-close" onclick="closeModal('edit-occ-modal')">✕</button>
     </div>
     <div class="form-grid">
-      <div class="form-group"><Label>Lab Name</Label><select id="eo-Lab"><option value="">— Select Lab —</option>
+      <div class="form-group"><label>Lab Name</label><select id="eo-lab"><option value="">— Select Lab —</option>
               <option>RAC APF-3</option>
               <option>RAC APF-4</option>
               <option>VRF APF</option>
@@ -670,31 +669,31 @@
               <option>GDC PAC APF Lab-4</option>
               <option>GDC PAC APF Lab-5</option>
               <option>GDC RAC APF Lab-1</option>
-              <option>GDC PAC HALT Lab-1</option>
-              <option>GDC PAC HALT Lab-2</option>
-              <option>GDC PAC HALT Lab-3</option>
-              <option>GDC PAC HALT Lab-4</option>
-              <option>GDC PAC HALT Lab-5</option>
-              <option>GDC PAC EMC Lab</option>
+              <option>GDC PAC HALT LAB-1</option>
+              <option>GDC PAC HALT LAB-2</option>
+              <option>GDC PAC HALT LAB-3</option>
+              <option>GDC PAC HALT LAB-4</option>
+              <option>GDC PAC HALT LAB-5</option>
+              <option>GDC PAC EMC LAB</option>
               <option>GDC Safety Lab</option>
-              <option>GDC PAC Sound Lab</option>
-              <option>GDC RAC Sound Lab</option>
+              <option>GDC PAC Sound LAB</option>
+              <option>GDC RAC Sound LAB</option>
               <option>GDC Software LAB</option>
               <option>GDC Structure Test Lab</option></select></div>
-      <div class="form-group"><Label>Project Name</Label><input type="text" id="eo-project" placeholder="Project name"></div>
-      <div class="form-group"><Label>Test Name</Label><input type="text" id="eo-test" placeholder="Test name"></div>
-      <div class="form-group"><Label>Assigned To / Team</Label><input type="text" id="eo-who" placeholder="e.g. Name"></div>
-      <div class="form-group"><Label>Planned Start Date (dd/mm/yyyy)</Label><input type="text" id="eo-date" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Planned End Date (dd/mm/yyyy)</Label><input type="text" id="eo-enddate" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Actual Start Date (dd/mm/yyyy)</Label><input type="text" id="eo-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Actual End Date (dd/mm/yyyy)</Label><input type="text" id="eo-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
-      <div class="form-group"><Label>Start Time</Label><input type="time" id="eo-start"></div>
-      <div class="form-group"><Label>End Time</Label><input type="time" id="eo-end"></div>
-      <div class="form-group"><Label>Test Hours</Label><input type="number" id="eo-testhours" placeholder="e.g. 8" min="0" step="0.5"></div>
-      <div class="form-group"><Label>Downtime Hours</Label><input type="number" id="eo-downtime" placeholder="e.g. 2" min="0" step="0.5"></div>
-      <div class="form-group"><Label>Total No. of Tests</Label><input type="number" id="eo-total-tests" placeholder="e.g. 10" min="0"></div>
-      <div class="form-group"><Label>No. of Tests Completed</Label><input type="number" id="eo-tests-done" placeholder="e.g. 6" min="0"></div>
-      <div class="form-group"><Label>Status</Label>
+      <div class="form-group"><label>Project Name</label><input type="text" id="eo-project" placeholder="Project name"></div>
+      <div class="form-group"><label>Test Name</label><input type="text" id="eo-test" placeholder="Test name"></div>
+      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="eo-who" placeholder="Name"></div>
+      <div class="form-group"><label>Planned Start Date (dd/mm/yyyy)</label><input type="text" id="eo-date" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Planned End Date (dd/mm/yyyy)</label><input type="text" id="eo-enddate" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Actual Start Date (dd/mm/yyyy)</label><input type="text" id="eo-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Actual End Date (dd/mm/yyyy)</label><input type="text" id="eo-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)"></div>
+      <div class="form-group"><label>Start Time</label><input type="time" id="eo-start"></div>
+      <div class="form-group"><label>End Time</label><input type="time" id="eo-end"></div>
+      <div class="form-group"><label>Test Hours</label><input type="number" id="eo-testhours" placeholder="e.g. 8" min="0" step="0.5"></div>
+      <div class="form-group"><label>Downtime Hours</label><input type="number" id="eo-downtime" placeholder="e.g. 2" min="0" step="0.5"></div>
+      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="eo-total-tests" placeholder="e.g. 10" min="0"></div>
+      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="eo-tests-done" placeholder="e.g. 6" min="0"></div>
+      <div class="form-group"><label>Status</label>
         <select id="eo-status"><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option></select>
       </div>
     </div>
@@ -709,7 +708,8 @@
 </div>
 
 <script>
-let Projects = [];
+// v1773558911 - cache bust
+let projects = [];
 let occupancy = [];
 
 // ── SUPABASE CONFIG ───────────────────────────────────────────────────────
@@ -737,7 +737,7 @@ async function supaFetch(endpoint, options={}) {
 
 function mapProject(r) {
   return {
-    id: r.id, name: r.name, type: r.type||'', Lab: r.Lab||'',
+    id: r.id, name: r.name, type: r.type||'', lab: r.lab||'',
     assigned: r.assigned||'', status: r.status||'Planning',
     start: r.start_date||'', end: r.end_date||'',
     actualStart: r.actual_start||'', actualEnd: r.actual_end||'',
@@ -749,7 +749,7 @@ function mapProject(r) {
 
 function mapOccupancy(r) {
   return {
-    id: r.id, Lab: r.Lab||'', project: r.project||'',
+    id: r.id, lab: r.lab||'', project: r.project||'',
     test: r.test||'', who: r.Assigned To||'',
     status: r.status||'Scheduled',
     date: r.planned_start||'', enddate: r.planned_end||'',
@@ -764,17 +764,17 @@ async function loadData() {
   setStatus('loading');
   try {
     const [pRows, oRows] = await Promise.all([
-      supaFetch('Projects?order=id.asc&limit=1000'),
+      supaFetch('projects?order=id.asc&limit=1000'),
       supaFetch('occupancy?order=id.asc&limit=1000')
     ]);
-    Projects  = (pRows||[]).map(mapProject);
+    projects  = (pRows||[]).map(mapProject);
     occupancy = (oRows||[]).map(mapOccupancy);
     setStatus('online');
   } catch(e) {
     console.error('Supabase load error:', e);
     setStatus('error');
   }
-  renderDashboard();
+  renderEPQ Dashboard();
 }
 
 // Save is now handled per-operation (insert/update/delete)
@@ -801,12 +801,12 @@ function setStatus(state) {
 setInterval(async () => {
   try {
     const [pRows, oRows] = await Promise.all([
-      supaFetch('Projects?order=id.asc&limit=1000'),
+      supaFetch('projects?order=id.asc&limit=1000'),
       supaFetch('occupancy?order=id.asc&limit=1000')
     ]);
-    Projects  = (pRows||[]).map(mapProject);
+    projects  = (pRows||[]).map(mapProject);
     occupancy = (oRows||[]).map(mapOccupancy);
-    renderDashboard();
+    renderEPQ Dashboard();
   } catch(e) {}
 }, 30000);
 
@@ -839,11 +839,11 @@ function showPage(name, el) {
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if(el) el.classList.add('active');
-  if(name==='dashboard') renderDashboard();
-  if(name==='Projects')  renderProjects();
+  if(name==='EPQ Dashboard') renderEPQ Dashboard();
+  if(name==='projects')  renderProjects();
   if(name==='occupancy') renderOccupancy();
   if(name==='reports')   renderReports();
-  if(name==='timeline')  { tlType='Projects'; tlView='year'; tlYear=null; tlMonth=null; renderTimeline(); }
+  if(name==='timeline')  { tlType='projects'; tlView='year'; tlYear=null; tlMonth=null; renderTimeline(); }
 }
 
 function badge(s) {
@@ -851,13 +851,13 @@ function badge(s) {
   return `<span class="badge ${m[s]||'badge-blue'}">${s}</span>`;
 }
 
-// ── Projects ──────────────────────────────────────────
+// ── PROJECTS ──────────────────────────────────────────
 async function addProject() {
   const name=document.getElementById('p-name').value.trim();
-  const Lab=document.getElementById('p-Lab').value.trim();
-  if(!name||!Lab){alert('Project name and Lab are required.');return;}
+  const lab=document.getElementById('p-lab').value.trim();
+  if(!name||!lab){alert('Project name and lab are required.');return;}
   const obj = {
-    name, Lab,
+    name, lab,
     start_date:   document.getElementById('p-start').value.trim(),
     end_date:     document.getElementById('p-end').value.trim(),
     actual_start: document.getElementById('p-actual-start').value.trim(),
@@ -872,10 +872,10 @@ async function addProject() {
     notes:        document.getElementById('p-notes').value.trim()
   };
   try {
-    const rows = await supaFetch('Projects', { method:'POST', body: JSON.stringify(obj) });
-    Projects.unshift(mapProject(rows[0]));
+    const rows = await supaFetch('projects', { method:'POST', body: JSON.stringify(obj) });
+    projects.unshift(mapProject(rows[0]));
   } catch(e) { alert('Save failed: ' + e.message); return; }
-  ['p-name','p-Lab','p-start','p-end','p-actual-start','p-actual-end','p-ttm','p-assigned','p-issues','p-total-tests','p-tests-done','p-notes'].forEach(id=>document.getElementById(id).value='');
+  ['p-name','p-lab','p-start','p-end','p-actual-start','p-actual-end','p-ttm','p-assigned','p-issues','p-total-tests','p-tests-done','p-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('p-type').value='';
   document.getElementById('p-status').value='Planning';
   renderProjects(); alert('✅ Project added!');
@@ -883,22 +883,22 @@ async function addProject() {
 async function deleteProject(id){
   if(!confirm('Delete this project?'))return;
   try {
-    await supaFetch('Projects?id=eq.'+id, { method:'DELETE', prefer:'return=minimal', noJson:true });
-    Projects=Projects.filter(p=>p.id!==id);
+    await supaFetch('projects?id=eq.'+id, { method:'DELETE', prefer:'return=minimal', noJson:true });
+    projects=projects.filter(p=>p.id!==id);
   } catch(e) { alert('Delete failed: '+e.message); return; }
   renderProjects();
 }
 function renderProjects(){
   const s=(document.getElementById('proj-search')?.value||'').toLowerCase();
   const f=document.getElementById('proj-filter')?.value||'';
-  let list=Projects.filter(p=>(!f||p.status===f)&&(!s||p.name.toLowerCase().includes(s)||p.Lab.toLowerCase().includes(s)||(p.assigned||'').toLowerCase().includes(s)));
+  let list=projects.filter(p=>(!f||p.status===f)&&(!s||p.name.toLowerCase().includes(s)||p.lab.toLowerCase().includes(s)||(p.assigned||'').toLowerCase().includes(s)));
   document.getElementById('proj-count').textContent=`${list.length} project(s)`;
-  const tb=document.getElementById('Projects-table');
-  if(!list.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="icon">◈</div>No Projects found</div></td></tr>`;return;}
+  const tb=document.getElementById('projects-table');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="icon">◈</div>No projects found</div></td></tr>`;return;}
   tb.innerHTML=list.map(p=>`<tr>
     <td><strong>${p.name}</strong>${p.notes?`<br><small style="color:var(--muted)">${p.notes.substring(0,60)}${p.notes.length>60?'...':''}</small>`:''}</td>
     <td>${p.type?`<span class="badge badge-blue">${p.type}</span>`:'—'}</td>
-    <td>${p.Lab}</td>
+    <td>${p.lab}</td>
     <td style="font-family:'DM Mono',monospace;font-size:12px">${p.start||'—'}</td>
     <td style="font-family:'DM Mono',monospace;font-size:12px">${p.end||'—'}</td>
     <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--success)">${p.actualStart||'—'}</td>
@@ -913,11 +913,11 @@ function renderProjects(){
 
 // ── OCCUPANCY ─────────────────────────────────────────
 async function addOccupancy(){
-  const Lab=document.getElementById('o-Lab').value.trim();
+  const lab=document.getElementById('o-lab').value.trim();
   const test=document.getElementById('o-test').value.trim();
-  if(!Lab||!test){alert('Lab name and test name are required.');return;}
+  if(!lab||!test){alert('Lab name and test name are required.');return;}
   const obj = {
-    Lab, test,
+    lab, test,
     project:      document.getElementById('o-project').value.trim(),
     Assigned To:   document.getElementById('o-who').value.trim(),
     planned_start:document.getElementById('o-date').value.trim(),
@@ -937,7 +937,7 @@ async function addOccupancy(){
     occupancy.unshift(mapOccupancy(rows[0]));
   } catch(e) { alert('Save failed: '+e.message); return; }
   ['o-project','o-test','o-who','o-date','o-enddate','o-actual-start','o-actual-end','o-start','o-end'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('o-Lab').value='';
+  document.getElementById('o-lab').value='';
   document.getElementById('o-testhours').value='';
   document.getElementById('o-downtime').value='';
   document.getElementById('o-total-tests').value='';
@@ -952,12 +952,12 @@ async function deleteOccupancy(id){
 function renderOccupancy(){
   const s=(document.getElementById('occ-search')?.value||'').toLowerCase();
   const f=document.getElementById('occ-filter')?.value||'';
-  let list=occupancy.filter(o=>(!f||o.status===f)&&(!s||o.Lab.toLowerCase().includes(s)||(o.project||'').toLowerCase().includes(s)||o.test.toLowerCase().includes(s)));
+  let list=occupancy.filter(o=>(!f||o.status===f)&&(!s||o.lab.toLowerCase().includes(s)||(o.project||'').toLowerCase().includes(s)||o.test.toLowerCase().includes(s)));
   document.getElementById('occ-count').textContent=`${list.length} entry(ies)`;
   const tb=document.getElementById('occupancy-table');
   if(!list.length){tb.innerHTML=`<tr><td colspan="17"><div class="empty-state"><div class="icon">◉</div>No occupancy records</div></td></tr>`;return;}
   tb.innerHTML=list.map(o=>`<tr>
-    <td><strong>${o.Lab}</strong></td>
+    <td><strong>${o.lab}</strong></td>
     <td>${o.project||'—'}</td>
     <td>${o.test}</td>
     <td>${o.who||'—'}</td>
@@ -977,20 +977,20 @@ function renderOccupancy(){
   </tr>`).join('');
 }
 
-// ── DASHBOARD ─────────────────────────────────────────
-function renderDashboard(){
-  const total=Projects.length, active=Projects.filter(p=>p.status==='In Progress').length;
-  const issues=Projects.filter(p=>p.issues).length, occ=occupancy.filter(o=>o.status==='In Progress').length;
+// ── EPQ Dashboard ─────────────────────────────────────────
+function renderEPQ Dashboard(){
+  const total=projects.length, active=projects.filter(p=>p.status==='In Progress').length;
+  const issues=projects.filter(p=>p.issues).length, occ=occupancy.filter(o=>o.status==='In Progress').length;
   document.getElementById('stats-row').innerHTML=`
-    <div class="stat-card"><div class="stat-Label">Total Projects</div><div class="stat-value">${total}</div><div class="stat-sub">All time</div></div>
-    <div class="stat-card blue"><div class="stat-Label">Active Now</div><div class="stat-value">${active}</div><div class="stat-sub">In progress</div></div>
-    <div class="stat-card red"><div class="stat-Label">With Issues</div><div class="stat-value">${issues}</div><div class="stat-sub">Need attention</div></div>
-    <div class="stat-card yellow"><div class="stat-Label">Lab Sessions</div><div class="stat-value">${occ}</div><div class="stat-sub">Currently active</div></div>`;
-  document.getElementById('dash-Projects').innerHTML=Projects.slice(0,5).map(p=>
+    <div class="stat-card"><div class="stat-label">Total Projects</div><div class="stat-value">${total}</div><div class="stat-sub">All time</div></div>
+    <div class="stat-card blue"><div class="stat-label">Active Now</div><div class="stat-value">${active}</div><div class="stat-sub">In progress</div></div>
+    <div class="stat-card red"><div class="stat-label">With Issues</div><div class="stat-value">${issues}</div><div class="stat-sub">Need attention</div></div>
+    <div class="stat-card yellow"><div class="stat-label">Lab Sessions</div><div class="stat-value">${occ}</div><div class="stat-sub">Currently active</div></div>`;
+  document.getElementById('dash-projects').innerHTML=projects.slice(0,5).map(p=>
     `<tr><td>${p.name}</td><td>${badge(p.status)}</td><td style="font-family:'DM Mono',monospace;font-size:11px">${p.end||'—'}</td></tr>`
-  ).join('')||`<tr><td colspan="3"><div class="empty-state"><div class="icon">◈</div>No Projects yet</div></td></tr>`;
+  ).join('')||`<tr><td colspan="3"><div class="empty-state"><div class="icon">◈</div>No projects yet</div></td></tr>`;
   document.getElementById('dash-occupancy').innerHTML=occupancy.slice(0,5).map(o=>
-    `<tr><td>${o.Lab}</td><td>${o.test}</td><td style="font-family:'DM Mono',monospace;font-size:11px">${o.start||'?'}→${o.end||'?'}</td></tr>`
+    `<tr><td>${o.lab}</td><td>${o.test}</td><td style="font-family:'DM Mono',monospace;font-size:11px">${o.start||'?'}→${o.end||'?'}</td></tr>`
   ).join('')||`<tr><td colspan="3"><div class="empty-state"><div class="icon">◉</div>No occupancy records</div></td></tr>`;
 }
 
@@ -999,37 +999,37 @@ function renderReports(){
   const PALETTE = ['#00e5c3','#5b8cff','#4ade80','#fbbf24','#ff6b6b','#f97316','#a78bfa','#06b6d4','#ec4899','#84cc16'];
 
   // ── KPI CARDS ──────────────────────────────────────────────────────────
-  const total=Projects.length;
-  const active=Projects.filter(p=>p.status==='In Progress').length;
-  const completed=Projects.filter(p=>p.status==='Completed').length;
-  const onHold=Projects.filter(p=>p.status==='On Hold').length;
-  const LabCount=[...new Set(occupancy.map(o=>o.Lab))].length;
+  const total=projects.length;
+  const active=projects.filter(p=>p.status==='In Progress').length;
+  const completed=projects.filter(p=>p.status==='Completed').length;
+  const onHold=projects.filter(p=>p.status==='On Hold').length;
+  const labCount=[...new Set(occupancy.map(o=>o.lab))].length;
   const occTotal=occupancy.length;
-  const issueCount=Projects.reduce((a,p)=>a+(p.issues?p.issues.split(',').length:0),0);
+  const issueCount=projects.reduce((a,p)=>a+(p.issues?p.issues.split(',').length:0),0);
   const compRate=total>0?Math.round(completed/total*100):0;
   document.getElementById('rpt-kpi').innerHTML=`
-    <div class="kpi-card c1"><span class="kpi-icon">◈</span><div class="kpi-Label">Total Projects</div><div class="kpi-value">${total}</div><div class="kpi-sub">All time</div></div>
-    <div class="kpi-card c2"><span class="kpi-icon">⚡</span><div class="kpi-Label">In Progress</div><div class="kpi-value">${active}</div><div class="kpi-sub">Active now</div></div>
-    <div class="kpi-card c3"><span class="kpi-icon">✓</span><div class="kpi-Label">Completed</div><div class="kpi-value">${completed}</div><div class="kpi-value" style="font-size:14px;margin-top:2px">${compRate}%</div></div>
-    <div class="kpi-card c4"><span class="kpi-icon">⏸</span><div class="kpi-Label">On Hold</div><div class="kpi-value">${onHold}</div><div class="kpi-sub">Paused</div></div>
-    <div class="kpi-card c5"><span class="kpi-icon">⚠</span><div class="kpi-Label">Total Issues</div><div class="kpi-value">${issueCount}</div><div class="kpi-sub">Across Projects</div></div>
-    <div class="kpi-card c7"><span class="kpi-icon">◉</span><div class="kpi-Label">Active Labs</div><div class="kpi-value">${LabCount}</div><div class="kpi-sub">With sessions</div></div>
-    <div class="kpi-card c8"><span class="kpi-icon">🔬</span><div class="kpi-Label">Lab Sessions</div><div class="kpi-value">${occTotal}</div><div class="kpi-sub">Total logged</div></div>
-    <div class="kpi-card c6"><span class="kpi-icon">🎯</span><div class="kpi-Label">Completion Rate</div><div class="kpi-value">${compRate}%</div><div class="kpi-sub">Projects done</div></div>
+    <div class="kpi-card c1"><span class="kpi-icon">◈</span><div class="kpi-label">Total Projects</div><div class="kpi-value">${total}</div><div class="kpi-sub">All time</div></div>
+    <div class="kpi-card c2"><span class="kpi-icon">⚡</span><div class="kpi-label">In Progress</div><div class="kpi-value">${active}</div><div class="kpi-sub">Active now</div></div>
+    <div class="kpi-card c3"><span class="kpi-icon">✓</span><div class="kpi-label">Completed</div><div class="kpi-value">${completed}</div><div class="kpi-value" style="font-size:14px;margin-top:2px">${compRate}%</div></div>
+    <div class="kpi-card c4"><span class="kpi-icon">⏸</span><div class="kpi-label">On Hold</div><div class="kpi-value">${onHold}</div><div class="kpi-sub">Paused</div></div>
+    <div class="kpi-card c5"><span class="kpi-icon">⚠</span><div class="kpi-label">Total Issues</div><div class="kpi-value">${issueCount}</div><div class="kpi-sub">Across projects</div></div>
+    <div class="kpi-card c7"><span class="kpi-icon">◉</span><div class="kpi-label">Active Labs</div><div class="kpi-value">${labCount}</div><div class="kpi-sub">With sessions</div></div>
+    <div class="kpi-card c8"><span class="kpi-icon">🔬</span><div class="kpi-label">Lab Sessions</div><div class="kpi-value">${occTotal}</div><div class="kpi-sub">Total logged</div></div>
+    <div class="kpi-card c6"><span class="kpi-icon">🎯</span><div class="kpi-label">Completion Rate</div><div class="kpi-value">${compRate}%</div><div class="kpi-sub">Projects done</div></div>
   `;
 
   // helper: colorful bar
-  function bar(Label, count, max, color, idx) {
+  function bar(label, count, max, color, idx) {
     const pct = max > 0 ? Math.max(count/max*100, 4) : 0;
     const textColor = ['#fff','#0d0f14','#0d0f14','#0d0f14','#fff','#fff','#fff','#fff','#fff','#0d0f14'][idx%10]||'#fff';
-    return `<div class="bar-row2"><div class="bar-Label2">${Label}</div><div class="bar-track2"><div class="bar-fill2" style="width:${pct}%;background:${color};color:${textColor}">${count}</div></div></div>`;
+    return `<div class="bar-row2"><div class="bar-label2">${label}</div><div class="bar-track2"><div class="bar-fill2" style="width:${pct}%;background:${color};color:${textColor}">${count}</div></div></div>`;
   }
 
   // helper: progress bar
-  function progress(Label, count, total, color) {
+  function progress(label, count, total, color) {
     const pct = total>0?Math.round(count/total*100):0;
     return `<div class="progress-bar-wrap">
-      <div class="progress-Label-row"><span style="color:var(--text);font-size:12px">${Label}</span><span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${color}">${count} <span style="color:var(--muted);font-weight:400">(${pct}%)</span></span></div>
+      <div class="progress-label-row"><span style="color:var(--text);font-size:12px">${label}</span><span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${color}">${count} <span style="color:var(--muted);font-weight:400">(${pct}%)</span></span></div>
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
     </div>`;
   }
@@ -1038,19 +1038,19 @@ function renderReports(){
   // Status
   const ss=['Planning','In Progress','Completed','On Hold'];
   const sc=['#5b8cff','#00e5c3','#4ade80','#fbbf24'];
-  const sn=ss.map(s=>Projects.filter(p=>p.status===s).length);
+  const sn=ss.map(s=>projects.filter(p=>p.status===s).length);
   const ms=Math.max(...sn,1);
   document.getElementById('rpt-status').innerHTML = ss.map((s,i)=>bar(s,sn[i],ms,sc[i],i)).join('') || '<div class="empty-state">No data</div>';
 
   // Type
   const ptypes=['RAC','WAC','VRF'];
   const ptColors=['#00e5c3','#5b8cff','#fbbf24'];
-  const ptCounts=ptypes.map(t=>Projects.filter(p=>p.type===t).length);
+  const ptCounts=ptypes.map(t=>projects.filter(p=>p.type===t).length);
   const ptMax=Math.max(...ptCounts,1);
   document.getElementById('rpt-type').innerHTML = ptypes.map((t,i)=>bar(t,ptCounts[i],ptMax,ptColors[i],i)).join('');
 
   // Person
-  const allAssigned=Projects.flatMap(p=>p.assigned?p.assigned.split(',').map(a=>a.trim()).filter(Boolean):[]);
+  const allAssigned=projects.flatMap(p=>p.assigned?p.assigned.split(',').map(a=>a.trim()).filter(Boolean):[]);
   const personMap={};
   allAssigned.forEach(a=>{personMap[a]=(personMap[a]||0)+1;});
   const persons=Object.entries(personMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
@@ -1060,7 +1060,7 @@ function renderReports(){
     : '<div class="empty-state">No assigned persons yet</div>';
 
   // Issues
-  const allI=Projects.flatMap(p=>p.issues?p.issues.split(',').map(i=>i.trim()):[]);
+  const allI=projects.flatMap(p=>p.issues?p.issues.split(',').map(i=>i.trim()):[]);
   const imap={};
   allI.forEach(i=>{imap[i]=(imap[i]||0)+1;});
   const ient=Object.entries(imap).sort((a,b)=>b[1]-a[1]).slice(0,8);
@@ -1078,10 +1078,10 @@ function renderReports(){
   ].join('') || '<div class="empty-state">No data</div>';
 
   // ── OCCUPANCY CHARTS ──────────────────────────────────────────────────
-  const occLabs=[...new Set(occupancy.map(o=>o.Lab))];
-  const occLC=occLabs.map(l=>occupancy.filter(o=>o.Lab===l).length);
+  const occLabs=[...new Set(occupancy.map(o=>o.lab))];
+  const occLC=occLabs.map(l=>occupancy.filter(o=>o.lab===l).length);
   const occMax=Math.max(...occLC,1);
-  document.getElementById('rpt-occ-Lab').innerHTML = occLabs.length ?
+  document.getElementById('rpt-occ-lab').innerHTML = occLabs.length ?
     occLabs.map((l,i)=>bar(l,occLC[i],occMax,PALETTE[i%PALETTE.length],i)).join('')
     : '<div class="empty-state">No occupancy data yet</div>';
 
@@ -1099,31 +1099,31 @@ function renderReports(){
   document.getElementById('rpt-occ-status').innerHTML = oSS.map((s,i)=>progress(s,oSN[i],occTotal||1,oSC[i])).join('') || '<div class="empty-state">No data</div>';
 
   // ── TABLES ────────────────────────────────────────────────────────────
-  // Populate Lab dropdowns in filters
-  const projLabOpts = [...new Set(Projects.map(p=>p.Lab).filter(Boolean))].sort();
-  const rfPL = document.getElementById('rf-proj-Lab');
-  const rfOL = document.getElementById('rf-occ-Lab');
+  // Populate lab dropdowns in filters
+  const projLabOpts = [...new Set(projects.map(p=>p.lab).filter(Boolean))].sort();
+  const rfPL = document.getElementById('rf-proj-lab');
+  const rfOL = document.getElementById('rf-occ-lab');
   if(rfPL){ rfPL.innerHTML='<option value="">All Labs</option>'+projLabOpts.map(l=>`<option>${l}</option>`).join(''); }
-  const occLabOpts = [...new Set(occupancy.map(o=>o.Lab).filter(Boolean))].sort();
+  const occLabOpts = [...new Set(occupancy.map(o=>o.lab).filter(Boolean))].sort();
   if(rfOL){ rfOL.innerHTML='<option value="">All Labs</option>'+occLabOpts.map(l=>`<option>${l}</option>`).join(''); }
 
   filterReportProjects();
 
   // Lab Utilization chart
-  const utilLabs = [...new Set(occupancy.map(o=>o.Lab))];
+  const utilLabs = [...new Set(occupancy.map(o=>o.lab))];
   const utilData = utilLabs.map(l => {
-    const entries = occupancy.filter(o=>o.Lab===l);
+    const entries = occupancy.filter(o=>o.lab===l);
     const th = entries.reduce((s,o)=>s+(o.testHours||0),0);
     const dt = entries.reduce((s,o)=>s+(o.downtime||0),0);
     const total = th+dt;
-    return { Lab:l, th, dt, total, pct: total>0?Math.round(th/total*100):0 };
+    return { lab:l, th, dt, total, pct: total>0?Math.round(th/total*100):0 };
   }).sort((a,b)=>b.pct-a.pct);
 
-  document.getElementById('rpt-Lab-util').innerHTML = utilData.length ?
+  document.getElementById('rpt-lab-util').innerHTML = utilData.length ?
     utilData.map((d,i)=>{
       const col = d.pct>=80?'#4ade80':d.pct>=50?'#fbbf24':'#ff6b6b';
       return `<div class="bar-row2">
-        <div class="bar-Label2">${d.Lab}</div>
+        <div class="bar-label2">${d.lab}</div>
         <div class="bar-track2">
           <div class="bar-fill2" style="width:${Math.max(d.pct,3)}%;background:${col};color:#0d0f14">${d.pct}%</div>
         </div>
@@ -1132,7 +1132,7 @@ function renderReports(){
     : '<div class="empty-state">Enter Test Hours & Downtime in occupancy to see Utilization</div>';
 
   const maxH = Math.max(...utilData.map(x=>x.total),1);
-  document.getElementById('rpt-Lab-hours').innerHTML = utilData.length ? `
+  document.getElementById('rpt-lab-hours').innerHTML = utilData.length ? `
     <div style="display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:6px 10px;">
       <!-- Header row -->
       <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Lab</div>
@@ -1140,7 +1140,7 @@ function renderReports(){
       <div style="font-size:9px;color:#00e5c3;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;text-align:right">Test</div>
       <div style="font-size:9px;color:#ff6b6b;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;text-align:right">Down</div>
       ${utilData.map(d=>`
-        <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px" title="${d.Lab}">${d.Lab}</div>
+        <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px" title="${d.lab}">${d.lab}</div>
         <div style="background:rgba(255,255,255,0.05);border-radius:6px;height:20px;overflow:hidden;display:flex;gap:2px">
           <div style="width:${d.total>0?Math.max(d.th/maxH*100,0):0}%;background:#00e5c3;height:100%;border-radius:4px 0 0 4px;transition:width 0.6s ease;flex-shrink:0"></div>
           <div style="width:${d.total>0?Math.max(d.dt/maxH*100,0):0}%;background:#ff6b6b;height:100%;border-radius:0 4px 4px 0;transition:width 0.6s ease;flex-shrink:0"></div>
@@ -1160,13 +1160,13 @@ function renderReports(){
 // ── CSV ───────────────────────────────────────────────
 function exportCSV(type){
   let h,r,fn;
-  if(type==='Projects'){
+  if(type==='projects'){
     h=['Name','Type','Lab','Planned Start','Planned End','Actual Start','Actual End','TTM Date','Assigned To','Total Tests','Tests Done','Test Completion %','Status','Issues','Notes'];
-    r=Projects.map(p=>{const tt=p.totalTests||0,td=p.testsDone||0;return[p.name,p.type||'',p.Lab,p.start,p.end,p.actualStart||'',p.actualEnd||'',p.ttm,p.assigned,tt,td,tt>0?Math.round(td/tt*100)+'%':'—',p.status,p.issues,p.notes];});
-    fn='Projects_export.csv';
+    r=projects.map(p=>{const tt=p.totalTests||0,td=p.testsDone||0;return[p.name,p.type||'',p.lab,p.start,p.end,p.actualStart||'',p.actualEnd||'',p.ttm,p.assigned,tt,td,tt>0?Math.round(td/tt*100)+'%':'—',p.status,p.issues,p.notes];});
+    fn='projects_export.csv';
   } else {
     h=['Lab','Project','Test','Assigned To','Planned Start','Planned End','Actual Start','Actual End','Start Time','End Time','Test Hours','Downtime Hours','Utilization %','Total Tests','Tests Done','Test Completion %','Status'];
-    r=occupancy.map(o=>{const th=o.testHours||0,dt=o.downtime||0,tot=th+dt,tt=o.totalTests||0,td=o.testsDone||0;return[o.Lab,o.project,o.test,o.who,o.date,o.enddate,o.actualStart||'',o.actualEnd||'',o.start,o.end,th,dt,tot>0?Math.round(th/tot*100)+'%':'—',tt,td,tt>0?Math.round(td/tt*100)+'%':'—',o.status];});
+    r=occupancy.map(o=>{const th=o.testHours||0,dt=o.downtime||0,tot=th+dt,tt=o.totalTests||0,td=o.testsDone||0;return[o.lab,o.project,o.test,o.who,o.date,o.enddate,o.actualStart||'',o.actualEnd||'',o.start,o.end,th,dt,tot>0?Math.round(th/tot*100)+'%':'—',tt,td,tt>0?Math.round(td/tt*100)+'%':'—',o.status];});
     fn='occupancy_export.csv';
   }
   const csv=[h,...r].map(row=>row.map(c=>`"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
@@ -1176,18 +1176,18 @@ function exportCSV(type){
 }
 
 // ── TIMELINE REPORT ───────────────────────────────────
-let tlType='Projects', tlView='year', tlYear=null, tlMonth=null;
+let tlType='projects', tlView='year', tlYear=null, tlMonth=null;
 
 function switchType(t){
   tlType=t; tlView='year'; tlYear=null; tlMonth=null;
-  document.getElementById('tab-proj').classList.toggle('active',t==='Projects');
+  document.getElementById('tab-proj').classList.toggle('active',t==='projects');
   document.getElementById('tab-occ').classList.toggle('active',t==='occupancy');
   renderTimeline();
 }
 
-function tlData(){ return tlType==='Projects'?Projects:occupancy; }
-function tlDateOf(item){ return tlType==='Projects'?item.start:item.date; }
-function tlStatuses(){ return tlType==='Projects'?['Planning','In Progress','Completed','On Hold']:['Scheduled','In Progress','Completed','Cancelled']; }
+function tlData(){ return tlType==='projects'?projects:occupancy; }
+function tlDateOf(item){ return tlType==='projects'?item.start:item.date; }
+function tlStatuses(){ return tlType==='projects'?['Planning','In Progress','Completed','On Hold']:['Scheduled','In Progress','Completed','Cancelled']; }
 
 function pills(items){
   return tlStatuses().map(s=>{
@@ -1214,7 +1214,7 @@ function renderTimeline(){
   document.getElementById('tl-bc').innerHTML=bc;
 
   const data=tlData();
-  const Label=tlType==='Projects'?'Projects':'sessions';
+  const label=tlType==='projects'?'projects':'sessions';
   let html='';
 
   if(tlView==='year'){
@@ -1223,21 +1223,21 @@ function renderTimeline(){
     data.forEach(item=>{ const y=getYear(tlDateOf(item)); if(y){if(!map[y])map[y]=[];map[y].push(item);} });
     const years=Object.keys(map).sort((a,b)=>b-a);
     if(!years.length){
-      html=`<div class="empty-state"><div class="icon">◫</div>No ${Label} with dates yet.<br>Enter dates in dd/mm/yyyy format when adding entries.</div>`;
+      html=`<div class="empty-state"><div class="icon">◫</div>No ${label} with dates yet.<br>Enter dates in dd/mm/yyyy format when adding entries.</div>`;
     } else {
-      html+=`<div class="section-sep">Showing ${data.length} ${Label} — click a year card to see months</div><div class="drill-grid">`;
+      html+=`<div class="section-sep">Showing ${data.length} ${label} — click a year card to see months</div><div class="drill-grid">`;
       years.forEach(y=>{
         const items=map[y];
         html+=`<div class="drill-card" onclick="goMonth(${y})">
           <h4>📅 ${y}</h4>
-          <div class="drill-stat"><span>Total ${Label}</span><span>${items.length}</span></div>
+          <div class="drill-stat"><span>Total ${label}</span><span>${items.length}</span></div>
           <div class="status-pills">${pills(items)}</div>
           <div class="mini-bar">${minibar(items)}</div>
         </div>`;
       });
       html+=`</div>`;
       const noDates=data.filter(i=>!getYear(tlDateOf(i)));
-      if(noDates.length) html+=`<div class="section-sep" style="margin-top:8px">${noDates.length} ${Label} without dates</div>`;
+      if(noDates.length) html+=`<div class="section-sep" style="margin-top:8px">${noDates.length} ${label} without dates</div>`;
     }
   }
 
@@ -1247,14 +1247,14 @@ function renderTimeline(){
     items.forEach(i=>{ const m=getMonth(tlDateOf(i)); if(m!==null){if(!map[m])map[m]=[];map[m].push(i);} });
     const months=Object.keys(map).sort((a,b)=>a-b);
     if(!months.length){
-      html=`<div class="empty-state"><div class="icon">◫</div>No ${Label} in ${tlYear}</div>`;
+      html=`<div class="empty-state"><div class="icon">◫</div>No ${label} in ${tlYear}</div>`;
     } else {
-      html+=`<div class="section-sep">${tlYear} — ${items.length} ${Label} across ${months.length} month(s) — click to see weekly breakdown</div><div class="drill-grid">`;
+      html+=`<div class="section-sep">${tlYear} — ${items.length} ${label} across ${months.length} month(s) — click to see weekly breakdown</div><div class="drill-grid">`;
       months.forEach(m=>{
         const mi=map[m];
         html+=`<div class="drill-card" onclick="goWeek(${tlYear},${m})">
           <h4>🗓 ${MONTHS[m]}</h4>
-          <div class="drill-stat"><span>Total ${Label}</span><span>${mi.length}</span></div>
+          <div class="drill-stat"><span>Total ${label}</span><span>${mi.length}</span></div>
           <div class="status-pills">${pills(mi)}</div>
           <div class="mini-bar">${minibar(mi)}</div>
         </div>`;
@@ -1272,9 +1272,9 @@ function renderTimeline(){
     items.forEach(i=>{ const w=weekOfMonth(tlDateOf(i)); if(w){if(!map[w])map[w]=[];map[w].push(i);} });
     const weeks=Object.keys(map).sort((a,b)=>a-b);
     if(!weeks.length){
-      html=`<div class="empty-state"><div class="icon">◫</div>No ${Label} in ${MONTHS[tlMonth]} ${tlYear}</div>`;
+      html=`<div class="empty-state"><div class="icon">◫</div>No ${label} in ${MONTHS[tlMonth]} ${tlYear}</div>`;
     } else {
-      html+=`<div class="section-sep">${MONTHS[tlMonth]} ${tlYear} — ${items.length} ${Label} — weekly view</div>`;
+      html+=`<div class="section-sep">${MONTHS[tlMonth]} ${tlYear} — ${items.length} ${label} — weekly view</div>`;
       weeks.forEach(w=>{
         const wi=map[w];
         const sd=(Number(w)-1)*7+1;
@@ -1287,10 +1287,10 @@ function renderTimeline(){
               <div class="status-pills">${pills(wi)}</div>
             </div>
           </div>`;
-        if(tlType==='Projects'){
+        if(tlType==='projects'){
           html+=`<table><thead><tr><th>Project</th><th>Type</th><th>Lab</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>TTM</th><th>Status</th><th>Issues</th></tr></thead><tbody>`;
           html+=wi.map(p=>`<tr>
-            <td>${p.name}</td><td>${p.type?`<span class='badge badge-blue'>${p.type}</span>`:'—'}</td><td>${p.Lab}</td><td>${p.assigned||'—'}</td>
+            <td>${p.name}</td><td>${p.type?`<span class='badge badge-blue'>${p.type}</span>`:'—'}</td><td>${p.lab}</td><td>${p.assigned||'—'}</td>
             <td style="font-family:'DM Mono',monospace;font-size:11px">${p.start||'—'}</td>
             <td style="font-family:'DM Mono',monospace;font-size:11px">${p.end||'—'}</td>
             <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${p.actualStart||'—'}</td>
@@ -1303,7 +1303,7 @@ function renderTimeline(){
         } else {
           html+=`<table><thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time</th><th>Status</th></tr></thead><tbody>`;
           html+=wi.map(o=>`<tr>
-            <td>${o.Lab}</td><td>${o.project||'—'}</td><td>${o.test}</td><td>${o.who||'—'}</td>
+            <td>${o.lab}</td><td>${o.project||'—'}</td><td>${o.test}</td><td>${o.who||'—'}</td>
             <td style="font-family:'DM Mono',monospace;font-size:11px">${o.date||'—'}</td>
             <td style="font-family:'DM Mono',monospace;font-size:11px">${o.enddate||'—'}</td>
             <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${o.actualStart||'—'}</td>
@@ -1342,11 +1342,11 @@ document.addEventListener('click', function(e) {
 
 // ── EDIT PROJECT ──────────────────────────────────────────────────────────
 function editProject(id) {
-  const p = Projects.find(x => x.id === id);
+  const p = projects.find(x => x.id === id);
   if (!p) return;
   editingProjId = id;
   document.getElementById('ep-name').value     = p.name    || '';
-  document.getElementById('ep-Lab').value      = p.Lab     || '';
+  document.getElementById('ep-lab').value      = p.lab     || '';
   document.getElementById('ep-start').value       = p.start       || '';
   document.getElementById('ep-end').value         = p.end         || '';
   document.getElementById('ep-actual-start').value = p.actualStart  || '';
@@ -1364,12 +1364,12 @@ function editProject(id) {
 
 async function saveProjectEdit() {
   const name = document.getElementById('ep-name').value.trim();
-  const Lab  = document.getElementById('ep-Lab').value.trim();
-  if (!name || !Lab) { alert('Project name and Lab are required.'); return; }
-  const idx = Projects.findIndex(x => x.id === editingProjId);
+  const lab  = document.getElementById('ep-lab').value.trim();
+  if (!name || !lab) { alert('Project name and lab are required.'); return; }
+  const idx = projects.findIndex(x => x.id === editingProjId);
   if (idx === -1) return;
   const upd = {
-    name, Lab,
+    name, lab,
     start_date:   document.getElementById('ep-start').value.trim(),
     end_date:     document.getElementById('ep-end').value.trim(),
     actual_start: document.getElementById('ep-actual-start').value.trim(),
@@ -1384,10 +1384,10 @@ async function saveProjectEdit() {
     notes:        document.getElementById('ep-notes').value.trim(),
   };
   try {
-    await supaFetch('Projects?id=eq.'+editingProjId, {
+    await supaFetch('projects?id=eq.'+editingProjId, {
       method:'PATCH', body: JSON.stringify(upd), prefer:'return=minimal', noJson:true
     });
-    Projects[idx] = {...Projects[idx], ...mapProject({id:editingProjId, ...upd,
+    projects[idx] = {...projects[idx], ...mapProject({id:editingProjId, ...upd,
       start_date:upd.start_date, end_date:upd.end_date,
       actual_start:upd.actual_start, actual_end:upd.actual_end,
       total_tests:upd.total_tests, tests_done:upd.tests_done
@@ -1402,7 +1402,7 @@ function editOccupancy(id) {
   const o = occupancy.find(x => x.id === id);
   if (!o) return;
   editingOccId = id;
-  document.getElementById('eo-Lab').value     = o.Lab     || '';
+  document.getElementById('eo-lab').value     = o.lab     || '';
   document.getElementById('eo-project').value = o.project || '';
   document.getElementById('eo-test').value    = o.test    || '';
   document.getElementById('eo-who').value     = o.who     || '';
@@ -1421,13 +1421,13 @@ function editOccupancy(id) {
 }
 
 async function saveOccupancyEdit() {
-  const Lab  = document.getElementById('eo-Lab').value.trim();
+  const lab  = document.getElementById('eo-lab').value.trim();
   const test = document.getElementById('eo-test').value.trim();
-  if (!Lab || !test) { alert('Lab name and test name are required.'); return; }
+  if (!lab || !test) { alert('Lab name and test name are required.'); return; }
   const idx = occupancy.findIndex(x => x.id === editingOccId);
   if (idx === -1) return;
   const upd = {
-    Lab, test,
+    lab, test,
     project:      document.getElementById('eo-project').value.trim(),
     Assigned To:   document.getElementById('eo-who').value.trim(),
     planned_start:document.getElementById('eo-date').value.trim(),
@@ -1463,7 +1463,7 @@ async function saveOccupancyEdit() {
 function printSection(section) {
   // Mark report page as print target and hide other sections
   const page = document.getElementById('page-reports');
-  const secProj = document.getElementById('section-Projects');
+  const secProj = document.getElementById('section-projects');
   const secOcc  = document.getElementById('section-occupancy');
   const kpi     = document.getElementById('rpt-kpi');
 
@@ -1472,7 +1472,7 @@ function printSection(section) {
   const origOccDisplay  = secOcc.style.display;
 
   // Set what to show
-  if (section === 'Projects') {
+  if (section === 'projects') {
     secOcc.style.display = 'none';
   } else if (section === 'occupancy') {
     secProj.style.display = 'none';
@@ -1496,7 +1496,7 @@ function printSection(section) {
 // ── PRINT TIMELINE ────────────────────────────────────────────────────────
 function printTimeline(mode) {
   const data   = tlData();
-  const Label  = tlType === 'Projects' ? 'Projects' : 'Occupancy';
+  const label  = tlType === 'projects' ? 'Projects' : 'Occupancy';
   const PALETTE= ['#00e5c3','#5b8cff','#4ade80','#fbbf24','#ff6b6b','#f97316','#a78bfa','#06b6d4'];
 
   // Build a standalone print window so it never disturbs current view
@@ -1512,7 +1512,7 @@ function printTimeline(mode) {
     return `<tr>
       <td>${p.name}</td>
       <td>${p.type?`<b>${p.type}</b>`:'—'}</td>
-      <td>${p.Lab||'—'}</td>
+      <td>${p.lab||'—'}</td>
       <td>${p.assigned||'—'}</td>
       <td>${p.start||'—'}</td><td>${p.end||'—'}</td>
       <td style="color:#4ade80">${p.actualStart||'—'}</td><td style="color:#4ade80">${p.actualEnd||'—'}</td>
@@ -1525,7 +1525,7 @@ function printTimeline(mode) {
     const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
     const util = tot>0 ? Math.round(th/tot*100)+'%' : '—';
     return `<tr>
-      <td>${o.Lab}</td><td>${o.project||'—'}</td><td>${o.test}</td><td>${o.who||'—'}</td>
+      <td>${o.lab}</td><td>${o.project||'—'}</td><td>${o.test}</td><td>${o.who||'—'}</td>
       <td>${o.date||'—'}</td><td>${o.enddate||'—'}</td>
       <td style="color:#4ade80">${o.actualStart||'—'}</td><td style="color:#4ade80">${o.actualEnd||'—'}</td>
       <td>${o.start||'?'}→${o.end||'?'}</td>
@@ -1542,7 +1542,7 @@ function printTimeline(mode) {
   }
 
   function statusSummary(items) {
-    const statuses = tlType==='Projects'
+    const statuses = tlType==='projects'
       ? ['Planning','In Progress','Completed','On Hold']
       : ['Scheduled','In Progress','Completed','Cancelled'];
     const cols = {'Planning':'#5b8cff','In Progress':'#00e5c3','Completed':'#4ade80','On Hold':'#fbbf24','Scheduled':'#5b8cff','Cancelled':'#ff6b6b'};
@@ -1563,9 +1563,9 @@ function printTimeline(mode) {
 
   // ── BUILD HTML ─────────────────────────────────────────────────────────
   let body = '';
-  const title = mode==='yearly' ? `Yearly Summary — ${Label}`
-              : mode==='monthly'? `Monthly Summary — ${Label}`
-              : `Timeline Report — ${Label} (${tlView==='year'?'All Years':tlView==='month'?tlYear:MONTHS[tlMonth]+' '+tlYear})`;
+  const title = mode==='yearly' ? `Yearly Summary — ${label}`
+              : mode==='monthly'? `Monthly Summary — ${label}`
+              : `Timeline Report — ${label} (${tlView==='year'?'All Years':tlView==='month'?tlYear:MONTHS[tlMonth]+' '+tlYear})`;
 
   if (mode === 'current') {
     // Print whatever is currently on screen
@@ -1578,12 +1578,12 @@ function printTimeline(mode) {
         <div class="section">
           <div class="sec-header">
             <span class="sec-title">📅 ${y}</span>
-            <span class="sec-count">${items.length} ${Label.toLowerCase()}</span>
+            <span class="sec-count">${items.length} ${label.toLowerCase()}</span>
           </div>
           <div class="pills">${statusSummary(items)}</div>
           <table>
-            <thead>${tlType==='Projects'?projHeader():occHeader()}</thead>
-            <tbody>${items.map(i=>tlType==='Projects'?projRow(i):occRow(i)).join('')}</tbody>
+            <thead>${tlType==='projects'?projHeader():occHeader()}</thead>
+            <tbody>${items.map(i=>tlType==='projects'?projRow(i):occRow(i)).join('')}</tbody>
           </table>
         </div>`;
     });
@@ -1602,12 +1602,12 @@ function printTimeline(mode) {
           <div class="section">
             <div class="sec-header">
               <span class="sec-title">🗓 ${MONTHS[m]} ${y}</span>
-              <span class="sec-count">${items.length} ${Label.toLowerCase()}</span>
+              <span class="sec-count">${items.length} ${label.toLowerCase()}</span>
             </div>
             <div class="pills">${statusSummary(items)}</div>
             <table>
-              <thead>${tlType==='Projects'?projHeader():occHeader()}</thead>
-              <tbody>${items.map(i=>tlType==='Projects'?projRow(i):occRow(i)).join('')}</tbody>
+              <thead>${tlType==='projects'?projHeader():occHeader()}</thead>
+              <tbody>${items.map(i=>tlType==='projects'?projRow(i):occRow(i)).join('')}</tbody>
             </table>
           </div>`;
       });
@@ -1646,7 +1646,7 @@ function printTimeline(mode) {
   <div class="print-header">
     <div>
       <h1>LabTrack — ${title}</h1>
-      <div style="margin-top:6px"><span class="badge">${tlType==='Projects'?'📁 Projects':'🔬 Occupancy'}</span></div>
+      <div style="margin-top:6px"><span class="badge">${tlType==='projects'?'📁 Projects':'🔬 Occupancy'}</span></div>
     </div>
     <div class="meta">
       Generated: ${new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'})}<br>
@@ -1666,58 +1666,58 @@ function printTimeline(mode) {
 // ── EXPORT TIMELINE CSV ───────────────────────────────────────────────────
 function exportTimelineCSV() {
   const data  = tlData();
-  const Label = tlType === 'Projects' ? 'Projects' : 'occupancy';
+  const label = tlType === 'projects' ? 'projects' : 'occupancy';
   let rows, headers;
 
-  if (tlType === 'Projects') {
+  if (tlType === 'projects') {
     headers = ['Year','Month','Project','Type','Lab','Assigned To','Planned Start','Planned End','Actual Start','Actual End','TTM Date','Status','Issues'];
     rows = data.filter(p=>tlDateOf(p)).map(p => {
       const d=parseDate(tlDateOf(p));
-      return [d?d.getFullYear():'',d?MONTHS[d.getMonth()]:'',p.name,p.type||'',p.Lab,p.assigned||'',p.start||'',p.end||'',p.actualStart||'',p.actualEnd||'',p.ttm||'',p.status,p.issues||''];
+      return [d?d.getFullYear():'',d?MONTHS[d.getMonth()]:'',p.name,p.type||'',p.lab,p.assigned||'',p.start||'',p.end||'',p.actualStart||'',p.actualEnd||'',p.ttm||'',p.status,p.issues||''];
     });
   } else {
     headers = ['Year','Month','Lab','Project','Test','Assigned To','Planned Start','Planned End','Actual Start','Actual End','Start Time','End Time','Test Hours','Downtime','Utilization%','Status'];
     rows = data.filter(o=>tlDateOf(o)).map(o => {
       const d=parseDate(tlDateOf(o));
       const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
-      return [d?d.getFullYear():'',d?MONTHS[d.getMonth()]:'',o.Lab,o.project||'',o.test,o.who||'',o.date||'',o.enddate||'',o.actualStart||'',o.actualEnd||'',o.start||'',o.end||'',th,dt,tot>0?Math.round(th/tot*100)+'%':'—',o.status];
+      return [d?d.getFullYear():'',d?MONTHS[d.getMonth()]:'',o.lab,o.project||'',o.test,o.who||'',o.date||'',o.enddate||'',o.actualStart||'',o.actualEnd||'',o.start||'',o.end||'',th,dt,tot>0?Math.round(th/tot*100)+'%':'—',o.status];
     });
   }
 
   const csv = [headers,...rows].map(r=>r.map(x=>`"${(x||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download = `Labtrack_timeline_${Label}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `labtrack_timeline_${label}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
 }
 
 
-// ── REPORT FILTER: Projects ───────────────────────────────────────────────
+// ── REPORT FILTER: PROJECTS ───────────────────────────────────────────────
 function filterReportProjects() {
   const search = (document.getElementById('rf-proj-search')?.value||'').toLowerCase();
   const status = document.getElementById('rf-proj-status')?.value||'';
   const type   = document.getElementById('rf-proj-type')?.value||'';
-  const Lab    = document.getElementById('rf-proj-Lab')?.value||'';
+  const lab    = document.getElementById('rf-proj-lab')?.value||'';
 
-  const filtered = Projects.filter(p => {
+  const filtered = projects.filter(p => {
     const matchSearch = !search ||
       (p.name||'').toLowerCase().includes(search) ||
       (p.assigned||'').toLowerCase().includes(search) ||
-      (p.Lab||'').toLowerCase().includes(search) ||
+      (p.lab||'').toLowerCase().includes(search) ||
       (p.issues||'').toLowerCase().includes(search);
     const matchStatus = !status || p.status === status;
     const matchType   = !type   || p.type   === type;
-    const matchLab    = !Lab    || p.Lab    === Lab;
+    const matchLab    = !lab    || p.lab    === lab;
     return matchSearch && matchStatus && matchType && matchLab;
   });
 
   const countEl = document.getElementById('rf-proj-count');
-  if(countEl) countEl.textContent = `Showing ${filtered.length} of ${Projects.length} Projects`;
+  if(countEl) countEl.textContent = `Showing ${filtered.length} of ${projects.length} projects`;
 
   document.getElementById('report-table').innerHTML = filtered.map(p=>`<tr>
     <td>${p.name}</td>
     <td>${p.type?`<span class="badge badge-blue">${p.type}</span>`:'—'}</td>
-    <td>${p.Lab}</td>
+    <td>${p.lab}</td>
     <td>${p.assigned||'—'}</td>
     <td style="font-family:'DM Mono',monospace;font-size:11px">${p.start||'—'}</td>
     <td style="font-family:'DM Mono',monospace;font-size:11px">${p.end||'—'}</td>
@@ -1729,11 +1729,11 @@ function filterReportProjects() {
     <td style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;text-align:center;color:${(p.totalTests||0)>0?(p.testsDone||0)/(p.totalTests||1)>=0.8?'var(--success)':(p.testsDone||0)/(p.totalTests||1)>=0.5?'var(--yellow)':'var(--warn)':'var(--muted)'}">${(p.totalTests||0)>0?Math.round((p.testsDone||0)/(p.totalTests||1)*100)+'%':'—'}</td>
     <td>${badge(p.status)}</td>
     <td>${p.issues?p.issues.split(',').map(i=>`<span class="issue-tag">${i.trim()}</span>`).join(''):'—'}</td>
-  </tr>`).join('') || `<tr><td colspan="14"><div class="empty-state">No Projects match the selected filters</div></td></tr>`;
+  </tr>`).join('') || `<tr><td colspan="14"><div class="empty-state">No projects match the selected filters</div></td></tr>`;
 }
 
 function clearReportProjFilters() {
-  ['rf-proj-search','rf-proj-status','rf-proj-type','rf-proj-Lab'].forEach(id=>{
+  ['rf-proj-search','rf-proj-status','rf-proj-type','rf-proj-lab'].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.value='';
   });
@@ -1744,17 +1744,17 @@ function clearReportProjFilters() {
 function filterReportOcc() {
   const search = (document.getElementById('rf-occ-search')?.value||'').toLowerCase();
   const status = document.getElementById('rf-occ-status')?.value||'';
-  const Lab    = document.getElementById('rf-occ-Lab')?.value||'';
+  const lab    = document.getElementById('rf-occ-lab')?.value||'';
   const util   = document.getElementById('rf-occ-util')?.value||'';
 
   const filtered = occupancy.filter(o => {
     const matchSearch = !search ||
-      (o.Lab||'').toLowerCase().includes(search) ||
+      (o.lab||'').toLowerCase().includes(search) ||
       (o.test||'').toLowerCase().includes(search) ||
       (o.who||'').toLowerCase().includes(search) ||
       (o.project||'').toLowerCase().includes(search);
     const matchStatus = !status || o.status === status;
-    const matchLab    = !Lab    || o.Lab    === Lab;
+    const matchLab    = !lab    || o.lab    === lab;
     const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
     const pct = tot>0 ? Math.round(th/tot*100) : -1;
     const matchUtil = !util ||
@@ -1773,7 +1773,7 @@ function filterReportOcc() {
     const pct=tot>0?Math.round(th/tot*100):-1;
     const utilCol=pct>=80?'var(--success)':pct>=50?'var(--yellow)':'var(--warn)';
     return `<tr>
-      <td><strong>${o.Lab}</strong></td>
+      <td><strong>${o.lab}</strong></td>
       <td>${o.project||'—'}</td>
       <td>${o.test}</td>
       <td>${o.who||'—'}</td>
@@ -1794,7 +1794,7 @@ function filterReportOcc() {
 }
 
 function clearReportOccFilters() {
-  ['rf-occ-search','rf-occ-status','rf-occ-Lab','rf-occ-util'].forEach(id=>{
+  ['rf-occ-search','rf-occ-status','rf-occ-lab','rf-occ-util'].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.value='';
   });
