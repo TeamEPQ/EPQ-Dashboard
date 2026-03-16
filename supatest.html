@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Supabase Connection Test</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 40px; background: #0d1b2a; color: white; }
+  h2 { color: #00e5c3; }
+  .box { background: #1a2f45; border-radius: 10px; padding: 20px; margin: 16px 0; font-size: 14px; }
+  .ok  { border-left: 4px solid #22c55e; }
+  .err { border-left: 4px solid #ef4444; }
+  .info{ border-left: 4px solid #3b82f6; }
+  button { background: #00e5c3; color: #0d1b2a; border: none; padding: 12px 28px;
+           border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+  pre { background: #0d1b2a; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; color: #00e5c3; }
+</style>
+</head>
+<body>
+
+<h2>🔬 Supabase Connection Test</h2>
+<p style="color:#aaa">This will tell us exactly what is working and what is not.</p>
+
+<div class="box info">
+  <b>Config</b><br>
+  URL: <span id="show-url"></span><br>
+  Key: <span id="show-key"></span>
+</div>
+
+<button onclick="runTest()">▶ Run Connection Test</button>
+
+<div id="results"></div>
+
+<script>
+const SUPA_URL = 'https://zgyvqqkawfdxcxyanyik.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpneXZxcWthd2ZkeGN4eWFueWlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMDg2NTEsImV4cCI6MjA4ODc4NDY1MX0.Fb9_ezyZW8jgmF5AgYlucrqKzH0DRMxGR0Gf0EwoPog';
+
+document.getElementById('show-url').textContent = SUPA_URL;
+document.getElementById('show-key').textContent = SUPA_KEY.substring(0,30) + '...' + SUPA_KEY.slice(-10);
+
+function log(msg, type='info') {
+  const d = document.createElement('div');
+  d.className = 'box ' + type;
+  d.innerHTML = msg;
+  document.getElementById('results').appendChild(d);
+}
+
+async function runTest() {
+  document.getElementById('results').innerHTML = '';
+  log('⏳ Starting tests...', 'info');
+
+  // Test 1 — Can we reach Supabase at all?
+  log('🔵 Test 1: Checking if Supabase URL is reachable...', 'info');
+  try {
+    const res = await fetch(SUPA_URL + '/rest/v1/', {
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY
+      }
+    });
+    log(`✅ Test 1 PASSED — Server responded with status: <b>${res.status}</b>`, 'ok');
+  } catch(e) {
+    log(`❌ Test 1 FAILED — Cannot reach Supabase at all<br><pre>${e.message}</pre>
+    <b>This means:</b> Network is blocking the connection or URL is wrong.`, 'err');
+    return;
+  }
+
+  // Test 2 — Can we read projects table?
+  log('🔵 Test 2: Reading projects table...', 'info');
+  try {
+    const res = await fetch(SUPA_URL + '/rest/v1/projects?limit=1', {
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Content-Type': 'application/json'
+      }
+    });
+    const text = await res.text();
+    if (res.ok) {
+      log(`✅ Test 2 PASSED — Projects table readable! Response: <pre>${text}</pre>`, 'ok');
+    } else {
+      log(`❌ Test 2 FAILED — Status ${res.status}<br><pre>${text}</pre>
+      <b>This means:</b> Table exists but RLS policy is blocking access.`, 'err');
+    }
+  } catch(e) {
+    log(`❌ Test 2 FAILED<br><pre>${e.message}</pre>`, 'err');
+  }
+
+  // Test 3 — Can we read occupancy table?
+  log('🔵 Test 3: Reading occupancy table...', 'info');
+  try {
+    const res = await fetch(SUPA_URL + '/rest/v1/occupancy?limit=1', {
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Content-Type': 'application/json'
+      }
+    });
+    const text = await res.text();
+    if (res.ok) {
+      log(`✅ Test 3 PASSED — Occupancy table readable! Response: <pre>${text}</pre>`, 'ok');
+    } else {
+      log(`❌ Test 3 FAILED — Status ${res.status}<br><pre>${text}</pre>
+      <b>This means:</b> Table exists but RLS policy is blocking access.`, 'err');
+    }
+  } catch(e) {
+    log(`❌ Test 3 FAILED<br><pre>${e.message}</pre>`, 'err');
+  }
+
+  // Test 4 — Can we insert a test row?
+  log('🔵 Test 4: Writing a test record to projects...', 'info');
+  try {
+    const res = await fetch(SUPA_URL + '/rest/v1/projects', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({ name: 'TEST_CONNECTION', status: 'Planning', lab: 'Test Lab' })
+    });
+    const text = await res.text();
+    if (res.ok) {
+      const row = JSON.parse(text);
+      log(`✅ Test 4 PASSED — Write works! Inserted row ID: <b>${row[0]?.id}</b>`, 'ok');
+      // Clean up
+      await fetch(SUPA_URL + '/rest/v1/projects?name=eq.TEST_CONNECTION', {
+        method: 'DELETE',
+        headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
+      });
+      log('🧹 Test row deleted (cleanup done)', 'info');
+    } else {
+      log(`❌ Test 4 FAILED — Status ${res.status}<br><pre>${text}</pre>
+      <b>This means:</b> INSERT policy is blocking writes.`, 'err');
+    }
+  } catch(e) {
+    log(`❌ Test 4 FAILED<br><pre>${e.message}</pre>`, 'err');
+  }
+
+  log('✅ All tests complete! Share a screenshot of the results above.', 'ok');
+}
+</script>
+</body>
+</html>
