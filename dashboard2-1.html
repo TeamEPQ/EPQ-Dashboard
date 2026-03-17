@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPQ Dashboard — EPQ EPQ Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14; --surface: #161b25; --card: #1e2535; --border: #2a3348;
+    --accent: #00e5c3; --accent2: #5b8cff; --warn: #ff6b6b;
+    --text: #e8edf5; --muted: #6b7a99; --success: #4ade80; --yellow: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+  html { overflow-x: hidden; }
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar { width: 200px; background: var(--surface); border-right: 1px solid var(--border); padding: 24px 0; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; overflow-y: auto; }
+  .logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); }
+  .logo span { font-size: 20px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
+  .logo small { display: block; font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+  .nav { padding: 16px 0; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; cursor: pointer; color: var(--muted); font-size: 13px; font-weight: 500; transition: all 0.2s; border-left: 3px solid transparent; }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,229,195,0.06); }
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .main { margin-left: 200px; flex: 1; padding: 24px; min-width: 0; overflow-x: hidden; max-width: calc(100vw - 200px); }
+  .page { display: none; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .page-header { margin-bottom: 28px; }
+  .page-header h1 { font-size: 24px; font-weight: 700; }
+  .page-header p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .kpi-card { cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+
+  /* Tooltip */
+  .kpi-tooltip { position: fixed; z-index: 9999; background: #1a2f45; border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 18px; min-width: 220px; max-width: 300px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5); pointer-events: none;
+    opacity: 0; transition: opacity 0.15s; font-size: 12px; }
+  .kpi-tooltip.show { opacity: 1; }
+  .kpi-tooltip-title { font-weight: 700; font-size: 13px; color: var(--accent); margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  .kpi-tooltip-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; color: var(--text); }
+  .kpi-tooltip-row span:first-child { color: var(--muted); font-size: 11px; }
+  .kpi-tooltip-row span:last-child { font-weight: 600; font-family: 'DM Mono', monospace; }
+  .kpi-tooltip-list { margin-top: 6px; }
+  .kpi-tooltip-item { padding: 3px 0; color: var(--text); font-size: 11px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
+  .stat-card.blue::before { background: var(--accent2); }
+  .stat-card.red::before { background: var(--warn); }
+  .stat-card.yellow::before { background: var(--yellow); }
+  .stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .stat-value { font-size: 32px; font-weight: 700; margin-top: 8px; }
+  .stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+  .form-card h2 { font-size: 15px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.8px; }
+  input, select, textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-family: 'Sora', sans-serif; font-size: 13px; transition: border-color 0.2s; outline: none; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 80px; }
+  select option { background: var(--surface); }
+  .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: #0d0f14; }
+  .btn-primary:hover { background: #00c9aa; transform: translateY(-1px); }
+  .btn-danger { background: rgba(255,107,107,0.15); color: var(--warn); border: 1px solid rgba(255,107,107,0.3); }
+  .btn-danger:hover { background: rgba(255,107,107,0.25); }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 500; transition: all 0.2s; }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+  .table-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 20px; } .table-card > table, .table-card > div > table { overflow-x: auto; display: block; width: 100%; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+  .table-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .table-header h2 { font-size: 14px; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; }
+  th { padding: 10px 16px; text-align: left; font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
+  td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
+  .badge-green { background: rgba(74,222,128,0.12); color: var(--success); }
+  .badge-blue { background: rgba(91,140,255,0.12); color: var(--accent2); }
+  .badge-yellow { background: rgba(251,191,36,0.12); color: var(--yellow); }
+  .badge-red { background: rgba(255,107,107,0.12); color: var(--warn); }
+  .badge-cyan { background: rgba(0,229,195,0.12); color: var(--accent); }
+  .issue-tag { display: inline-block; background: rgba(255,107,107,0.1); color: var(--warn); padding: 2px 7px; border-radius: 4px; font-size: 10px; margin: 2px 2px 2px 0; }
+  .search-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+  .search-bar input { flex: 1; }
+  .search-bar select { width: 160px; }
+  .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .report-chart { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+  .report-chart h3 { font-size: 13px; font-weight: 600; margin-bottom: 16px; color: var(--muted); text-transform: uppercase; font-family: 'DM Mono', monospace; letter-spacing: 1px; }
+  .bar-chart { display: flex; flex-direction: column; gap: 10px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-label { font-size: 11px; color: var(--muted); width: 110px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+  .bar-track { flex: 1; background: var(--bg); border-radius: 4px; height: 22px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 10px; font-weight: 600; font-family: 'DM Mono', monospace; transition: width 0.6s ease; min-width: 24px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .export-bar { display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 20px; flex-wrap: wrap; }
+  .empty-state { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
+  .empty-state .icon { font-size: 32px; margin-bottom: 8px; }
+
+  /* TIMELINE */
+  .tl-controls { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .period-tabs { display: flex; gap: 6px; }
+  .period-tab { padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); color: var(--muted); transition: all 0.2s; font-family: 'DM Mono', monospace; }
+  .period-tab.active { background: var(--accent); color: #0d0f14; border-color: var(--accent); }
+  .period-tab:hover:not(.active) { border-color: var(--accent2); color: var(--accent2); }
+  .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+  .crumb { cursor: pointer; color: var(--accent2); }
+  .crumb:hover { text-decoration: underline; }
+  .current-crumb { color: var(--text); font-weight: 600; }
+  .sep { color: var(--border); }
+  .drill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px,1fr)); gap: 14px; margin-bottom: 24px; }
+  .drill-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; cursor: pointer; transition: all 0.2s; }
+  .drill-card:hover { border-color: var(--accent2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .drill-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+  .drill-stat { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
+  .drill-stat span:first-child { color: var(--muted); }
+  .drill-stat span:last-child { font-family: 'DM Mono', monospace; font-weight: 600; }
+  .status-pills { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+  .spill { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 600; }
+  .mini-bar { height: 5px; border-radius: 3px; margin-top: 12px; display: flex; overflow: hidden; gap: 2px; }
+  .mini-bar div { height: 100%; border-radius: 2px; }
+  .section-sep { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1px; margin: 8px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .week-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1280px) {
+    .kpi-grid         { grid-template-columns: repeat(4,1fr); }
+    .charts-3col      { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 1100px) {
+    .main             { padding: 20px; }
+    .stats-row        { grid-template-columns: repeat(2,1fr); }
+    .kpi-grid         { grid-template-columns: repeat(2,1fr); }
+    .charts-3col      { grid-template-columns: 1fr 1fr; }
+    .charts-2col      { grid-template-columns: 1fr; }
+    .report-grid      { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .sidebar          { width: 180px; }
+    .main             { margin-left: 180px; padding: 16px; }
+    .charts-3col      { grid-template-columns: 1fr; }
+    .charts-2col      { grid-template-columns: 1fr; }
+    .stats-row        { grid-template-columns: repeat(2,1fr); }
+    .kpi-grid         { grid-template-columns: repeat(2,1fr); }
+    .form-grid        { grid-template-columns: 1fr; }
+    .tl-controls      { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 768px) {
+    .sidebar          { width: 56px; }
+    .sidebar .logo span, .sidebar .nav-item span,
+    .sidebar small, #srv-status span { display: none; }
+    .main             { margin-left: 56px; padding: 12px; }
+    .stats-row        { grid-template-columns: 1fr 1fr; }
+    .kpi-grid         { grid-template-columns: 1fr 1fr; }
+    .form-grid        { grid-template-columns: 1fr; }
+    .report-grid      { grid-template-columns: 1fr; }
+    .charts-3col      { grid-template-columns: 1fr; }
+    .charts-2col      { grid-template-columns: 1fr; }
+    .table-card table { font-size: 11px; }
+    .modal            { max-width: 98vw; padding: 16px; }
+    .drill-grid       { grid-template-columns: 1fr 1fr; }
+    .no-print[style*="grid-template-columns:1fr 1fr 1fr 1fr"] {
+      grid-template-columns: 1fr 1fr !important;
+    }
+  }
+  @media (max-width: 480px) {
+    .stats-row        { grid-template-columns: 1fr; }
+    .kpi-grid         { grid-template-columns: 1fr; }
+    .drill-grid       { grid-template-columns: 1fr; }
+    .main             { padding: 8px; }
+    .page-header h1   { font-size: 18px; }
+  }
+
+  /* EDIT MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; padding:20px; }
+  .modal-overlay.open { display:flex; animation:fadeIn 0.2s ease; }
+  .modal { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px; width:100%; max-width:720px; max-height:90vh; overflow-y:auto; position:relative; }
+  .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+  .modal-header h2 { font-size:16px; font-weight:700; color:var(--accent); }
+  .modal-close { background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; line-height:1; padding:4px 8px; border-radius:6px; transition:all 0.2s; }
+  .modal-close:hover { color:var(--warn); background:rgba(255,107,107,0.1); }
+  .modal-footer { display:flex; gap:10px; margin-top:20px; justify-content:flex-end; }
+  .btn-edit { background:rgba(91,140,255,0.15); color:var(--accent2); border:1px solid rgba(91,140,255,0.3); padding:6px 14px; border-radius:7px; cursor:pointer; font-family:'Sora',sans-serif; font-size:12px; font-weight:600; transition:all 0.2s; }
+  .btn-edit:hover { background:rgba(91,140,255,0.28); }
+  .btn-save { background:var(--accent); color:#0d0f14; padding:10px 24px; border-radius:8px; border:none; cursor:pointer; font-family:'Sora',sans-serif; font-size:13px; font-weight:700; transition:all 0.2s; }
+  .btn-save:hover { background:#00c9aa; transform:translateY(-1px); }
+  .btn-cancel { background:transparent; border:1px solid var(--border); color:var(--muted); padding:10px 20px; border-radius:8px; cursor:pointer; font-family:'Sora',sans-serif; font-size:13px; font-weight:500; transition:all 0.2s; }
+  .btn-cancel:hover { border-color:var(--warn); color:var(--warn); }
+
+  /* PRINT STYLES */
+  @media print {
+    .sidebar, .export-bar, .btn, .btn-outline, .btn-primary, .btn-danger, .btn-edit,
+    .search-bar, .btn-row, .form-card, .modal-overlay, .nav, .logo small,
+    .no-print { display: none !important; }
+    .main { margin-left: 0 !important; padding: 16px !important; max-width: 100% !important; }
+    .page { display: block !important; }
+    .page:not(.print-target) { display: none !important; }
+    body { background: #fff !important; color: #111 !important; }
+    .stat-card, .report-chart, .table-card { border: 1px solid #ddd !important; background: #fff !important; box-shadow: none !important; }
+    .stat-value { color: #111 !important; }
+    .stat-label, .stat-sub { color: #555 !important; }
+    th { color: #333 !important; border-bottom: 1px solid #ccc !important; }
+    td { border-bottom: 1px solid #eee !important; color: #111 !important; }
+    .bar-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .stat-card::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .report-chart h3 { color: #333 !important; }
+    .chart-section-title { color: #111 !important; }
+    .kpi-icon { display: none; }
+  }
+
+  /* COLORFUL REPORT ENHANCEMENTS */
+  .report-section-title {
+    font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    font-family: 'DM Mono', monospace; color: var(--muted);
+    margin: 28px 0 14px; padding-bottom: 10px;
+    border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 8px;
+  }
+  .report-section-title span { color: var(--accent); }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 28px; }
+  .kpi-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px; position: relative; overflow: hidden;
+  }
+  .kpi-card::after {
+    content: ''; position: absolute; bottom: -20px; right: -20px;
+    width: 80px; height: 80px; border-radius: 50%; opacity: 0.08;
+  }
+  .kpi-card.c1 { border-top: 3px solid #00e5c3; } .kpi-card.c1::after { background: #00e5c3; }
+  .kpi-card.c2 { border-top: 3px solid #5b8cff; } .kpi-card.c2::after { background: #5b8cff; }
+  .kpi-card.c3 { border-top: 3px solid #4ade80; } .kpi-card.c3::after { background: #4ade80; }
+  .kpi-card.c4 { border-top: 3px solid #fbbf24; } .kpi-card.c4::after { background: #fbbf24; }
+  .kpi-card.c5 { border-top: 3px solid #ff6b6b; } .kpi-card.c5::after { background: #ff6b6b; }
+  .kpi-card.c6 { border-top: 3px solid #f97316; } .kpi-card.c6::after { background: #f97316; }
+  .kpi-card.c7 { border-top: 3px solid #a78bfa; } .kpi-card.c7::after { background: #a78bfa; }
+  .kpi-card.c8 { border-top: 3px solid #06b6d4; } .kpi-card.c8::after { background: #06b6d4; }
+  .kpi-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+  .kpi-label { font-size: 10px; color: var(--muted); font-family: 'DM Mono',monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .kpi-value { font-size: 36px; font-weight: 800; margin: 6px 0 4px; line-height: 1; }
+  .kpi-sub { font-size: 11px; color: var(--muted); }
+  .kpi-card.c1 .kpi-value { color: #00e5c3; }
+  .kpi-card.c2 .kpi-value { color: #5b8cff; }
+  .kpi-card.c3 .kpi-value { color: #4ade80; }
+  .kpi-card.c4 .kpi-value { color: #fbbf24; }
+  .kpi-card.c5 .kpi-value { color: #ff6b6b; }
+  .kpi-card.c6 .kpi-value { color: #f97316; }
+  .kpi-card.c7 .kpi-value { color: #a78bfa; }
+  .kpi-card.c8 .kpi-value { color: #06b6d4; }
+
+  .chart-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px; position: relative;
+  }
+  .chart-card h3 {
+    font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase;
+    font-family: 'DM Mono',monospace; letter-spacing: 1.2px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chart-card h3 .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .charts-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+  .charts-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+  .bar-row2 { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .bar-label2 { font-size: 11px; color: var(--muted); width: 100px; text-align: right; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track2 { flex: 1; background: rgba(255,255,255,0.05); border-radius: 6px; height: 24px; overflow: hidden; }
+  .bar-fill2 { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 700; font-family: 'DM Mono',monospace; transition: width 0.7s ease; min-width: 28px; }
+  .donut-wrap { display: flex; gap: 16px; align-items: center; }
+  .donut-svg { flex-shrink: 0; }
+  .donut-legend2 { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-sq { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .progress-bar-wrap { margin-bottom: 12px; }
+  .progress-label-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
+  .progress-track { height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 5px; transition: width 0.7s ease; }
+
+  .sep-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .section-print-btn {
+    padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); font-family: 'Sora',sans-serif;
+    font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .section-print-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,195,0.06); }
+  .section-print-btn.blue:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(91,140,255,0.06); }
+  .section-print-btn.green:hover { border-color: var(--success); color: var(--success); background: rgba(74,222,128,0.06); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="logo"><span>EPQ EPQ Dashboard</span><small>v2.0 ☁️ Cloud</small><div id="srv-status" style="font-size:10px;margin-top:8px;display:flex;align-items:center;gap:4px;color:var(--accent2)">🔵 <span>Connecting...</span></div></div>
+  <nav class="nav">
+    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">⬡</span><span>EPQ EPQ Dashboard</span></div>
+    <div class="nav-item" onclick="showPage('projects',this)"><span class="icon">◈</span><span>Projects</span></div>
+    <div class="nav-item" onclick="showPage('occupancy',this)"><span class="icon">◉</span><span>Lab Occupancy</span></div>
+    <div class="nav-item" onclick="showPage('reports',this)"><span class="icon">▦</span><span>Reports</span></div>
+    <div class="nav-item" onclick="showPage('timeline',this)"><span class="icon">◫</span><span>Timeline Report</span></div>
+  </nav>
+</aside>
+
+<main class="main">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="page-header"><h1>EPQ Dashboard</h1><p>Overview of all projects and lab activity</p></div>
+  <div class="stats-row" id="stats-row"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+    <div class="table-card">
+      <div class="table-header"><h2>Recent Projects</h2></div>
+      <table><thead><tr><th>Project</th><th>Status</th><th>End Date</th></tr></thead><tbody id="dash-projects"></tbody></table>
+    </div>
+    <div class="table-card">
+      <div class="table-header"><h2>Lab Occupancy</h2></div>
+      <table><thead><tr><th>Lab</th><th>Test</th><th>Time Slot</th></tr></thead><tbody id="dash-occupancy"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="page" id="page-projects">
+  <div class="page-header"><h1>Projects</h1><p>Add and manage research projects</p></div>
+  <div class="form-card">
+    <h2>➕ Add New Project</h2>
+    <div class="form-grid">
+      <div class="form-group"><label>Project Name</label><input type="text" id="p-name" placeholder="e.g. Protein Analysis Study"></div>
+      <div class="form-group"><label>Lab Name</label><select id="p-lab"><option value="">— Select Lab —</option>
+              <option>RAC APF-3</option>
+              <option>RAC APF-4</option>
+              <option>VRF APF</option>
+              <option>RAC Sound Lab</option>
+              <option>GDC PAC APF Lab-1</option>
+              <option>GDC PAC APF Lab-2</option>
+              <option>GDC PAC APF Lab-3</option>
+              <option>GDC PAC APF Lab-4</option>
+              <option>GDC PAC APF Lab-5</option>
+              <option>GDC RAC APF Lab-1</option>
+              <option>GDC PAC HALT LAB-1</option>
+              <option>GDC PAC HALT LAB-2</option>
+              <option>GDC PAC HALT LAB-3</option>
+              <option>GDC PAC HALT LAB-4</option>
+              <option>GDC PAC HALT LAB-5</option>
+              <option>GDC PAC EMC LAB</option>
+              <option>GDC Safety Lab</option>
+              <option>GDC PAC Sound LAB</option>
+              <option>GDC RAC Sound LAB</option>
+              <option>GDC Software DQA LAB</option>
+              <option>GDC Structure Test Lab</option></select></div>
+      <div class="form-group"><label>Planned Start Date</label><input type="date" id="p-start" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Planned End Date</label><input type="date" id="p-end" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Actual Start Date</label><input type="date" id="p-actual-start" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Actual End Date</label><input type="date" id="p-actual-end" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>TTM Date</label><input type="date" id="p-ttm" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Assigned To</label><input type="text" id="p-assigned" placeholder="e.g. John, Priya"></div>
+      <div class="form-group"><label>Project Type</label>
+        <select id="p-type"><option value="">— Select Type —</option><option>RAC</option><option>WAC</option><option>VRF</option></select>
+      </div>
+      <div class="form-group"><label>Status</label>
+        <select id="p-status"><option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option></select>
+      </div>
+      <div class="form-group"><label>Issue List (comma separated)</label><input type="text" id="p-issues" placeholder="e.g. Equipment delay, Data gap"></div>
+      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="p-total-tests" placeholder="e.g. 10" min="0"></div>
+      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="p-tests-done" placeholder="e.g. 6" min="0"></div>
+      <div class="form-group full"><label>Notes</label><textarea id="p-notes" placeholder="Any additional details..."></textarea></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="addProject()">Add Project</button></div>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="proj-search" placeholder="Search projects..." oninput="renderProjects()">
+    <select id="proj-filter" onchange="renderProjects()">
+      <option value="">All Statuses</option><option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option>
+    </select>
+  </div>
+  <div class="table-card">
+    <div class="table-header"><h2>All Projects</h2><span id="proj-count" style="font-size:12px;color:var(--muted)"></span></div>
+    <table>
+      <thead><tr><th>Project</th><th>Type</th><th>Lab</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>TTM Date</th><th>Assigned To</th><th>Status</th><th>Issues</th><th>Action</th></tr></thead>
+      <tbody id="projects-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- OCCUPANCY -->
+<div class="page" id="page-occupancy">
+  <div class="page-header"><h1>Lab Occupancy</h1><p>Track who is using which lab, when, and for what</p></div>
+  <div class="form-card">
+    <h2>➕ Add Occupancy Entry</h2>
+    <div class="form-grid">
+      <div class="form-group"><label>Lab Name</label><select id="o-lab"><option value="">— Select Lab —</option>
+              <option>RAC APF-3</option>
+              <option>RAC APF-4</option>
+              <option>VRF APF</option>
+              <option>RAC Sound Lab</option>
+              <option>GDC PAC APF Lab-1</option>
+              <option>GDC PAC APF Lab-2</option>
+              <option>GDC PAC APF Lab-3</option>
+              <option>GDC PAC APF Lab-4</option>
+              <option>GDC PAC APF Lab-5</option>
+              <option>GDC RAC APF Lab-1</option>
+              <option>GDC PAC HALT LAB-1</option>
+              <option>GDC PAC HALT LAB-2</option>
+              <option>GDC PAC HALT LAB-3</option>
+              <option>GDC PAC HALT LAB-4</option>
+              <option>GDC PAC HALT LAB-5</option>
+              <option>GDC PAC EMC LAB</option>
+              <option>GDC Safety Lab</option>
+              <option>GDC PAC Sound LAB</option>
+              <option>GDC RAC Sound LAB</option>
+              <option>GDC Software DQA LAB</option>
+              <option>GDC Structure Test Lab</option></select></div>
+      <div class="form-group"><label>Project Name</label><input type="text" id="o-project" placeholder="e.g. Protein Analysis"></div>
+      <div class="form-group"><label>Test Name</label><input type="text" id="o-test" placeholder="e.g. Product SIT"></div>
+      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="o-who" placeholder="e.g. John"></div>
+      <div class="form-group"><label>Planned Start Date</label><input type="date" id="o-date" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Planned End Date</label><input type="date" id="o-enddate" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Actual Start Date</label><input type="date" id="o-actual-start" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Actual End Date</label><input type="date" id="o-actual-end" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Start Time</label><input type="time" id="o-start"></div>
+      <div class="form-group"><label>End Time</label><input type="time" id="o-end"></div>
+      <div class="form-group"><label>Test Hours</label><input type="number" id="o-testhours" placeholder="e.g. 8" min="0" step="0.5"></div>
+      <div class="form-group"><label>Downtime Hours</label><input type="number" id="o-downtime" placeholder="e.g. 2" min="0" step="0.5"></div>
+      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="o-total-tests" placeholder="e.g. 10" min="0"></div>
+      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="o-tests-done" placeholder="e.g. 6" min="0"></div>
+      <div class="form-group"><label>Status</label>
+        <select id="o-status"><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option></select>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="addOccupancy()">Add Entry</button></div>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="occ-search" placeholder="Search by lab, project, test..." oninput="renderOccupancy()">
+    <select id="occ-filter" onchange="renderOccupancy()">
+      <option value="">All Statuses</option><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option>
+    </select>
+  </div>
+  <div class="table-card">
+    <div class="table-header"><h2>Occupancy Log</h2><span id="occ-count" style="font-size:12px;color:var(--muted)"></span></div>
+    <table>
+      <thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time Slot</th><th>Test Hrs</th><th>Downtime Hrs</th><th>Utilization %</th><th>Total Tests</th><th>Tests Done</th><th>Test %</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody id="occupancy-table"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- REPORTS -->
+<div class="page" id="page-reports">
+  <div class="page-header">
+    <h1>Reports & Analytics</h1>
+    <p>Colorful summaries, charts and exports for projects & lab utilization</p>
+  </div>
+
+  <!-- MASTER EXPORT BAR -->
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+    <div class="sep-actions">
+      <span style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Overall</span>
+      <button class="section-print-btn green" onclick="printSection('all')">🖨 Print Full Report</button>
+      <button class="btn-outline" onclick="exportCSV('projects')">⬇ Projects CSV</button>
+      <button class="btn-outline" onclick="exportCSV('occupancy')">⬇ Occupancy CSV</button>
+    </div>
+    <div class="sep-actions">
+      <button class="section-print-btn" onclick="printSection('projects')">🖨 Print Project Report</button>
+      <button class="section-print-btn blue" onclick="printSection('occupancy')">🖨 Print Lab Utilization Report</button>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-grid" id="rpt-kpi"></div>
+
+  <!-- ═══ SECTION 1: PROJECT REPORT ═══ -->
+  <div id="section-projects">
+    <div class="report-section-title"><span>◈</span> Project Report</div>
+    <div class="charts-3col">
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#00e5c3"></span>Projects by Status</h3>
+        <div id="rpt-status"></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#5b8cff"></span>Projects by Type</h3>
+        <div id="rpt-type"></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#a78bfa"></span>Projects per Person</h3>
+        <div id="rpt-person"></div>
+      </div>
+    </div>
+    <div class="charts-2col">
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#ff6b6b"></span>Issues Breakdown</h3>
+        <div id="rpt-issues"></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#fbbf24"></span>Completion Rate</h3>
+        <div id="rpt-completion"></div>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="table-header">
+        <h2>📋 Project Details</h2>
+        <button class="section-print-btn no-print" onclick="printSection('projects')">🖨 Print</button>
+      </div>
+      <div class="no-print" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);">
+        <input type="text"   id="rf-proj-search"  placeholder="🔍 Search project / assigned..." oninput="filterReportProjects()" style="font-size:12px;padding:8px 12px;">
+        <select id="rf-proj-status"  onchange="filterReportProjects()" style="font-size:12px;padding:8px 12px;">
+          <option value="">All Statuses</option>
+          <option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option>
+        </select>
+        <select id="rf-proj-type"    onchange="filterReportProjects()" style="font-size:12px;padding:8px 12px;">
+          <option value="">All Types</option>
+          <option>RAC</option><option>WAC</option><option>VRF</option>
+        </select>
+        <select id="rf-proj-lab"     onchange="filterReportProjects()" style="font-size:12px;padding:8px 12px;">
+          <option value="">All Labs</option>
+        </select>
+        <button onclick="clearReportProjFilters()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'Sora',sans-serif;transition:all 0.2s" onmouseover="this.style.color='var(--warn)';this.style.borderColor='var(--warn)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">✕ Clear</button>
+      </div>
+      <div style="padding:6px 16px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;border-bottom:1px solid var(--border);background:var(--surface)" id="rf-proj-count"></div>
+      <table>
+        <thead><tr><th>Project</th><th>Type</th><th>Lab</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>TTM Date</th><th>Total Tests</th><th>Tests Done</th><th>Test %</th><th>Status</th><th>Issues</th></tr></thead>
+        <tbody id="report-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: LAB UTILISATION REPORT ═══ -->
+  <div id="section-occupancy" style="margin-top:8px;">
+    <div class="report-section-title"><span>◉</span> Lab Utilization Report</div>
+    <div class="charts-3col">
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#5b8cff"></span>Occupancy per Lab</h3>
+        <div id="rpt-occ-lab"></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#fbbf24"></span>Test Activity</h3>
+        <div id="rpt-tests"></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#4ade80"></span>Session Status</h3>
+        <div id="rpt-occ-status"></div>
+      </div>
+    </div>
+    <div class="charts-2col" style="margin-bottom:20px">
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#00e5c3"></span>Lab Utilization % (Test Hrs / Total Hrs)</h3>
+        <div id="rpt-lab-util"></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#5b8cff"></span>Test Hours vs Downtime per Lab</h3>
+        <div id="rpt-lab-hours"></div>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="table-header">
+        <h2>🔬 Lab Occupancy Details</h2>
+        <button class="section-print-btn blue no-print" onclick="printSection('occupancy')">🖨 Print</button>
+      </div>
+      <div class="no-print" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);">
+        <input type="text"   id="rf-occ-search"  placeholder="🔍 Search lab / test / assigned..." oninput="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
+        <select id="rf-occ-status"  onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
+          <option value="">All Statuses</option>
+          <option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option>
+        </select>
+        <select id="rf-occ-lab"     onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
+          <option value="">All Labs</option>
+        </select>
+        <select id="rf-occ-util"    onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
+          <option value="">All Utilization</option>
+          <option value="high">🟢 High (≥80%)</option>
+          <option value="mid">🟡 Medium (50–79%)</option>
+          <option value="low">🔴 Low (&lt;50%)</option>
+          <option value="none">— No data</option>
+        </select>
+        <button onclick="clearReportOccFilters()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'Sora',sans-serif;transition:all 0.2s" onmouseover="this.style.color='var(--warn)';this.style.borderColor='var(--warn)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">✕ Clear</button>
+      </div>
+      <div style="padding:6px 16px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;border-bottom:1px solid var(--border);background:var(--surface)" id="rf-occ-count"></div>
+      <table>
+        <thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time Slot</th><th>Test Hrs</th><th>Downtime</th><th>Utilization</th><th>Total Tests</th><th>Tests Done</th><th>Test %</th><th>Status</th></tr></thead>
+        <tbody id="rpt-occ-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE REPORT -->
+<div class="page" id="page-timeline">
+  <div class="page-header"><h1>Timeline Report</h1><p>Drill down: Year → Month → Week with status breakdown</p></div>
+  <div class="tl-controls">
+    <div class="period-tabs">
+      <div class="period-tab active" id="tab-proj" onclick="switchType('projects')">📁 Projects</div>
+      <div class="period-tab" id="tab-occ" onclick="switchType('occupancy')">🔬 Occupancy</div>
+    </div>
+    <div class="breadcrumb" id="tl-bc"></div>
+  </div>
+  <!-- PRINT ACTIONS -->
+  <div class="no-print" id="tl-print-bar" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:12px;align-items:center;">
+    <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-right:4px;">Print / Export</span>
+    <button class="section-print-btn green" onclick="printTimeline('current')">🖨 Print Current View</button>
+    <button class="section-print-btn" onclick="printTimeline('yearly')">🖨 Print Yearly Summary</button>
+    <button class="section-print-btn blue" onclick="printTimeline('monthly')">🖨 Print Monthly Summary</button>
+    <button class="section-print-btn" style="margin-left:auto" onclick="exportTimelineCSV()">⬇ Export CSV</button>
+  </div>
+  <div id="tl-body"></div>
+</div>
+
+
+<!-- EDIT PROJECT MODAL -->
+<div class="modal-overlay" id="edit-proj-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>✏️ Edit Project</h2>
+      <button class="modal-close" onclick="closeModal('edit-proj-modal')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Project Name</label><input type="text" id="ep-name" placeholder="Project name"></div>
+      <div class="form-group"><label>Lab Name</label><select id="ep-lab"><option value="">— Select Lab —</option>
+              <option>RAC APF-3</option>
+              <option>RAC APF-4</option>
+              <option>VRF APF</option>
+              <option>RAC Sound Lab</option>
+              <option>GDC PAC APF Lab-1</option>
+              <option>GDC PAC APF Lab-2</option>
+              <option>GDC PAC APF Lab-3</option>
+              <option>GDC PAC APF Lab-4</option>
+              <option>GDC PAC APF Lab-5</option>
+              <option>GDC RAC APF Lab-1</option>
+              <option>GDC PAC HALT LAB-1</option>
+              <option>GDC PAC HALT LAB-2</option>
+              <option>GDC PAC HALT LAB-3</option>
+              <option>GDC PAC HALT LAB-4</option>
+              <option>GDC PAC HALT LAB-5</option>
+              <option>GDC PAC EMC LAB</option>
+              <option>GDC Safety Lab</option>
+              <option>GDC PAC Sound LAB</option>
+              <option>GDC RAC Sound LAB</option>
+              <option>GDC Software DQA LAB</option>
+              <option>GDC Structure Test Lab</option></select></div>
+      <div class="form-group"><label>Planned Start Date</label><input type="date" id="ep-start" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Planned End Date</label><input type="date" id="ep-end" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Actual Start Date</label><input type="date" id="ep-actual-start" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Actual End Date</label><input type="date" id="ep-actual-end" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>TTM Date</label><input type="date" id="ep-ttm" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Assigned To</label><input type="text" id="ep-assigned" placeholder="e.g. John"></div>
+      <div class="form-group"><label>Project Type</label>
+        <select id="ep-type"><option value="">— Select Type —</option><option>RAC</option><option>WAC</option><option>VRF</option></select>
+      </div>
+      <div class="form-group"><label>Status</label>
+        <select id="ep-status"><option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option></select>
+      </div>
+      <div class="form-group"><label>Issue List (comma separated)</label><input type="text" id="ep-issues" placeholder="e.g. Equipment delay"></div>
+      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="ep-total-tests" placeholder="e.g. 10" min="0"></div>
+      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="ep-tests-done" placeholder="e.g. 6" min="0"></div>
+      <div class="form-group full"><label>Notes</label><textarea id="ep-notes" placeholder="Additional notes..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('edit-proj-modal')">Cancel</button>
+      <button class="btn-save" onclick="saveProjectEdit()">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT OCCUPANCY MODAL -->
+<div class="modal-overlay" id="edit-occ-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>✏️ Edit Occupancy Entry</h2>
+      <button class="modal-close" onclick="closeModal('edit-occ-modal')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Lab Name</label><select id="eo-lab"><option value="">— Select Lab —</option>
+              <option>RAC APF-3</option>
+              <option>RAC APF-4</option>
+              <option>VRF APF</option>
+              <option>RAC Sound Lab</option>
+              <option>GDC PAC APF Lab-1</option>
+              <option>GDC PAC APF Lab-2</option>
+              <option>GDC PAC APF Lab-3</option>
+              <option>GDC PAC APF Lab-4</option>
+              <option>GDC PAC APF Lab-5</option>
+              <option>GDC RAC APF Lab-1</option>
+              <option>GDC PAC HALT LAB-1</option>
+              <option>GDC PAC HALT LAB-2</option>
+              <option>GDC PAC HALT LAB-3</option>
+              <option>GDC PAC HALT LAB-4</option>
+              <option>GDC PAC HALT LAB-5</option>
+              <option>GDC PAC EMC LAB</option>
+              <option>GDC Safety Lab</option>
+              <option>GDC PAC Sound LAB</option>
+              <option>GDC RAC Sound LAB</option>
+              <option>GDC Software DQA LAB</option>
+              <option>GDC Structure Test Lab</option></select></div>
+      <div class="form-group"><label>Project Name</label><input type="text" id="eo-project" placeholder="Project name"></div>
+      <div class="form-group"><label>Test Name</label><input type="text" id="eo-test" placeholder="e.g. Product SIT"></div>
+      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="eo-who" placeholder="e.g. John"></div>
+      <div class="form-group"><label>Planned Start Date</label><input type="date" id="eo-date" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Planned End Date</label><input type="date" id="eo-enddate" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Actual Start Date</label><input type="date" id="eo-actual-start" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Actual End Date</label><input type="date" id="eo-actual-end" style="color-scheme:dark;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;"></div>
+      <div class="form-group"><label>Start Time</label><input type="time" id="eo-start"></div>
+      <div class="form-group"><label>End Time</label><input type="time" id="eo-end"></div>
+      <div class="form-group"><label>Test Hours</label><input type="number" id="eo-testhours" placeholder="e.g. 8" min="0" step="0.5"></div>
+      <div class="form-group"><label>Downtime Hours</label><input type="number" id="eo-downtime" placeholder="e.g. 2" min="0" step="0.5"></div>
+      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="eo-total-tests" placeholder="e.g. 10" min="0"></div>
+      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="eo-tests-done" placeholder="e.g. 6" min="0"></div>
+      <div class="form-group"><label>Status</label>
+        <select id="eo-status"><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('edit-occ-modal')">Cancel</button>
+      <button class="btn-save" onclick="saveOccupancyEdit()">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+<div class="kpi-tooltip" id="kpi-tooltip"></div>
+
+<script>
+// v1773558911 - cache bust
+let projects = [];
+let occupancy = [];
+
+// ── SUPABASE CONFIG ───────────────────────────────────────────────────────
+const SUPA_URL = 'https://zgyvqqkawfdxcxyanyik.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpneXZxcWthd2ZkeGN4eWFueWlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMDg2NTEsImV4cCI6MjA4ODc4NDY1MX0.Fb9_ezyZW8jgmF5AgYlucrqKzH0DRMxGR0Gf0EwoPog';
+
+async function supaFetch(endpoint, options={}) {
+  const res = await fetch(SUPA_URL + '/rest/v1/' + endpoint, {
+    ...options,
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': options.prefer || 'return=representation',
+      'X-Client-Info': 'supabase-js/2.0.0',
+      ...(options.headers||{})
+    }
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  return options.noJson ? null : res.json();
+}
+
+// ── DATE HELPERS ─────────────────────────────────────────────────────────
+// Convert yyyy-mm-dd (date input) → dd/mm/yyyy (display/storage)
+function toDisplay(d) {
+  if (!d) return '';
+  if (d.includes('/')) return d; // already display format
+  const [y,m,day] = d.split('-');
+  return day && m && y ? `${day}/${m}/${y}` : d;
+}
+// Convert dd/mm/yyyy (storage) → yyyy-mm-dd (date input value)
+function toPicker(d) {
+  if (!d) return '';
+  if (d.includes('-')) return d; // already picker format
+  const [day,m,y] = d.split('/');
+  return day && m && y ? `${y}-${m}-${day}` : '';
+}
+// Set a date picker value from stored dd/mm/yyyy
+function setDate(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = toPicker(val);
+}
+// Get date picker value as dd/mm/yyyy
+function getDate(id) {
+  const el = document.getElementById(id);
+  if (!el || !el.value) return '';
+  return toDisplay(el.value);
+}
+
+function mapProject(r) {
+  return {
+    id: r.id, name: r.name, type: r.type||'', lab: r.lab||'',
+    assigned: r.assigned||'', status: r.status||'Planning',
+    start: r.start_date||'', end: r.end_date||'',
+    actualStart: r.actual_start||'', actualEnd: r.actual_end||'',
+    ttm: r.ttm||'',
+    totalTests: r.total_tests||0, testsDone: r.tests_done||0,
+    issues: r.issues||'', notes: r.notes||''
+  };
+}
+
+function mapOccupancy(r) {
+  return {
+    id: r.id, lab: r.lab||'', project: r.project||'',
+    test: r.test||'', who: r.assigned_to||'',
+    status: r.status||'Scheduled',
+    date: r.planned_start||'', enddate: r.planned_end||'',
+    actualStart: r.actual_start||'', actualEnd: r.actual_end||'',
+    start: r.start_time||'', end: r.end_time||'',
+    testHours: r.test_hours||0, downtime: r.downtime||0,
+    totalTests: r.total_tests||0, testsDone: r.tests_done||0
+  };
+}
+
+async function loadData() {
+  setStatus('loading');
+  try {
+    const [pRows, oRows] = await Promise.all([
+      supaFetch('projects?order=id.asc&limit=1000'),
+      supaFetch('occupancy?order=id.asc&limit=1000')
+    ]);
+    projects  = (pRows||[]).map(mapProject);
+    occupancy = (oRows||[]).map(mapOccupancy);
+    setStatus('online');
+  } catch(e) {
+    console.error('Supabase load error:', e);
+    setStatus('error');
+  }
+  renderDashboard();
+}
+
+// Save is now handled per-operation (insert/update/delete)
+async function save() {
+  // No-op — all saves go directly via supaInsert/supaUpdate/supaDelete
+}
+
+function setStatus(state) {
+  const el = document.getElementById('srv-status');
+  if (!el) return;
+  if (state === 'online') {
+    el.innerHTML = '🟢 <span>Live — Supabase Cloud</span>';
+    el.style.color = 'var(--success)';
+  } else if (state === 'loading') {
+    el.innerHTML = '🔵 <span>Connecting to database...</span>';
+    el.style.color = 'var(--accent2)';
+  } else {
+    el.innerHTML = '🔴 <span>Database error — check console</span>';
+    el.style.color = 'var(--warn)';
+  }
+}
+
+// ── KEEP SUPABASE AWAKE (ping every 4 minutes) ──────────────────────────
+setInterval(async () => {
+  try {
+    await fetch(SUPA_URL + '/rest/v1/projects?limit=1', {
+      headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
+    });
+  } catch(e) {}
+}, 240000); // 4 minutes
+
+// Auto-refresh every 30 seconds
+setInterval(async () => {
+  try {
+    const [pRows, oRows] = await Promise.all([
+      supaFetch('projects?order=id.asc&limit=1000'),
+      supaFetch('occupancy?order=id.asc&limit=1000')
+    ]);
+    projects  = (pRows||[]).map(mapProject);
+    occupancy = (oRows||[]).map(mapOccupancy);
+    renderDashboard();
+  } catch(e) {}
+}, 30000);
+
+// ── DATE HELPERS ──────────────────────────────────────
+function autoSlash(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length > 2) v = v.slice(0,2)+'/'+v.slice(2);
+  if (v.length > 5) v = v.slice(0,5)+'/'+v.slice(5);
+  el.value = v;
+}
+function parseDate(s) {
+  if (!s) return null;
+  const p = s.split('/');
+  if (p.length!==3) return null;
+  const [d,m,y] = p.map(Number);
+  if (!d||!m||!y||y<1000) return null;
+  return new Date(y,m-1,d);
+}
+function getYear(s)  { const d=parseDate(s); return d?d.getFullYear():null; }
+function getMonth(s) { const d=parseDate(s); return d?d.getMonth():null; }
+function weekOfMonth(s) { const d=parseDate(s); return d?Math.ceil(d.getDate()/7):null; }
+
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SCOL={ 'Planning':'#5b8cff','In Progress':'#00e5c3','Completed':'#4ade80','On Hold':'#fbbf24','Scheduled':'#5b8cff','Cancelled':'#ff6b6b' };
+const SBG={ 'Planning':'rgba(91,140,255,0.14)','In Progress':'rgba(0,229,195,0.14)','Completed':'rgba(74,222,128,0.14)','On Hold':'rgba(251,191,36,0.14)','Scheduled':'rgba(91,140,255,0.14)','Cancelled':'rgba(255,107,107,0.14)' };
+
+// ── NAV ───────────────────────────────────────────────
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+  if(name==='dashboard') renderDashboard();
+  if(name==='projects')  renderProjects();
+  if(name==='occupancy') renderOccupancy();
+  if(name==='reports')   renderReports();
+  if(name==='timeline')  { tlType='projects'; tlView='year'; tlYear=null; tlMonth=null; renderTimeline(); }
+}
+
+function badge(s) {
+  const m={'Planning':'badge-blue','In Progress':'badge-cyan','Completed':'badge-green','On Hold':'badge-yellow','Scheduled':'badge-blue','Cancelled':'badge-red'};
+  return `<span class="badge ${m[s]||'badge-blue'}">${s}</span>`;
+}
+
+// ── PROJECTS ──────────────────────────────────────────
+async function addProject() {
+  const name=document.getElementById('p-name').value.trim();
+  const lab=document.getElementById('p-lab').value.trim();
+  if(!name||!lab){alert('Project name and lab are required.');return;}
+  const obj = {
+    name, lab,
+    start_date:   getDate('p-start'),
+    end_date:     getDate('p-end'),
+    actual_start: getDate('p-actual-start'),
+    actual_end:   getDate('p-actual-end'),
+    ttm:          getDate('p-ttm'),
+    assigned:     document.getElementById('p-assigned').value.trim(),
+    type:         document.getElementById('p-type').value,
+    status:       document.getElementById('p-status').value,
+    total_tests:  parseInt(document.getElementById('p-total-tests').value)||0,
+    tests_done:   parseInt(document.getElementById('p-tests-done').value)||0,
+    issues:       document.getElementById('p-issues').value.trim(),
+    notes:        document.getElementById('p-notes').value.trim()
+  };
+  try {
+    const rows = await supaFetch('projects', { method:'POST', body: JSON.stringify(obj) });
+    projects.unshift(mapProject(rows[0]));
+  } catch(e) { alert('Save failed: ' + e.message); return; }
+  ['p-name','p-lab','p-start','p-end','p-actual-start','p-actual-end','p-ttm','p-assigned','p-issues','p-total-tests','p-tests-done','p-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('p-type').value='';
+  document.getElementById('p-status').value='Planning';
+  renderProjects(); alert('✅ Project added!');
+}
+async function deleteProject(id){
+  if(!confirm('Delete this project?'))return;
+  try {
+    await supaFetch('projects?id=eq.'+id, { method:'DELETE', prefer:'return=minimal', noJson:true });
+    projects=projects.filter(p=>p.id!==id);
+  } catch(e) { alert('Delete failed: '+e.message); return; }
+  renderProjects();
+}
+function renderProjects(){
+  const s=(document.getElementById('proj-search')?.value||'').toLowerCase();
+  const f=document.getElementById('proj-filter')?.value||'';
+  let list=projects.filter(p=>(!f||p.status===f)&&(!s||p.name.toLowerCase().includes(s)||p.lab.toLowerCase().includes(s)||(p.assigned||'').toLowerCase().includes(s)));
+  document.getElementById('proj-count').textContent=`${list.length} project(s)`;
+  const tb=document.getElementById('projects-table');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="9"><div class="empty-state"><div class="icon">◈</div>No projects found</div></td></tr>`;return;}
+  tb.innerHTML=list.map(p=>`<tr>
+    <td><strong>${p.name}</strong>${p.notes?`<br><small style="color:var(--muted)">${p.notes.substring(0,60)}${p.notes.length>60?'...':''}</small>`:''}</td>
+    <td>${p.type?`<span class="badge badge-blue">${p.type}</span>`:'—'}</td>
+    <td>${p.lab}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px">${toDisplay(p.start)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px">${toDisplay(p.end)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--success)">${toDisplay(p.actualStart)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--success)">${toDisplay(p.actualEnd)||'—'}</td>
+    <td style="color:var(--accent);font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.ttm)||'—'}</td>
+    <td>${p.assigned||'—'}</td>
+    <td>${badge(p.status)}</td>
+    <td>${p.issues?p.issues.split(',').map(i=>`<span class="issue-tag">${i.trim()}</span>`).join(''):'—'}</td>
+    <td style="display:flex;gap:6px"><button class="btn-edit" onclick="editProject(${p.id})">✏️ Edit</button><button class="btn btn-danger" onclick="deleteProject(${p.id})">Delete</button></td>
+  </tr>`).join('');
+}
+
+// ── OCCUPANCY ─────────────────────────────────────────
+async function addOccupancy(){
+  const lab=document.getElementById('o-lab').value.trim();
+  const test=document.getElementById('o-test').value.trim();
+  if(!lab||!test){alert('Lab name and test name are required.');return;}
+  const obj = {
+    lab, test,
+    project:      document.getElementById('o-project').value.trim(),
+    assigned_to:   document.getElementById('o-who').value.trim(),
+    planned_start:getDate('o-date'),
+    planned_end:  getDate('o-enddate'),
+    actual_start: getDate('o-actual-start'),
+    actual_end:   getDate('o-actual-end'),
+    start_time:   document.getElementById('o-start').value,
+    end_time:     document.getElementById('o-end').value,
+    test_hours:   parseFloat(document.getElementById('o-testhours').value)||0,
+    downtime:     parseFloat(document.getElementById('o-downtime').value)||0,
+    total_tests:  parseInt(document.getElementById('o-total-tests').value)||0,
+    tests_done:   parseInt(document.getElementById('o-tests-done').value)||0,
+    status:       document.getElementById('o-status').value
+  };
+  try {
+    const rows = await supaFetch('occupancy', { method:'POST', body: JSON.stringify(obj) });
+    occupancy.unshift(mapOccupancy(rows[0]));
+  } catch(e) { alert('Save failed: '+e.message); return; }
+  ['o-project','o-test','o-who','o-date','o-enddate','o-actual-start','o-actual-end','o-start','o-end'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('o-lab').value='';
+  document.getElementById('o-testhours').value='';
+  document.getElementById('o-downtime').value='';
+  document.getElementById('o-total-tests').value='';
+  document.getElementById('o-tests-done').value='';
+  document.getElementById('o-status').value='Scheduled';
+  renderOccupancy(); alert('✅ Occupancy entry added!');
+}
+async function deleteOccupancy(id){
+  if(!confirm('Delete this entry?'))return;
+  occupancy=occupancy.filter(o=>o.id!==id); save(); renderOccupancy();
+}
+function renderOccupancy(){
+  const s=(document.getElementById('occ-search')?.value||'').toLowerCase();
+  const f=document.getElementById('occ-filter')?.value||'';
+  let list=occupancy.filter(o=>(!f||o.status===f)&&(!s||o.lab.toLowerCase().includes(s)||(o.project||'').toLowerCase().includes(s)||o.test.toLowerCase().includes(s)));
+  document.getElementById('occ-count').textContent=`${list.length} entry(ies)`;
+  const tb=document.getElementById('occupancy-table');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="17"><div class="empty-state"><div class="icon">◉</div>No occupancy records</div></td></tr>`;return;}
+  tb.innerHTML=list.map(o=>`<tr>
+    <td><strong>${o.lab}</strong></td>
+    <td>${o.project||'—'}</td>
+    <td>${o.test}</td>
+    <td>${o.who||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px">${toDisplay(o.date)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px">${toDisplay(o.enddate)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--success)">${toDisplay(o.actualStart)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--success)">${toDisplay(o.actualEnd)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px">${o.start||'?'} → ${o.end||'?'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--accent2)">${o.testHours||0}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--warn)">${o.downtime||0}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${(o.testHours||0)+(o.downtime||0)>0?'var(--success)':'var(--muted)'}">${(o.testHours||0)+(o.downtime||0)>0?Math.round((o.testHours||0)/((o.testHours||0)+(o.downtime||0))*100)+'%':'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;text-align:center">${o.totalTests||0}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;text-align:center;color:var(--success)">${o.testsDone||0}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;text-align:center;color:${(o.totalTests||0)>0?(o.testsDone||0)/(o.totalTests||1)>=0.8?'var(--success)':(o.testsDone||0)/(o.totalTests||1)>=0.5?'var(--yellow)':'var(--warn)':'var(--muted)'}">${(o.totalTests||0)>0?Math.round((o.testsDone||0)/(o.totalTests||1)*100)+'%':'—'}</td>
+    <td>${badge(o.status)}</td>
+    <td style="display:flex;gap:6px"><button class="btn-edit" onclick="editOccupancy(${o.id})">✏️ Edit</button><button class="btn btn-danger" onclick="deleteOccupancy(${o.id})">Delete</button></td>
+  </tr>`).join('');
+}
+
+// ── DASHBOARD ─────────────────────────────────────────
+// ── TOOLTIP ──────────────────────────────────────────────────────────────
+const tooltip = document.getElementById('kpi-tooltip') || document.createElement('div');
+
+function showTipRpt(e, key) {
+  const d = window._tipRpt && window._tipRpt[key];
+  if (!d) return;
+  showTooltip(e, d.title, d.rows);
+}
+
+function showTip(e, key) {
+  const d = window._tipData && window._tipData[key];
+  if (!d) return;
+  showTooltip(e, d.title, d.rows);
+}
+
+function showTooltip(e, title, rows) {
+  const t = document.getElementById('kpi-tooltip');
+  const rowsHtml = rows.map(r => {
+    if (r.type === 'list') {
+      return `<div class="kpi-tooltip-row"><span>${r.label}</span></div>
+              <div class="kpi-tooltip-list">${(r.items||[]).slice(0,5).map(i=>`<div class="kpi-tooltip-item">• ${i}</div>`).join('') || '<div class="kpi-tooltip-item" style="color:var(--muted)">None</div>'}</div>`;
+    }
+    return `<div class="kpi-tooltip-row"><span>${r.label}</span><span style="color:${r.color||'var(--accent)'}">${r.value}</span></div>`;
+  }).join('');
+  t.innerHTML = `<div class="kpi-tooltip-title">${title}</div>${rowsHtml}`;
+  t.classList.add('show');
+  moveTooltip(e);
+}
+
+function moveTooltip(e) {
+  const t = document.getElementById('kpi-tooltip');
+  const x = e.clientX + 16;
+  const y = e.clientY + 16;
+  const maxX = window.innerWidth  - t.offsetWidth  - 10;
+  const maxY = window.innerHeight - t.offsetHeight - 10;
+  t.style.left = Math.min(x, maxX) + 'px';
+  t.style.top  = Math.min(y, maxY) + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('kpi-tooltip').classList.remove('show');
+}
+
+document.addEventListener('mousemove', e => {
+  if (document.getElementById('kpi-tooltip').classList.contains('show')) moveTooltip(e);
+});
+
+function renderDashboard(){
+  const total=projects.length, active=projects.filter(p=>p.status==='In Progress').length;
+  const issues=projects.filter(p=>p.issues).length, occ=occupancy.filter(o=>o.status==='In Progress').length;
+  // Build tooltip data for stat cards
+  const planning = projects.filter(p=>p.status==='Planning').length;
+  const completed = projects.filter(p=>p.status==='Completed').length;
+  const onHold = projects.filter(p=>p.status==='On Hold').length;
+  const activeProjs = projects.filter(p=>p.status==='In Progress').map(p=>p.name);
+  const issueProjs = projects.filter(p=>p.issues).map(p=>p.name);
+  const activeOcc = occupancy.filter(o=>o.status==='In Progress').map(o=>o.lab+' — '+o.test);
+  const totalTestHrs = occupancy.reduce((a,o)=>a+(parseFloat(o.testHours)||0),0);
+  const uniqueLabs = [...new Set(occupancy.map(o=>o.lab))].length;
+
+  const tipTotal  = JSON.stringify([
+    {label:'In Progress', value:active,    color:'#00e5c3'},
+    {label:'Planning',    value:planning,  color:'#5b8cff'},
+    {label:'Completed',   value:completed, color:'#4ade80'},
+    {label:'On Hold',     value:onHold,    color:'#fbbf24'}
+  ]);
+  const tipActive = JSON.stringify([
+    {label:'Active projects', value:active, color:'#5b8cff'},
+    {type:'list', label:'Projects:', items:activeProjs}
+  ]);
+  const tipIssues = JSON.stringify([
+    {label:'Projects with issues', value:issues, color:'#ef4444'},
+    {type:'list', label:'Affected:', items:issueProjs}
+  ]);
+  const tipOcc = JSON.stringify([
+    {label:'Active sessions',  value:occ,           color:'#fbbf24'},
+    {label:'Total logged',     value:occupancy.length, color:'#00e5c3'},
+    {label:'Unique labs used', value:uniqueLabs,    color:'#5b8cff'},
+    {label:'Total test hours', value:totalTestHrs.toFixed(1)+'h', color:'#4ade80'},
+    {type:'list', label:'Active now:', items:activeOcc}
+  ]);
+
+  // Store tooltip data in window for access
+  window._tipData = {
+    total:  {title:'📊 Total Projects',   rows: [{label:'In Progress',value:active,    color:'#00e5c3'},{label:'Planning',   value:planning,  color:'#5b8cff'},{label:'Completed',  value:completed,color:'#4ade80'},{label:'On Hold',    value:onHold,    color:'#fbbf24'}]},
+    active: {title:'⚡ Active Projects',  rows: [{label:'Count',      value:active,    color:'#5b8cff'},{type:'list',label:'Projects:',items:activeProjs}]},
+    issues: {title:'⚠️ Projects With Issues', rows:[{label:'Count',   value:issues,    color:'#ef4444'},{type:'list',label:'Affected:',items:issueProjs}]},
+    occ:    {title:'🔬 Lab Sessions',     rows: [{label:'Active now', value:occ,       color:'#fbbf24'},{label:'Total logged',value:occupancy.length,color:'#00e5c3'},{label:'Unique labs',value:uniqueLabs,color:'#5b8cff'},{label:'Total test hrs',value:totalTestHrs.toFixed(1)+'h',color:'#4ade80'},{type:'list',label:'Active sessions:',items:activeOcc}]}
+  };
+  document.getElementById('stats-row').innerHTML=`
+    <div class="stat-card" onmouseenter="showTip(event,'total')" onmouseleave="hideTooltip()">
+      <div class="stat-label">Total Projects</div><div class="stat-value">${total}</div><div class="stat-sub">Hover for breakdown</div></div>
+    <div class="stat-card blue" onmouseenter="showTip(event,'active')" onmouseleave="hideTooltip()">
+      <div class="stat-label">Active Now</div><div class="stat-value">${active}</div><div class="stat-sub">In progress</div></div>
+    <div class="stat-card red" onmouseenter="showTip(event,'issues')" onmouseleave="hideTooltip()">
+      <div class="stat-label">With Issues</div><div class="stat-value">${issues}</div><div class="stat-sub">Need attention</div></div>
+    <div class="stat-card yellow" onmouseenter="showTip(event,'occ')" onmouseleave="hideTooltip()">
+      <div class="stat-label">Lab Sessions</div><div class="stat-value">${occ}</div><div class="stat-sub">Currently active</div></div>`;
+  document.getElementById('dash-projects').innerHTML=projects.slice(0,5).map(p=>
+    `<tr><td>${p.name}</td><td>${badge(p.status)}</td><td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.end)||'—'}</td></tr>`
+  ).join('')||`<tr><td colspan="3"><div class="empty-state"><div class="icon">◈</div>No projects yet</div></td></tr>`;
+  document.getElementById('dash-occupancy').innerHTML=occupancy.slice(0,5).map(o=>
+    `<tr><td>${o.lab}</td><td>${o.test}</td><td style="font-family:'DM Mono',monospace;font-size:11px">${o.start||'?'}→${o.end||'?'}</td></tr>`
+  ).join('')||`<tr><td colspan="3"><div class="empty-state"><div class="icon">◉</div>No occupancy records</div></td></tr>`;
+}
+
+// ── REPORTS ───────────────────────────────────────────
+function renderReports(){
+  const PALETTE = ['#00e5c3','#5b8cff','#4ade80','#fbbf24','#ff6b6b','#f97316','#a78bfa','#06b6d4','#ec4899','#84cc16'];
+
+  // ── KPI CARDS ──────────────────────────────────────────────────────────
+  const total=projects.length;
+  const active=projects.filter(p=>p.status==='In Progress').length;
+  const completed=projects.filter(p=>p.status==='Completed').length;
+  const onHold=projects.filter(p=>p.status==='On Hold').length;
+  const labCount=[...new Set(occupancy.map(o=>o.lab))].length;
+  const occTotal=occupancy.length;
+  const issueCount=projects.reduce((a,p)=>a+(p.issues?p.issues.split(',').length:0),0);
+  const compRate=total>0?Math.round(completed/total*100):0;
+  // Tooltip data for report KPI cards
+  const totalTestHrs2 = occupancy.reduce((a,o)=>a+(parseFloat(o.testHours)||0),0);
+  const totalDowntime = occupancy.reduce((a,o)=>a+(parseFloat(o.downtime)||0),0);
+  const avgUtil = (totalTestHrs2+totalDowntime)>0 ? Math.round(totalTestHrs2/(totalTestHrs2+totalDowntime)*100) : 0;
+  const inProgProjs = projects.filter(p=>p.status==='In Progress').map(p=>p.name);
+  const compProjs   = projects.filter(p=>p.status==='Completed').map(p=>p.name);
+  const holdProjs   = projects.filter(p=>p.status==='On Hold').map(p=>p.name);
+  const issueList   = projects.filter(p=>p.issues).map(p=>p.name+': '+p.issues);
+  const activeLabs  = [...new Set(occupancy.map(o=>o.lab))];
+
+  window._tipRpt = {
+    total:    {title:'📊 Total Projects',    rows:[{label:'In Progress',value:active,color:'#00e5c3'},{label:'Completed',value:completed,color:'#4ade80'},{label:'On Hold',value:onHold,color:'#fbbf24'},{label:'Planning',value:total-active-completed-onHold,color:'#5b8cff'}]},
+    active:   {title:'⚡ In Progress',       rows:[{label:'Count',value:active,color:'#00e5c3'},{type:'list',label:'Projects:',items:inProgProjs}]},
+    completed:{title:'✅ Completed Projects', rows:[{label:'Count',value:completed,color:'#4ade80'},{label:'Rate',value:compRate+'%',color:'#4ade80'},{type:'list',label:'Projects:',items:compProjs}]},
+    hold:     {title:'⏸ On Hold',            rows:[{label:'Count',value:onHold,color:'#fbbf24'},{type:'list',label:'Projects:',items:holdProjs}]},
+    issues:   {title:'⚠️ Issues',            rows:[{label:'Total issues',value:issueCount,color:'#ef4444'},{type:'list',label:'Details:',items:issueList}]},
+    labs:     {title:'🏭 Active Labs',        rows:[{label:'Labs used',value:labCount,color:'#5b8cff'},{label:'Total sessions',value:occTotal,color:'#00e5c3'},{type:'list',label:'Labs:',items:activeLabs}]},
+    sessions: {title:'🔬 Lab Sessions',       rows:[{label:'Total sessions',value:occTotal,color:'#00e5c3'},{label:'Total test hrs',value:totalTestHrs2.toFixed(1)+'h',color:'#4ade80'},{label:'Total downtime',value:totalDowntime.toFixed(1)+'h',color:'#ef4444'},{label:'Avg utilization',value:avgUtil+'%',color:'#fbbf24'}]},
+    comprate: {title:'🎯 Completion Rate',    rows:[{label:'Completed',value:completed,color:'#4ade80'},{label:'Total',value:total,color:'#00e5c3'},{label:'Rate',value:compRate+'%',color:'#4ade80'},{label:'Remaining',value:total-completed,color:'#fbbf24'}]}
+  };
+
+  document.getElementById('rpt-kpi').innerHTML=`
+    <div class="kpi-card c1" onmouseenter="showTipRpt(event,'total')"    onmouseleave="hideTooltip()"><span class="kpi-icon">◈</span><div class="kpi-label">Total Projects</div><div class="kpi-value">${total}</div><div class="kpi-sub">Hover for details</div></div>
+    <div class="kpi-card c2" onmouseenter="showTipRpt(event,'active')"   onmouseleave="hideTooltip()"><span class="kpi-icon">⚡</span><div class="kpi-label">In Progress</div><div class="kpi-value">${active}</div><div class="kpi-sub">Active now</div></div>
+    <div class="kpi-card c3" onmouseenter="showTipRpt(event,'completed')" onmouseleave="hideTooltip()"><span class="kpi-icon">✓</span><div class="kpi-label">Completed</div><div class="kpi-value">${completed}</div><div class="kpi-value" style="font-size:14px;margin-top:2px">${compRate}%</div></div>
+    <div class="kpi-card c4" onmouseenter="showTipRpt(event,'hold')"     onmouseleave="hideTooltip()"><span class="kpi-icon">⏸</span><div class="kpi-label">On Hold</div><div class="kpi-value">${onHold}</div><div class="kpi-sub">Paused</div></div>
+    <div class="kpi-card c5" onmouseenter="showTipRpt(event,'issues')"   onmouseleave="hideTooltip()"><span class="kpi-icon">⚠</span><div class="kpi-label">Total Issues</div><div class="kpi-value">${issueCount}</div><div class="kpi-sub">Across projects</div></div>
+    <div class="kpi-card c7" onmouseenter="showTipRpt(event,'labs')"     onmouseleave="hideTooltip()"><span class="kpi-icon">◉</span><div class="kpi-label">Active Labs</div><div class="kpi-value">${labCount}</div><div class="kpi-sub">With sessions</div></div>
+    <div class="kpi-card c8" onmouseenter="showTipRpt(event,'sessions')" onmouseleave="hideTooltip()"><span class="kpi-icon">🔬</span><div class="kpi-label">Lab Sessions</div><div class="kpi-value">${occTotal}</div><div class="kpi-sub">Total logged</div></div>
+    <div class="kpi-card c6" onmouseenter="showTipRpt(event,'comprate')" onmouseleave="hideTooltip()"><span class="kpi-icon">🎯</span><div class="kpi-label">Completion Rate</div><div class="kpi-value">${compRate}%</div><div class="kpi-sub">Projects done</div></div>
+  `;
+
+  // helper: colorful bar
+  function bar(label, count, max, color, idx) {
+    const pct = max > 0 ? Math.max(count/max*100, 4) : 0;
+    const textColor = ['#fff','#0d0f14','#0d0f14','#0d0f14','#fff','#fff','#fff','#fff','#fff','#0d0f14'][idx%10]||'#fff';
+    return `<div class="bar-row2"><div class="bar-label2">${label}</div><div class="bar-track2"><div class="bar-fill2" style="width:${pct}%;background:${color};color:${textColor}">${count}</div></div></div>`;
+  }
+
+  // helper: progress bar
+  function progress(label, count, total, color) {
+    const pct = total>0?Math.round(count/total*100):0;
+    return `<div class="progress-bar-wrap">
+      <div class="progress-label-row"><span style="color:var(--text);font-size:12px">${label}</span><span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${color}">${count} <span style="color:var(--muted);font-weight:400">(${pct}%)</span></span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
+    </div>`;
+  }
+
+  // ── PROJECT CHARTS ────────────────────────────────────────────────────
+  // Status
+  const ss=['Planning','In Progress','Completed','On Hold'];
+  const sc=['#5b8cff','#00e5c3','#4ade80','#fbbf24'];
+  const sn=ss.map(s=>projects.filter(p=>p.status===s).length);
+  const ms=Math.max(...sn,1);
+  document.getElementById('rpt-status').innerHTML = ss.map((s,i)=>bar(s,sn[i],ms,sc[i],i)).join('') || '<div class="empty-state">No data</div>';
+
+  // Type
+  const ptypes=['RAC','WAC','VRF'];
+  const ptColors=['#00e5c3','#5b8cff','#fbbf24'];
+  const ptCounts=ptypes.map(t=>projects.filter(p=>p.type===t).length);
+  const ptMax=Math.max(...ptCounts,1);
+  document.getElementById('rpt-type').innerHTML = ptypes.map((t,i)=>bar(t,ptCounts[i],ptMax,ptColors[i],i)).join('');
+
+  // Person
+  const allAssigned=projects.flatMap(p=>p.assigned?p.assigned.split(',').map(a=>a.trim()).filter(Boolean):[]);
+  const personMap={};
+  allAssigned.forEach(a=>{personMap[a]=(personMap[a]||0)+1;});
+  const persons=Object.entries(personMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const pMax=Math.max(...persons.map(p=>p[1]),1);
+  document.getElementById('rpt-person').innerHTML = persons.length ?
+    persons.map(([name,cnt],i)=>bar(name,cnt,pMax,PALETTE[i%PALETTE.length],i)).join('')
+    : '<div class="empty-state">No assigned persons yet</div>';
+
+  // Issues
+  const allI=projects.flatMap(p=>p.issues?p.issues.split(',').map(i=>i.trim()):[]);
+  const imap={};
+  allI.forEach(i=>{imap[i]=(imap[i]||0)+1;});
+  const ient=Object.entries(imap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const iMax=Math.max(...ient.map(e=>e[1]),1);
+  document.getElementById('rpt-issues').innerHTML = ient.length ?
+    ient.map(([n,ct],i)=>bar(n,ct,iMax,'#ff6b6b',i)).join('')
+    : '<div class="empty-state">No issues logged</div>';
+
+  // Completion progress
+  document.getElementById('rpt-completion').innerHTML = [
+    progress('Planning', sn[0], total, '#5b8cff'),
+    progress('In Progress', sn[1], total, '#00e5c3'),
+    progress('Completed', sn[2], total, '#4ade80'),
+    progress('On Hold', sn[3], total, '#fbbf24'),
+  ].join('') || '<div class="empty-state">No data</div>';
+
+  // ── OCCUPANCY CHARTS ──────────────────────────────────────────────────
+  const occLabs=[...new Set(occupancy.map(o=>o.lab))];
+  const occLC=occLabs.map(l=>occupancy.filter(o=>o.lab===l).length);
+  const occMax=Math.max(...occLC,1);
+  document.getElementById('rpt-occ-lab').innerHTML = occLabs.length ?
+    occLabs.map((l,i)=>bar(l,occLC[i],occMax,PALETTE[i%PALETTE.length],i)).join('')
+    : '<div class="empty-state">No occupancy data yet</div>';
+
+  const tests=[...new Set(occupancy.map(o=>o.test))].slice(0,8);
+  const tc=tests.map(t=>occupancy.filter(o=>o.test===t).length);
+  const mt=Math.max(...tc,1);
+  document.getElementById('rpt-tests').innerHTML = tests.length ?
+    tests.map((t,i)=>bar(t,tc[i],mt,PALETTE[(i+3)%PALETTE.length],i)).join('')
+    : '<div class="empty-state">No test data yet</div>';
+
+  const oSS=['Scheduled','In Progress','Completed','Cancelled'];
+  const oSC=['#5b8cff','#00e5c3','#4ade80','#ff6b6b'];
+  const oSN=oSS.map(s=>occupancy.filter(o=>o.status===s).length);
+  const oMax=Math.max(...oSN,1);
+  document.getElementById('rpt-occ-status').innerHTML = oSS.map((s,i)=>progress(s,oSN[i],occTotal||1,oSC[i])).join('') || '<div class="empty-state">No data</div>';
+
+  // ── TABLES ────────────────────────────────────────────────────────────
+  // Populate lab dropdowns in filters
+  const projLabOpts = [...new Set(projects.map(p=>p.lab).filter(Boolean))].sort();
+  const rfPL = document.getElementById('rf-proj-lab');
+  const rfOL = document.getElementById('rf-occ-lab');
+  if(rfPL){ rfPL.innerHTML='<option value="">All Labs</option>'+projLabOpts.map(l=>`<option>${l}</option>`).join(''); }
+  const occLabOpts = [...new Set(occupancy.map(o=>o.lab).filter(Boolean))].sort();
+  if(rfOL){ rfOL.innerHTML='<option value="">All Labs</option>'+occLabOpts.map(l=>`<option>${l}</option>`).join(''); }
+
+  filterReportProjects();
+
+  // Lab Utilization chart
+  const utilLabs = [...new Set(occupancy.map(o=>o.lab))];
+  const utilData = utilLabs.map(l => {
+    const entries = occupancy.filter(o=>o.lab===l);
+    const th = entries.reduce((s,o)=>s+(o.testHours||0),0);
+    const dt = entries.reduce((s,o)=>s+(o.downtime||0),0);
+    const total = th+dt;
+    return { lab:l, th, dt, total, pct: total>0?Math.round(th/total*100):0 };
+  }).sort((a,b)=>b.pct-a.pct);
+
+  document.getElementById('rpt-lab-util').innerHTML = utilData.length ?
+    utilData.map((d,i)=>{
+      const col = d.pct>=80?'#4ade80':d.pct>=50?'#fbbf24':'#ff6b6b';
+      return `<div class="bar-row2">
+        <div class="bar-label2">${d.lab}</div>
+        <div class="bar-track2">
+          <div class="bar-fill2" style="width:${Math.max(d.pct,3)}%;background:${col};color:#0d0f14">${d.pct}%</div>
+        </div>
+      </div>`;
+    }).join('')
+    : '<div class="empty-state">Enter Test Hours & Downtime in occupancy to see utilization</div>';
+
+  const maxH = Math.max(...utilData.map(x=>x.total),1);
+  document.getElementById('rpt-lab-hours').innerHTML = utilData.length ? `
+    <div style="display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:6px 10px;">
+      <!-- Header row -->
+      <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Lab</div>
+      <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Hours</div>
+      <div style="font-size:9px;color:#00e5c3;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;text-align:right">Test</div>
+      <div style="font-size:9px;color:#ff6b6b;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;text-align:right">Down</div>
+      ${utilData.map(d=>`
+        <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px" title="${d.lab}">${d.lab}</div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:6px;height:20px;overflow:hidden;display:flex;gap:2px">
+          <div style="width:${d.total>0?Math.max(d.th/maxH*100,0):0}%;background:#00e5c3;height:100%;border-radius:4px 0 0 4px;transition:width 0.6s ease;flex-shrink:0"></div>
+          <div style="width:${d.total>0?Math.max(d.dt/maxH*100,0):0}%;background:#ff6b6b;height:100%;border-radius:0 4px 4px 0;transition:width 0.6s ease;flex-shrink:0"></div>
+        </div>
+        <div style="font-size:11px;font-weight:700;font-family:'DM Mono',monospace;color:#00e5c3;text-align:right;white-space:nowrap">${d.th}h</div>
+        <div style="font-size:11px;font-weight:700;font-family:'DM Mono',monospace;color:#ff6b6b;text-align:right;white-space:nowrap">${d.dt}h</div>
+      `).join('')}
+    </div>
+    <div style="display:flex;gap:16px;margin-top:14px;padding-top:10px;border-top:1px solid var(--border);font-size:11px">
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#00e5c3;display:inline-block;flex-shrink:0"></span><span style="color:var(--muted)">Test Hours</span></span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#ff6b6b;display:inline-block;flex-shrink:0"></span><span style="color:var(--muted)">Downtime</span></span>
+    </div>` : '<div class="empty-state">No hours data yet</div>';
+
+  filterReportOcc();
+}
+
+// ── CSV ───────────────────────────────────────────────
+function exportCSV(type){
+  let h,r,fn;
+  if(type==='projects'){
+    h=['Name','Type','Lab','Planned Start','Planned End','Actual Start','Actual End','TTM Date','Assigned To','Total Tests','Tests Done','Test Completion %','Status','Issues','Notes'];
+    r=projects.map(p=>{const tt=p.totalTests||0,td=p.testsDone||0;return[p.name,p.type||'',p.lab,p.start,p.end,p.actualStart||'',p.actualEnd||'',p.ttm,p.assigned,tt,td,tt>0?Math.round(td/tt*100)+'%':'—',p.status,p.issues,p.notes];});
+    fn='projects_export.csv';
+  } else {
+    h=['Lab','Project','Test','Assigned To','Planned Start','Planned End','Actual Start','Actual End','Start Time','End Time','Test Hours','Downtime Hours','Utilization %','Total Tests','Tests Done','Test Completion %','Status'];
+    r=occupancy.map(o=>{const th=o.testHours||0,dt=o.downtime||0,tot=th+dt,tt=o.totalTests||0,td=o.testsDone||0;return[o.lab,o.project,o.test,o.who,o.date,o.enddate,o.actualStart||'',o.actualEnd||'',o.start,o.end,th,dt,tot>0?Math.round(th/tot*100)+'%':'—',tt,td,tt>0?Math.round(td/tt*100)+'%':'—',o.status];});
+    fn='occupancy_export.csv';
+  }
+  const csv=[h,...r].map(row=>row.map(c=>`"${(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=fn; a.click();
+}
+
+// ── TIMELINE REPORT ───────────────────────────────────
+let tlType='projects', tlView='year', tlYear=null, tlMonth=null;
+
+function switchType(t){
+  tlType=t; tlView='year'; tlYear=null; tlMonth=null;
+  document.getElementById('tab-proj').classList.toggle('active',t==='projects');
+  document.getElementById('tab-occ').classList.toggle('active',t==='occupancy');
+  renderTimeline();
+}
+
+function tlData(){ return tlType==='projects'?projects:occupancy; }
+function tlDateOf(item){ return tlType==='projects'?item.start:item.date; }
+function tlStatuses(){ return tlType==='projects'?['Planning','In Progress','Completed','On Hold']:['Scheduled','In Progress','Completed','Cancelled']; }
+
+function pills(items){
+  return tlStatuses().map(s=>{
+    const n=items.filter(i=>i.status===s).length;
+    if(!n) return '';
+    return `<span class="spill" style="background:${SBG[s]||'rgba(255,255,255,0.07)'};color:${SCOL[s]||'#fff'}">${s}: ${n}</span>`;
+  }).join('');
+}
+function minibar(items){
+  const tot=items.length||1;
+  return tlStatuses().map(s=>{
+    const n=items.filter(i=>i.status===s).length;
+    if(!n) return '';
+    return `<div style="width:${n/tot*100}%;background:${SCOL[s]||'#555'}"></div>`;
+  }).join('');
+}
+
+function renderTimeline(){
+  // Breadcrumb
+  let bc='';
+  if(tlView==='year'){ bc=`<span class="current-crumb">All Years</span>`; }
+  else if(tlView==='month'){ bc=`<span class="crumb" onclick="goYear()">All Years</span><span class="sep"> › </span><span class="current-crumb">${tlYear}</span>`; }
+  else if(tlView==='week'){ bc=`<span class="crumb" onclick="goYear()">All Years</span><span class="sep"> › </span><span class="crumb" onclick="goMonth()"> ${tlYear}</span><span class="sep"> › </span><span class="current-crumb">${MONTHS[tlMonth]} ${tlYear}</span>`; }
+  document.getElementById('tl-bc').innerHTML=bc;
+
+  const data=tlData();
+  const label=tlType==='projects'?'projects':'sessions';
+  let html='';
+
+  if(tlView==='year'){
+    // Group by year
+    const map={};
+    data.forEach(item=>{ const y=getYear(tlDateOf(item)); if(y){if(!map[y])map[y]=[];map[y].push(item);} });
+    const years=Object.keys(map).sort((a,b)=>b-a);
+    if(!years.length){
+      html=`<div class="empty-state"><div class="icon">◫</div>No ${label} with dates yet.<br>Enter dates in dd/mm/yyyy format when adding entries.</div>`;
+    } else {
+      html+=`<div class="section-sep">Showing ${data.length} ${label} — click a year card to see months</div><div class="drill-grid">`;
+      years.forEach(y=>{
+        const items=map[y];
+        html+=`<div class="drill-card" onclick="goMonth(${y})">
+          <h4>📅 ${y}</h4>
+          <div class="drill-stat"><span>Total ${label}</span><span>${items.length}</span></div>
+          <div class="status-pills">${pills(items)}</div>
+          <div class="mini-bar">${minibar(items)}</div>
+        </div>`;
+      });
+      html+=`</div>`;
+      const noDates=data.filter(i=>!getYear(tlDateOf(i)));
+      if(noDates.length) html+=`<div class="section-sep" style="margin-top:8px">${noDates.length} ${label} without dates</div>`;
+    }
+  }
+
+  else if(tlView==='month'){
+    const items=data.filter(i=>getYear(tlDateOf(i))===tlYear);
+    const map={};
+    items.forEach(i=>{ const m=getMonth(tlDateOf(i)); if(m!==null){if(!map[m])map[m]=[];map[m].push(i);} });
+    const months=Object.keys(map).sort((a,b)=>a-b);
+    if(!months.length){
+      html=`<div class="empty-state"><div class="icon">◫</div>No ${label} in ${tlYear}</div>`;
+    } else {
+      html+=`<div class="section-sep">${tlYear} — ${items.length} ${label} across ${months.length} month(s) — click to see weekly breakdown</div><div class="drill-grid">`;
+      months.forEach(m=>{
+        const mi=map[m];
+        html+=`<div class="drill-card" onclick="goWeek(${tlYear},${m})">
+          <h4>🗓 ${MONTHS[m]}</h4>
+          <div class="drill-stat"><span>Total ${label}</span><span>${mi.length}</span></div>
+          <div class="status-pills">${pills(mi)}</div>
+          <div class="mini-bar">${minibar(mi)}</div>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+  }
+
+  else if(tlView==='week'){
+    const items=data.filter(i=>{
+      const d=parseDate(tlDateOf(i));
+      return d&&d.getFullYear()===tlYear&&d.getMonth()===tlMonth;
+    });
+    const map={};
+    items.forEach(i=>{ const w=weekOfMonth(tlDateOf(i)); if(w){if(!map[w])map[w]=[];map[w].push(i);} });
+    const weeks=Object.keys(map).sort((a,b)=>a-b);
+    if(!weeks.length){
+      html=`<div class="empty-state"><div class="icon">◫</div>No ${label} in ${MONTHS[tlMonth]} ${tlYear}</div>`;
+    } else {
+      html+=`<div class="section-sep">${MONTHS[tlMonth]} ${tlYear} — ${items.length} ${label} — weekly view</div>`;
+      weeks.forEach(w=>{
+        const wi=map[w];
+        const sd=(Number(w)-1)*7+1;
+        const ed=Math.min(Number(w)*7,31);
+        const mm=String(tlMonth+1).padStart(2,'0');
+        html+=`<div class="table-card">
+          <div class="table-header">
+            <div class="week-header" style="width:100%">
+              <h2>Week ${w} &nbsp;<small style="color:var(--muted);font-size:11px;font-weight:400">${String(sd).padStart(2,'0')}/${mm}/${tlYear} – ${String(ed).padStart(2,'0')}/${mm}/${tlYear}</small></h2>
+              <div class="status-pills">${pills(wi)}</div>
+            </div>
+          </div>`;
+        if(tlType==='projects'){
+          html+=`<table><thead><tr><th>Project</th><th>Type</th><th>Lab</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>TTM</th><th>Status</th><th>Issues</th></tr></thead><tbody>`;
+          html+=wi.map(p=>`<tr>
+            <td>${p.name}</td><td>${p.type?`<span class='badge badge-blue'>${p.type}</span>`:'—'}</td><td>${p.lab}</td><td>${p.assigned||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.start)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.end)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(p.actualStart)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(p.actualEnd)||'—'}</td>
+            <td style="color:var(--accent);font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.ttm)||'—'}</td>
+            <td>${badge(p.status)}</td>
+            <td>${p.issues?p.issues.split(',').map(i=>`<span class="issue-tag">${i.trim()}</span>`).join(''):'—'}</td>
+          </tr>`).join('');
+          html+=`</tbody></table>`;
+        } else {
+          html+=`<table><thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time</th><th>Status</th></tr></thead><tbody>`;
+          html+=wi.map(o=>`<tr>
+            <td>${o.lab}</td><td>${o.project||'—'}</td><td>${o.test}</td><td>${o.who||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(o.date)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(o.enddate)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(o.actualStart)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(o.actualEnd)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:12px">${o.start||'?'}→${o.end||'?'}</td>
+            <td>${badge(o.status)}</td>
+          </tr>`).join('');
+          html+=`</tbody></table>`;
+        }
+        html+=`</div>`;
+      });
+    }
+  }
+
+  document.getElementById('tl-body').innerHTML=html;
+}
+
+function goYear(){ tlView='year'; tlYear=null; tlMonth=null; renderTimeline(); }
+function goMonth(y){ tlView='month'; if(y!==undefined)tlYear=y; tlMonth=null; renderTimeline(); }
+function goWeek(y,m){ tlView='week'; tlYear=y; tlMonth=m; renderTimeline(); }
+
+
+// ── MODAL HELPERS ─────────────────────────────────────────────────────────
+let editingProjId = null;
+let editingOccId  = null;
+
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// Close modal on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// ── EDIT PROJECT ──────────────────────────────────────────────────────────
+function editProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  editingProjId = id;
+  document.getElementById('ep-name').value     = p.name    || '';
+  document.getElementById('ep-lab').value      = p.lab     || '';
+  document.getElementById('ep-start').value = toPicker(p.start || '');
+  document.getElementById('ep-end').value = toPicker(p.end || '');
+  document.getElementById('ep-actual-start').value = toPicker(p.actualStart || '');
+  document.getElementById('ep-actual-end').value = toPicker(p.actualEnd || '');
+  document.getElementById('ep-ttm').value = toPicker(p.ttm || '');
+  document.getElementById('ep-assigned').value = p.assigned|| '';
+  document.getElementById('ep-type').value     = p.type    || '';
+  document.getElementById('ep-status').value   = p.status  || 'Planning';
+  document.getElementById('ep-issues').value      = p.issues     || '';
+  document.getElementById('ep-total-tests').value = p.totalTests || '';
+  document.getElementById('ep-tests-done').value  = p.testsDone  || '';
+  document.getElementById('ep-notes').value       = p.notes      || '';
+  openModal('edit-proj-modal');
+}
+
+async function saveProjectEdit() {
+  const name = document.getElementById('ep-name').value.trim();
+  const lab  = document.getElementById('ep-lab').value.trim();
+  if (!name || !lab) { alert('Project name and lab are required.'); return; }
+  const idx = projects.findIndex(x => x.id === editingProjId);
+  if (idx === -1) return;
+  const upd = {
+    name, lab,
+    start_date:   getDate('ep-start'),
+    end_date:     getDate('ep-end'),
+    actual_start: getDate('ep-actual-start'),
+    actual_end:   getDate('ep-actual-end'),
+    ttm:          getDate('ep-ttm'),
+    assigned:     document.getElementById('ep-assigned').value.trim(),
+    type:         document.getElementById('ep-type').value,
+    status:       document.getElementById('ep-status').value,
+    issues:       document.getElementById('ep-issues').value.trim(),
+    total_tests:  parseInt(document.getElementById('ep-total-tests').value)||0,
+    tests_done:   parseInt(document.getElementById('ep-tests-done').value)||0,
+    notes:        document.getElementById('ep-notes').value.trim(),
+  };
+  try {
+    await supaFetch('projects?id=eq.'+editingProjId, {
+      method:'PATCH', body: JSON.stringify(upd), prefer:'return=minimal', noJson:true
+    });
+    projects[idx] = {...projects[idx], ...mapProject({id:editingProjId, ...upd,
+      start_date:upd.start_date, end_date:upd.end_date,
+      actual_start:upd.actual_start, actual_end:upd.actual_end,
+      total_tests:upd.total_tests, tests_done:upd.tests_done
+    })};
+  } catch(e) { alert('Update failed: '+e.message); return; }
+  closeModal('edit-proj-modal');
+  renderProjects();
+}
+
+// ── EDIT OCCUPANCY ────────────────────────────────────────────────────────
+function editOccupancy(id) {
+  const o = occupancy.find(x => x.id === id);
+  if (!o) return;
+  editingOccId = id;
+  document.getElementById('eo-lab').value     = o.lab     || '';
+  document.getElementById('eo-project').value = o.project || '';
+  document.getElementById('eo-test').value    = o.test    || '';
+  document.getElementById('eo-who').value     = o.who     || '';
+  document.getElementById('eo-date').value = toPicker(o.date || '');
+  document.getElementById('eo-enddate').value = toPicker(o.enddate || '');
+  document.getElementById('eo-actual-start').value = toPicker(o.actualStart || '');
+  document.getElementById('eo-actual-end').value = toPicker(o.actualEnd || '');
+  document.getElementById('eo-start').value      = o.start    || '';
+  document.getElementById('eo-end').value        = o.end      || '';
+  document.getElementById('eo-testhours').value   = o.testHours  || '';
+  document.getElementById('eo-downtime').value    = o.downtime   || '';
+  document.getElementById('eo-total-tests').value = o.totalTests || '';
+  document.getElementById('eo-tests-done').value  = o.testsDone  || '';
+  document.getElementById('eo-status').value     = o.status   || 'Scheduled';
+  openModal('edit-occ-modal');
+}
+
+async function saveOccupancyEdit() {
+  const lab  = document.getElementById('eo-lab').value.trim();
+  const test = document.getElementById('eo-test').value.trim();
+  if (!lab || !test) { alert('Lab name and test name are required.'); return; }
+  const idx = occupancy.findIndex(x => x.id === editingOccId);
+  if (idx === -1) return;
+  const upd = {
+    lab, test,
+    project:      document.getElementById('eo-project').value.trim(),
+    assigned_to:   document.getElementById('eo-who').value.trim(),
+    planned_start:getDate('eo-date'),
+    planned_end:  getDate('eo-enddate'),
+    actual_start: getDate('eo-actual-start'),
+    actual_end:   getDate('eo-actual-end'),
+    start_time:   document.getElementById('eo-start').value,
+    end_time:     document.getElementById('eo-end').value,
+    test_hours:   parseFloat(document.getElementById('eo-testhours').value)||0,
+    downtime:     parseFloat(document.getElementById('eo-downtime').value)||0,
+    total_tests:  parseInt(document.getElementById('eo-total-tests').value)||0,
+    tests_done:   parseInt(document.getElementById('eo-tests-done').value)||0,
+    status:       document.getElementById('eo-status').value,
+  };
+  try {
+    await supaFetch('occupancy?id=eq.'+editingOccId, {
+      method:'PATCH', body: JSON.stringify(upd), prefer:'return=minimal', noJson:true
+    });
+    occupancy[idx] = {...occupancy[idx], ...mapOccupancy({id:editingOccId,
+      ...upd, assigned_to:upd.assigned_to,
+      planned_start:upd.planned_start, planned_end:upd.planned_end,
+      actual_start:upd.actual_start, actual_end:upd.actual_end,
+      start_time:upd.start_time, end_time:upd.end_time,
+      test_hours:upd.test_hours, total_tests:upd.total_tests, tests_done:upd.tests_done
+    })};
+  } catch(e) { alert('Update failed: '+e.message); return; }
+  closeModal('edit-occ-modal');
+  renderOccupancy();
+}
+
+
+// ── PRINT SECTIONS ────────────────────────────────────────────────────────
+function printSection(section) {
+  // Mark report page as print target and hide other sections
+  const page = document.getElementById('page-reports');
+  const secProj = document.getElementById('section-projects');
+  const secOcc  = document.getElementById('section-occupancy');
+  const kpi     = document.getElementById('rpt-kpi');
+
+  // Save original state
+  const origProjDisplay = secProj.style.display;
+  const origOccDisplay  = secOcc.style.display;
+
+  // Set what to show
+  if (section === 'projects') {
+    secOcc.style.display = 'none';
+  } else if (section === 'occupancy') {
+    secProj.style.display = 'none';
+    kpi.style.display = 'none';
+  }
+  // 'all' shows everything
+
+  // Add print-target class so CSS knows which page to show
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('print-target'));
+  page.classList.add('print-target');
+
+  window.print();
+
+  // Restore
+  secProj.style.display = origProjDisplay;
+  secOcc.style.display  = origOccDisplay;
+  kpi.style.display     = '';
+}
+
+
+// ── PRINT TIMELINE ────────────────────────────────────────────────────────
+function printTimeline(mode) {
+  const data   = tlData();
+  const label  = tlType === 'projects' ? 'Projects' : 'Occupancy';
+  const PALETTE= ['#00e5c3','#5b8cff','#4ade80','#fbbf24','#ff6b6b','#f97316','#a78bfa','#06b6d4'];
+
+  // Build a standalone print window so it never disturbs current view
+  const win = window.open('', '_blank', 'width=900,height=700');
+  if (!win) { alert('Please allow popups for this page to use print.'); return; }
+
+  function statusBadge(s) {
+    const col = {'Planning':'#5b8cff','In Progress':'#00e5c3','Completed':'#4ade80','On Hold':'#fbbf24','Scheduled':'#5b8cff','Cancelled':'#ff6b6b'}[s]||'#999';
+    return `<span style="background:${col}22;color:${col};padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;font-family:monospace;text-transform:uppercase">${s}</span>`;
+  }
+
+  function projRow(p) {
+    return `<tr>
+      <td>${p.name}</td>
+      <td>${p.type?`<b>${p.type}</b>`:'—'}</td>
+      <td>${p.lab||'—'}</td>
+      <td>${p.assigned||'—'}</td>
+      <td>${toDisplay(p.start)||'—'}</td><td>${toDisplay(p.end)||'—'}</td>
+      <td style="color:#4ade80">${toDisplay(p.actualStart)||'—'}</td><td style="color:#4ade80">${toDisplay(p.actualEnd)||'—'}</td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.issues||'—'}</td>
+    </tr>`;
+  }
+
+  function occRow(o) {
+    const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
+    const util = tot>0 ? Math.round(th/tot*100)+'%' : '—';
+    return `<tr>
+      <td>${o.lab}</td><td>${o.project||'—'}</td><td>${o.test}</td><td>${o.who||'—'}</td>
+      <td>${toDisplay(o.date)||'—'}</td><td>${toDisplay(o.enddate)||'—'}</td>
+      <td style="color:#4ade80">${toDisplay(o.actualStart)||'—'}</td><td style="color:#4ade80">${toDisplay(o.actualEnd)||'—'}</td>
+      <td>${o.start||'?'}→${o.end||'?'}</td>
+      <td>${th}h</td><td>${dt}h</td><td><b>${util}</b></td>
+      <td>${statusBadge(o.status)}</td>
+    </tr>`;
+  }
+
+  function projHeader() {
+    return `<tr><th>Project</th><th>Type</th><th>Lab</th><th>Assigned</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Status</th><th>Issues</th></tr>`;
+  }
+  function occHeader() {
+    return `<tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time</th><th>Test Hrs</th><th>Downtime</th><th>Util%</th><th>Status</th></tr>`;
+  }
+
+  function statusSummary(items) {
+    const statuses = tlType==='projects'
+      ? ['Planning','In Progress','Completed','On Hold']
+      : ['Scheduled','In Progress','Completed','Cancelled'];
+    const cols = {'Planning':'#5b8cff','In Progress':'#00e5c3','Completed':'#4ade80','On Hold':'#fbbf24','Scheduled':'#5b8cff','Cancelled':'#ff6b6b'};
+    return statuses.map(s => {
+      const n = items.filter(i=>i.status===s).length;
+      if(!n) return '';
+      return `<span style="background:${cols[s]}22;color:${cols[s]};padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;font-family:monospace;margin-right:4px">${s}: ${n}</span>`;
+    }).join('');
+  }
+
+  // ── GROUP DATA ──────────────────────────────────────────────────────────
+  const yearMap = {};
+  data.forEach(item => {
+    const y = getYear(tlDateOf(item));
+    if (y) { if (!yearMap[y]) yearMap[y]=[]; yearMap[y].push(item); }
+  });
+  const years = Object.keys(yearMap).sort((a,b)=>b-a);
+
+  // ── BUILD HTML ─────────────────────────────────────────────────────────
+  let body = '';
+  const title = mode==='yearly' ? `Yearly Summary — ${label}`
+              : mode==='monthly'? `Monthly Summary — ${label}`
+              : `Timeline Report — ${label} (${tlView==='year'?'All Years':tlView==='month'?tlYear:MONTHS[tlMonth]+' '+tlYear})`;
+
+  if (mode === 'current') {
+    // Print whatever is currently on screen
+    body = document.getElementById('tl-body').innerHTML;
+
+  } else if (mode === 'yearly') {
+    years.forEach(y => {
+      const items = yearMap[y];
+      body += `
+        <div class="section">
+          <div class="sec-header">
+            <span class="sec-title">📅 ${y}</span>
+            <span class="sec-count">${items.length} ${label.toLowerCase()}</span>
+          </div>
+          <div class="pills">${statusSummary(items)}</div>
+          <table>
+            <thead>${tlType==='projects'?projHeader():occHeader()}</thead>
+            <tbody>${items.map(i=>tlType==='projects'?projRow(i):occRow(i)).join('')}</tbody>
+          </table>
+        </div>`;
+    });
+    if (!years.length) body = '<p style="color:#999;text-align:center;padding:40px">No data with dates found.</p>';
+
+  } else if (mode === 'monthly') {
+    years.forEach(y => {
+      const monthMap = {};
+      yearMap[y].forEach(item => {
+        const m = getMonth(tlDateOf(item));
+        if (m!==null) { if(!monthMap[m]) monthMap[m]=[]; monthMap[m].push(item); }
+      });
+      Object.keys(monthMap).sort((a,b)=>a-b).forEach(m => {
+        const items = monthMap[m];
+        body += `
+          <div class="section">
+            <div class="sec-header">
+              <span class="sec-title">🗓 ${MONTHS[m]} ${y}</span>
+              <span class="sec-count">${items.length} ${label.toLowerCase()}</span>
+            </div>
+            <div class="pills">${statusSummary(items)}</div>
+            <table>
+              <thead>${tlType==='projects'?projHeader():occHeader()}</thead>
+              <tbody>${items.map(i=>tlType==='projects'?projRow(i):occRow(i)).join('')}</tbody>
+            </table>
+          </div>`;
+      });
+    });
+    if (!years.length) body = '<p style="color:#999;text-align:center;padding:40px">No data with dates found.</p>';
+  }
+
+  // ── WRITE TO PRINT WINDOW ──────────────────────────────────────────────
+  win.document.write(`<!DOCTYPE html><html><head>
+  <meta charset="UTF-8">
+  <title>LabTrack — ${title}</title>
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Segoe UI',Arial,sans-serif; color:#111; background:#fff; padding:24px; font-size:12px; }
+    .print-header { border-bottom:3px solid #00e5c3; padding-bottom:14px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:flex-end; }
+    .print-header h1 { font-size:20px; font-weight:800; color:#0d1b2a; }
+    .print-header .meta { font-size:11px; color:#666; text-align:right; }
+    .print-header .badge { display:inline-block; background:#00e5c322; color:#009b85; padding:2px 10px; border-radius:6px; font-weight:700; font-size:11px; }
+    .section { margin-bottom:28px; page-break-inside:avoid; }
+    .sec-header { display:flex; align-items:center; justify-content:space-between; background:#f0faf8; border-left:4px solid #00e5c3; padding:8px 14px; border-radius:0 8px 8px 0; margin-bottom:8px; }
+    .sec-title { font-size:14px; font-weight:800; color:#0d1b2a; }
+    .sec-count { font-size:11px; color:#666; font-family:monospace; }
+    .pills { margin-bottom:10px; }
+    table { width:100%; border-collapse:collapse; font-size:11px; }
+    th { background:#0d1b2a; color:#fff; padding:7px 10px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; }
+    td { padding:7px 10px; border-bottom:1px solid #eee; vertical-align:top; }
+    tr:nth-child(even) td { background:#f8fffe; }
+    .print-footer { margin-top:32px; border-top:1px solid #ddd; padding-top:10px; font-size:10px; color:#aaa; display:flex; justify-content:space-between; }
+    @media print {
+      body { padding:12px; }
+      .section { page-break-inside:avoid; }
+      .no-print { display:none; }
+    }
+  </style>
+  </head><body>
+  <div class="print-header">
+    <div>
+      <h1>LabTrack — ${title}</h1>
+      <div style="margin-top:6px"><span class="badge">${tlType==='projects'?'📁 Projects':'🔬 Occupancy'}</span></div>
+    </div>
+    <div class="meta">
+      Generated: ${new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'})}<br>
+      Total records: ${data.length}
+    </div>
+  </div>
+  ${body}
+  <div class="print-footer">
+    <span>LabTrack — EPQ Dashboard System</span>
+    <span>Printed: ${new Date().toLocaleString('en-GB')}</span>
+  </div>
+  </body></html>`)
+  setTimeout(()=>win.print(), 500);
+  win.document.close();
+}
+
+// ── EXPORT TIMELINE CSV ───────────────────────────────────────────────────
+function exportTimelineCSV() {
+  const data  = tlData();
+  const label = tlType === 'projects' ? 'projects' : 'occupancy';
+  let rows, headers;
+
+  if (tlType === 'projects') {
+    headers = ['Year','Month','Project','Type','Lab','Assigned To','Planned Start','Planned End','Actual Start','Actual End','TTM Date','Status','Issues'];
+    rows = data.filter(p=>tlDateOf(p)).map(p => {
+      const d=parseDate(tlDateOf(p));
+      return [d?d.getFullYear():'',d?MONTHS[d.getMonth()]:'',p.name,p.type||'',p.lab,p.assigned||'',p.start||'',p.end||'',p.actualStart||'',p.actualEnd||'',p.ttm||'',p.status,p.issues||''];
+    });
+  } else {
+    headers = ['Year','Month','Lab','Project','Test','Assigned To','Planned Start','Planned End','Actual Start','Actual End','Start Time','End Time','Test Hours','Downtime','Utilization%','Status'];
+    rows = data.filter(o=>tlDateOf(o)).map(o => {
+      const d=parseDate(tlDateOf(o));
+      const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
+      return [d?d.getFullYear():'',d?MONTHS[d.getMonth()]:'',o.lab,o.project||'',o.test,o.who||'',o.date||'',o.enddate||'',o.actualStart||'',o.actualEnd||'',o.start||'',o.end||'',th,dt,tot>0?Math.round(th/tot*100)+'%':'—',o.status];
+    });
+  }
+
+  const csv = [headers,...rows].map(r=>r.map(x=>`"${(x||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = `labtrack_timeline_${label}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+
+// ── REPORT FILTER: PROJECTS ───────────────────────────────────────────────
+function filterReportProjects() {
+  const search = (document.getElementById('rf-proj-search')?.value||'').toLowerCase();
+  const status = document.getElementById('rf-proj-status')?.value||'';
+  const type   = document.getElementById('rf-proj-type')?.value||'';
+  const lab    = document.getElementById('rf-proj-lab')?.value||'';
+
+  const filtered = projects.filter(p => {
+    const matchSearch = !search ||
+      (p.name||'').toLowerCase().includes(search) ||
+      (p.assigned||'').toLowerCase().includes(search) ||
+      (p.lab||'').toLowerCase().includes(search) ||
+      (p.issues||'').toLowerCase().includes(search);
+    const matchStatus = !status || p.status === status;
+    const matchType   = !type   || p.type   === type;
+    const matchLab    = !lab    || p.lab    === lab;
+    return matchSearch && matchStatus && matchType && matchLab;
+  });
+
+  const countEl = document.getElementById('rf-proj-count');
+  if(countEl) countEl.textContent = `Showing ${filtered.length} of ${projects.length} projects`;
+
+  document.getElementById('report-table').innerHTML = filtered.map(p=>`<tr>
+    <td>${p.name}</td>
+    <td>${p.type?`<span class="badge badge-blue">${p.type}</span>`:'—'}</td>
+    <td>${p.lab}</td>
+    <td>${p.assigned||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.start)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.end)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(p.actualStart)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(p.actualEnd)||'—'}</td>
+    <td style="color:var(--accent);font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.ttm)||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:11px;text-align:center">${p.totalTests||0}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:11px;text-align:center;color:var(--success)">${p.testsDone||0}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;text-align:center;color:${(p.totalTests||0)>0?(p.testsDone||0)/(p.totalTests||1)>=0.8?'var(--success)':(p.testsDone||0)/(p.totalTests||1)>=0.5?'var(--yellow)':'var(--warn)':'var(--muted)'}">${(p.totalTests||0)>0?Math.round((p.testsDone||0)/(p.totalTests||1)*100)+'%':'—'}</td>
+    <td>${badge(p.status)}</td>
+    <td>${p.issues?p.issues.split(',').map(i=>`<span class="issue-tag">${i.trim()}</span>`).join(''):'—'}</td>
+  </tr>`).join('') || `<tr><td colspan="14"><div class="empty-state">No projects match the selected filters</div></td></tr>`;
+}
+
+function clearReportProjFilters() {
+  ['rf-proj-search','rf-proj-status','rf-proj-type','rf-proj-lab'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.value='';
+  });
+  filterReportProjects();
+}
+
+// ── REPORT FILTER: OCCUPANCY ──────────────────────────────────────────────
+function filterReportOcc() {
+  const search = (document.getElementById('rf-occ-search')?.value||'').toLowerCase();
+  const status = document.getElementById('rf-occ-status')?.value||'';
+  const lab    = document.getElementById('rf-occ-lab')?.value||'';
+  const util   = document.getElementById('rf-occ-util')?.value||'';
+
+  const filtered = occupancy.filter(o => {
+    const matchSearch = !search ||
+      (o.lab||'').toLowerCase().includes(search) ||
+      (o.test||'').toLowerCase().includes(search) ||
+      (o.who||'').toLowerCase().includes(search) ||
+      (o.project||'').toLowerCase().includes(search);
+    const matchStatus = !status || o.status === status;
+    const matchLab    = !lab    || o.lab    === lab;
+    const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
+    const pct = tot>0 ? Math.round(th/tot*100) : -1;
+    const matchUtil = !util ||
+      (util==='high' && pct>=80) ||
+      (util==='mid'  && pct>=50 && pct<80) ||
+      (util==='low'  && pct>=0  && pct<50) ||
+      (util==='none' && pct===-1);
+    return matchSearch && matchStatus && matchLab && matchUtil;
+  });
+
+  const countEl = document.getElementById('rf-occ-count');
+  if(countEl) countEl.textContent = `Showing ${filtered.length} of ${occupancy.length} entries`;
+
+  document.getElementById('rpt-occ-table').innerHTML = filtered.map(o=>{
+    const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
+    const pct=tot>0?Math.round(th/tot*100):-1;
+    const utilCol=pct>=80?'var(--success)':pct>=50?'var(--yellow)':'var(--warn)';
+    return `<tr>
+      <td><strong>${o.lab}</strong></td>
+      <td>${o.project||'—'}</td>
+      <td>${o.test}</td>
+      <td>${o.who||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(o.date)||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(o.enddate)||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(o.actualStart)||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(o.actualEnd)||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px">${o.start||'?'}→${o.end||'?'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--accent2)">${th}h</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--warn)">${dt}h</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${pct>=0?utilCol:'var(--muted)'}">${pct>=0?pct+'%':'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;text-align:center">${o.totalTests||0}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;text-align:center;color:var(--success)">${o.testsDone||0}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;text-align:center;color:${(o.totalTests||0)>0?(o.testsDone||0)/(o.totalTests||1)>=0.8?'var(--success)':(o.testsDone||0)/(o.totalTests||1)>=0.5?'var(--yellow)':'var(--warn)':'var(--muted)'}">${(o.totalTests||0)>0?Math.round((o.testsDone||0)/(o.totalTests||1)*100)+'%':'—'}</td>
+      <td>${badge(o.status)}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="16"><div class="empty-state">No entries match the selected filters</div></td></tr>`;
+}
+
+function clearReportOccFilters() {
+  ['rf-occ-search','rf-occ-status','rf-occ-lab','rf-occ-util'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.value='';
+  });
+  filterReportOcc();
+}
+
+// INIT
+loadData();
+</script>
+</body>
+</html>
