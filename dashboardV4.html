@@ -969,6 +969,41 @@
     </div>
   </div>
 
+  <!-- SECTION 4: LAB UTILIZATION ANALYTICS -->
+  <div id="section-util-analytics" style="margin-top:8px;">
+    <div class="report-section-title"><span>🏭</span> Lab Utilization Analytics</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+      <select id="rpt-util-period" onchange="renderUtilAnalyticsReport()" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
+        <option value="day">Per Day</option><option value="week">Per Week</option>
+        <option value="month" selected>Per Month</option><option value="year">Per Year</option>
+      </select>
+      <select id="rpt-util-shift" onchange="renderUtilAnalyticsReport()" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
+        <option value="">All Shifts</option>
+        <option value="A">Shift A</option><option value="B">Shift B</option><option value="C">Shift C</option>
+      </select>
+      <select id="rpt-util-lab-filter" onchange="renderUtilAnalyticsReport()" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
+        <option value="">All Labs</option>
+      </select>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;" class="charts-3col">
+      <div class="chart-card"><h3><span class="dot" style="background:#00e5c3"></span>🎯 Productivity (%)</h3><div id="rpt-productivity"></div></div>
+      <div class="chart-card"><h3><span class="dot" style="background:#5b8cff"></span>📈 Utilization (%)</h3><div id="rpt-utilization"></div></div>
+      <div class="chart-card"><h3><span class="dot" style="background:#4ade80"></span>⚡ Max Utilization (%)</h3><div id="rpt-max-util"></div></div>
+    </div>
+
+    <!-- Rugby Budget in Report -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="inv-status-grid">
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#4ade80"></span>🏉 Rugby OPEX Budget (₹)</h3>
+        <div id="rpt-rugby-opex"></div>
+      </div>
+      <div class="chart-card">
+        <h3><span class="dot" style="background:#5b8cff"></span>🏗️ Rugby CAPEX Budget (mUSD)</h3>
+        <div id="rpt-rugby-capex"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- TIMELINE REPORT -->
@@ -1514,7 +1549,7 @@
 
       <!-- 5b: Rugby CAPEX Budget -->
       <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
-        <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;">🏗️ Rugby CAPEX Budget</div>
+        <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;">🏗️ Rugby CAPEX Budget (mUSD)</div>
         <div class="form-grid">
           <div class="form-group"><label>Total CAPEX Budget (mUSD)</label><input type="number" id="cx-capex-budget" placeholder="0" min="0" oninput="calcCapex()"></div>
           <div class="form-group"><label>PR Raised Against CAPEX (mUSD)</label><input type="number" id="cx-capex-pr" placeholder="0" min="0" oninput="calcCapex()"></div>
@@ -1526,10 +1561,16 @@
 
     </div>
 
-    <!-- Combined Rugby Budget Bar Chart -->
-    <div style="margin-top:20px;background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
-      <div style="font-size:13px;font-weight:700;color:var(--success);margin-bottom:14px;">📊 Rugby Budget Overview</div>
-      <div id="rugby-combined-chart"></div>
+    <!-- Separate bar charts -->
+    <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="inv-status-grid">
+      <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:var(--success);margin-bottom:12px;">📊 Rugby OPEX Overview (₹)</div>
+        <div id="rugby-opex-bar"></div>
+      </div>
+      <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:12px;">📊 Rugby CAPEX Overview (mUSD)</div>
+        <div id="rugby-capex-bar"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1622,6 +1663,7 @@ let tasks = [];
 // create policy "Allow all" on tasks for all using (true) with check (true);
 const SUPA_URL = 'https://mbimdmxxhekyriqnyvml.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1iaW1kbXh4aGVreXJpcW55dm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NDgyNDIsImV4cCI6MjA5NDEyNDI0Mn0.Yj5mufcDfxDXbXr-7Ag8T30RF9_5M5YFFE3bjvzZvKM';
+
 
 async function supaFetch(endpoint, options={}) {
   const res = await fetch(SUPA_URL + '/rest/v1/' + endpoint, {
@@ -2898,6 +2940,48 @@ function renderNablReport() {
 
   // NABL table
   filterReportNabl();
+  renderUtilAnalyticsReport();
+}
+
+function renderUtilAnalyticsReport() {
+  // Populate lab dropdown
+  const labSel = document.getElementById('rpt-util-lab-filter');
+  if (labSel) {
+    const labs = [...new Set(occupancy.map(o=>o.lab).filter(Boolean))].sort();
+    const cur  = labSel.value;
+    labSel.innerHTML = '<option value="">All Labs</option>'
+      + labs.map(l=>`<option value="${l}"${l===cur?' selected':''}>${l}</option>`).join('');
+  }
+
+  const period = document.getElementById('rpt-util-period')?.value||'month';
+  const shiftF = document.getElementById('rpt-util-shift')?.value||'';
+  const labF   = document.getElementById('rpt-util-lab-filter')?.value||'';
+
+  const base = occupancy.filter(o=>(!shiftF||o.shift===shiftF)&&(!labF||o.lab===labF));
+  const allKeys = [...new Set(base.map(o=>getPeriodKey(o,period)).filter(k=>k!=='Unknown'))].sort().slice(-10);
+
+  const grouped = {};
+  allKeys.forEach(k=>{ grouped[k]={}; PRODUCTS.forEach(p=>{ grouped[k][p]=[]; }); });
+  base.forEach(o=>{
+    const k=getPeriodKey(o,period); const p=o.product||'';
+    if(grouped[k]&&PRODUCTS.includes(p)) grouped[k][p].push(o);
+  });
+
+  renderGroupedBarChart('rpt-productivity', allKeys, grouped, 'productivity', '%', 100, 'var(--card)');
+  renderGroupedBarChart('rpt-utilization',  allKeys, grouped, 'utilization',  '%', 100, 'var(--card)');
+  renderGroupedBarChart('rpt-max-util',     allKeys, grouped, 'maxUtil',      '%', 100, 'var(--card)');
+
+  // Rugby charts in report
+  renderBarChart('rpt-rugby-opex', [
+    {l:'Total Budget', v:capexData.rugbyBudget||0, c:'#4ade80'},
+    {l:'PR Raised',    v:capexData.rugbyPR||0,     c:'#fbbf24'},
+    {l:'Balance',      v:Math.max((capexData.rugbyBudget||0)-(capexData.rugbyPR||0),0), c:'#4ade80'},
+  ], fmt);
+  renderBarChart('rpt-rugby-capex', [
+    {l:'Total Budget', v:capexData.capexBudget||0, c:'#5b8cff'},
+    {l:'PR Raised',    v:capexData.capexPR||0,     c:'#a78bfa'},
+    {l:'Balance',      v:Math.max((capexData.capexBudget||0)-(capexData.capexPR||0),0), c:'#5b8cff'},
+  ], fmtCapex);
 }
 
 function filterReportNabl() {
@@ -2985,6 +3069,7 @@ let capexData = {
 };
 
 function fmt(n) { return '₹'+Number(n||0).toLocaleString('en-IN'); }
+function fmtCapex(n) { return Number(n||0).toFixed(3)+' mUSD'; }
 
 function calcCapex() {
   // Pending PR = Total PR - Released PR
@@ -3053,17 +3138,17 @@ function renderRugbyCharts() {
   renderRugbyDonut('rugby-opex-chart',
     capexData.rugbyBudget||0,
     capexData.rugbyPR||0,
-    '#4ade80', '#fbbf24', 'Rugby OPEX'
+    '#4ade80', '#fbbf24', 'Rugby OPEX', '₹'
   );
   renderRugbyDonut('rugby-capex-chart',
     capexData.capexBudget||0,
     capexData.capexPR||0,
-    '#5b8cff', '#a78bfa', 'Rugby CAPEX'
+    '#5b8cff', '#a78bfa', 'Rugby CAPEX', 'mUSD'
   );
   renderRugbyCombined();
 }
 
-function renderRugbyDonut(containerId, budget, prRaised, colorBudget, colorPR, label) {
+function renderRugbyDonut(containerId, budget, prRaised, colorBudget, colorPR, label, currency) {
   const el = document.getElementById(containerId);
   if (!el) return;
   const balance = Math.max(budget - prRaised, 0);
@@ -3091,39 +3176,45 @@ function renderRugbyDonut(containerId, budget, prRaised, colorBudget, colorPR, l
     +'<div style="flex:1;min-width:90px;">'
     +'<div style="margin-bottom:8px;cursor:default">'
     +'<div style="font-size:10px;color:var(--muted)">Total Budget</div>'
-    +'<div style="font-size:15px;font-weight:700;color:'+colorBudget+'">'+fmt(budget)+'</div></div>'
+    +(()=>{ const fv=v=>currency==='mUSD'?fmtCapex(v):fmt(v); return '<div style="font-size:14px;font-weight:700;color:'+colorBudget+'">'+fv(budget)+'</div></div>'
     +'<div style="margin-bottom:8px;cursor:default">'
     +'<div style="font-size:10px;color:var(--muted)">PR Raised</div>'
-    +'<div style="font-size:15px;font-weight:700;color:'+colorPR+'">'+fmt(prRaised)+'</div></div>'
+    +'<div style="font-size:14px;font-weight:700;color:'+colorPR+'">'+fv(prRaised)+'</div></div>'
     +'<div style="cursor:default">'
     +'<div style="font-size:10px;color:var(--muted)">Balance</div>'
-    +'<div style="font-size:15px;font-weight:700;color:'+balColor+'">'+fmt(balance)+'</div></div>'
+    +'<div style="font-size:14px;font-weight:700;color:'+balColor+'">'+fv(balance)+'</div></div>'; })()
     +'</div></div>';
 }
 
-function renderRugbyCombined() {
-  const el = document.getElementById('rugby-combined-chart');
+function renderBarChart(elId, data, fmtFn) {
+  const el = document.getElementById(elId);
   if (!el) return;
-  const data = [
-    {l:'OPEX Budget',   v:capexData.rugbyBudget||0,  c:'#4ade80'},
-    {l:'OPEX PR Raised',v:capexData.rugbyPR||0,      c:'#fbbf24'},
-    {l:'OPEX Balance',  v:Math.max((capexData.rugbyBudget||0)-(capexData.rugbyPR||0),0), c:'#4ade80'},
-    {l:'CAPEX Budget',  v:capexData.capexBudget||0,  c:'#5b8cff'},
-    {l:'CAPEX PR Raised',v:capexData.capexPR||0,     c:'#a78bfa'},
-    {l:'CAPEX Balance', v:Math.max((capexData.capexBudget||0)-(capexData.capexPR||0),0), c:'#5b8cff'},
-  ];
   const max = Math.max(...data.map(d=>d.v), 1);
-  if (data.every(d=>d.v===0)) { el.innerHTML='<div style="color:var(--muted);font-size:12px">Enter values above to see chart</div>'; return; }
-  el.innerHTML = data.map(d=>
-    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;" '
-    +'onmouseenter="showCapexTip(event,this.dataset.l,this.dataset.v,\'\',this.dataset.c)" onmouseleave="hideTooltip()" '
-    +'data-l="'+d.l+'" data-v="'+fmt(d.v)+'" data-c="'+d.c+'">'
-    +'<div style="width:130px;font-size:11px;color:var(--muted);text-align:right;flex-shrink:0">'+d.l+'</div>'
-    +'<div style="flex:1;background:var(--border);border-radius:4px;height:22px;overflow:hidden;">'
+  if (data.every(d=>d.v===0)) { el.innerHTML='<div style="color:var(--muted);font-size:12px">Enter values to see chart</div>'; return; }
+  el.innerHTML = data.map(d=>{
+    const dispVal = fmtFn ? fmtFn(d.v) : fmt(d.v);
+    return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:default" title="'+d.l+': '+dispVal+'">'
+    +'<div style="width:100px;font-size:11px;color:var(--muted);text-align:right;flex-shrink:0">'+d.l+'</div>'
+    +'<div style="flex:1;background:var(--border);border-radius:4px;height:20px;overflow:hidden;">'
     +'<div style="width:'+Math.max(d.v/max*100,d.v>0?2:0)+'%;height:100%;background:'+d.c+';border-radius:4px;'
-    +'display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:#111;-webkit-print-color-adjust:exact">'+fmt(d.v)+'</div>'
-    +'</div></div>'
-  ).join('');
+    +'display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:#111;-webkit-print-color-adjust:exact">'
+    +dispVal+'</div></div></div>';
+  }).join('');
+}
+
+function renderRugbyCombined() {
+  // OPEX bar (₹)
+  renderBarChart('rugby-opex-bar', [
+    {l:'Total Budget',   v:capexData.rugbyBudget||0,  c:'#4ade80'},
+    {l:'PR Raised',      v:capexData.rugbyPR||0,      c:'#fbbf24'},
+    {l:'Balance',        v:Math.max((capexData.rugbyBudget||0)-(capexData.rugbyPR||0),0), c:'#4ade80'},
+  ], fmt);
+  // CAPEX bar (mUSD)
+  renderBarChart('rugby-capex-bar', [
+    {l:'Total Budget',   v:capexData.capexBudget||0,  c:'#5b8cff'},
+    {l:'PR Raised',      v:capexData.capexPR||0,      c:'#a78bfa'},
+    {l:'Balance',        v:Math.max((capexData.capexBudget||0)-(capexData.capexPR||0),0), c:'#5b8cff'},
+  ], fmtCapex);
 }
 
 function renderInvStats(type) {
@@ -4325,6 +4416,122 @@ function buildInvoicePrintSection() {
   return html;
 }
 
+function buildProjectKPIPrint() {
+  if (!projects.length) return '';
+  const statColors = {
+    'Planning':'#5b8cff','In Progress':'#00e5c3','Completed':'#4ade80','On Hold':'#fbbf24'
+  };
+  const statGroups = {};
+  projects.forEach(p => { statGroups[p.status] = (statGroups[p.status]||[]).concat(p); });
+
+  // KPI summary cards
+  const total     = projects.length;
+  const completed = projects.filter(p=>p.status==='Completed').length;
+  const active    = projects.filter(p=>p.status==='In Progress').length;
+  const onHold    = projects.filter(p=>p.status==='On Hold').length;
+  const planning  = projects.filter(p=>p.status==='Planning').length;
+  const compRate  = total>0 ? Math.round(completed/total*100) : 0;
+
+  const kpiCards = [
+    {l:'Total Projects', v:total,     c:'#00e5c3'},
+    {l:'In Progress',    v:active,    c:'#5b8cff'},
+    {l:'Completed',      v:completed, c:'#4ade80'},
+    {l:'On Hold',        v:onHold,    c:'#fbbf24'},
+    {l:'Planning',       v:planning,  c:'#a78bfa'},
+    {l:'Completion Rate',v:compRate+'%', c:'#4ade80'},
+  ].map(k=>'<div class="kpi-box" style="border-top:3px solid '+k.c+';-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+    +'<div class="lbl">'+k.l+'</div>'
+    +'<div class="val" style="color:'+k.c+'">'+k.v+'</div></div>'
+  ).join('');
+
+  // Project entries table
+  const projRows = projects.map(p=>{
+    const comp = p.totalTests>0 ? Math.round(p.testsDone/p.totalTests*100)+'%' : '—';
+    return '<tr>'
+      +'<td><strong>'+p.name+'</strong></td>'
+      +'<td>'+( p.type||'—')+'</td>'
+      +'<td style="font-size:7pt">'+( p.lab||'—')+'</td>'
+      +'<td>'+( p.assigned||'—')+'</td>'
+      +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.start)||'—')+'</td>'
+      +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.end)||'—')+'</td>'
+      +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.actualStart)||'—')+'</td>'
+      +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.actualEnd)||'—')+'</td>'
+      +'<td style="text-align:center">'+p.totalTests+'</td>'
+      +'<td style="text-align:center">'+p.testsDone+'</td>'
+      +'<td style="text-align:center;font-weight:700;color:'+(p.totalTests>0?'#166534':'#666')+'">'+comp+'</td>'
+      +'<td><span style="background:'+(statColors[p.status]||'#999')+'22;color:'+(statColors[p.status]||'#999')+';padding:1px 6px;border-radius:4px;font-size:7pt;font-weight:700;-webkit-print-color-adjust:exact">'+p.status+'</span></td>'
+      +'<td style="font-size:7pt;max-width:80px;word-break:break-word">'+(p.issues||'—')+'</td>'
+      +'</tr>';
+  }).join('');
+
+  return '<div class="section-title">📁 Project Overview</div>'
+    +'<div class="kpi-grid" style="margin-bottom:16px;">'+kpiCards+'</div>'
+    +'<table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:7.5pt">'
+    +'<colgroup><col style="width:14%"><col style="width:5%"><col style="width:10%"><col style="width:8%">'
+    +'<col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%">'
+    +'<col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:8%"><col style="width:12%"></colgroup>'
+    +'<thead><tr style="background:#0d1b2a;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+    +'<th style="padding:4px 5px;text-align:left">Project Name</th><th>Type</th><th>Lab</th><th>Assigned</th>'
+    +'<th>Plan Start</th><th>Plan End</th><th>Act Start</th><th>Act End</th>'
+    +'<th>Tests</th><th>Done</th><th>%</th><th>Status</th><th>Issues</th>'
+    +'</tr></thead><tbody>'+projRows+'</tbody></table>';
+}
+
+function buildOccupancyPrintSection(occRows, occHTML) {
+  // Productivity/Utilization/MaxUtil summary table by product
+  const period = 'month';
+  const allKeys = [...new Set(occupancy.map(o=>getPeriodKey(o,period)).filter(k=>k!=='Unknown'))].sort();
+  let analyticsSection = '';
+
+  if (allKeys.length) {
+    const grouped = {};
+    allKeys.forEach(k=>{ grouped[k]={}; PRODUCTS.forEach(p=>{ grouped[k][p]=[]; }); });
+    occupancy.forEach(o=>{
+      const k=getPeriodKey(o,period); const p=o.product||'';
+      if(grouped[k]&&PRODUCTS.includes(p)) grouped[k][p].push(o);
+    });
+
+    function metricTable(metric, label, formula) {
+      const rows = allKeys.map(k=>{
+        const cells = PRODUCTS.map(p=>{
+          const m = calcMetrics(grouped[k][p]||[]);
+          const v = m[metric];
+          const col = v===null?'#666':v>=80?'#166534':v>=50?'#92400e':'#991b1b';
+          return '<td style="text-align:center;font-weight:600;color:'+col+'">'+(v!==null?Math.round(v)+'%':'—')+'</td>';
+        }).join('');
+        return '<tr><td style="font-family:monospace;font-size:7pt">'+k+'</td>'+cells+'</tr>';
+      }).join('');
+      return '<div style="margin-bottom:10px">'
+        +'<div style="font-size:8pt;font-weight:700;margin-bottom:4px;color:#0d1b2a">'+label+' <span style="font-size:7pt;color:#666;font-weight:400">'+formula+'</span></div>'
+        +'<table style="width:100%;border-collapse:collapse;font-size:7.5pt">'
+        +'<thead><tr style="background:#0d1b2a;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+        +'<th style="padding:3px 6px;text-align:left">Period</th>'
+        +PRODUCTS.map(p=>'<th style="padding:3px 6px;text-align:center">'+p+'</th>').join('')
+        +'</tr></thead><tbody>'+rows+'</tbody></table></div>';
+    }
+
+    analyticsSection = '<div class="section-title" style="margin-top:14px">🏭 Lab Analytics — Product Wise (Monthly)</div>'
+      + metricTable('productivity','🎯 Productivity','Testing ÷ (Testing + Downtime)')
+      + metricTable('utilization', '📈 Utilization', 'Testing ÷ Available Hrs')
+      + metricTable('maxUtil',     '⚡ Max Utilization','Testing ÷ Total Shift Hrs');
+  }
+
+  const occTable = '<div class="section-title" style="margin-top:14px">🔬 Utilization Details ('+occRows.length+' records)</div>'
+    +'<table class="ot">'
+    +'<colgroup><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col></colgroup>'
+    +'<thead><tr>'
+    +'<th>Lab</th><th>Project</th><th>Test Stage</th><th>Assigned</th>'
+    +'<th>Start Date</th><th>End Date</th>'
+    +'<th>Test Hrs</th><th>Downtime</th><th>Util%</th>'
+    +'<th>Tests</th><th>Done</th><th>Comp%</th>'
+    +'<th>Status</th><th>Shift</th><th>Product</th><th>Proj Code</th><th>Test Type</th>'
+    +'</tr></thead>'
+    +'<tbody>'+(occHTML||'<tr><td colspan="17" style="text-align:center;color:#999">No records</td></tr>')+'</tbody>'
+    +'</table>';
+
+  return analyticsSection + occTable;
+}
+
 function buildEntryTable(type) {
   const entries = type==='opex' ? capexData.opexEntries : capexData.capexEntries;
   if (!entries.length) return '';
@@ -4373,22 +4580,33 @@ function printSection(section) {
     );
   }
 
-  const projHTML = projRows.map(p => `<tr>
-    <td>${p.name}</td>
-    <td>${p.type||'—'}</td>
-    <td style="max-width:120px">${p.lab||'—'}</td>
-    <td>${p.assigned||'—'}</td>
-    <td>${toDisplay(p.start)||'—'}</td>
-    <td>${toDisplay(p.end)||'—'}</td>
-    <td>${toDisplay(p.actualStart)||'—'}</td>
-    <td>${toDisplay(p.actualEnd)||'—'}</td>
-    <td>${toDisplay(p.ttm)||'—'}</td>
-    <td style="text-align:center">${p.totalTests||0}</td>
-    <td style="text-align:center">${p.testsDone||0}</td>
-    <td style="text-align:center;font-weight:700">${p.totalTests>0?Math.round(p.testsDone/p.totalTests*100)+'%':'—'}</td>
-    <td>${statusBadge(p.status)}</td>
-    <td style="max-width:100px;word-break:break-word">${p.issues||'—'}</td>
-  </tr>`).join('');
+  // Build KPI card HTML for projects
+  const projHTML = projRows.map(p => {
+    const comp = p.totalTests>0 ? Math.round(p.testsDone/p.totalTests*100) : null;
+    const compColor = comp!==null ? (comp>=80?'#166534':comp>=50?'#92400e':'#991b1b') : '#666';
+    const statusColors = {'Planning':'#1d4ed8','In Progress':'#0f766e','Completed':'#166534','On Hold':'#92400e'};
+    const sColor = statusColors[p.status]||'#374151';
+    return '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;page-break-inside:avoid;border-left:4px solid '+sColor+';-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:4px;margin-bottom:8px;">'
+      +'<div style="font-size:11pt;font-weight:700;color:#0d1b2a">'+p.name+'</div>'
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap;">'
+      +(p.type?'<span style="background:#dbeafe;color:#1e40af;padding:1px 7px;border-radius:4px;font-size:7.5pt;font-weight:700;-webkit-print-color-adjust:exact">'+p.type+'</span>':'')
+      +'<span style="background:'+sColor+'22;color:'+sColor+';padding:1px 7px;border-radius:4px;font-size:7.5pt;font-weight:700;-webkit-print-color-adjust:exact">'+p.status+'</span>'
+      +'</div></div>'
+      +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;font-size:8pt;">'
+      +'<div><span style="color:#6b7280">Lab: </span><strong>'+(p.lab||'—')+'</strong></div>'
+      +'<div><span style="color:#6b7280">Assigned: </span><strong>'+(p.assigned||'—')+'</strong></div>'
+      +'<div><span style="color:#6b7280">Planned Start: </span><strong>'+(toDisplay(p.start)||'—')+'</strong></div>'
+      +'<div><span style="color:#6b7280">Planned End: </span><strong>'+(toDisplay(p.end)||'—')+'</strong></div>'
+      +'<div><span style="color:#6b7280">Actual Start: </span><strong>'+(toDisplay(p.actualStart)||'—')+'</strong></div>'
+      +'<div><span style="color:#6b7280">Actual End: </span><strong>'+(toDisplay(p.actualEnd)||'—')+'</strong></div>'
+      +'<div><span style="color:#6b7280">TTM: </span><strong>'+(toDisplay(p.ttm)||'—')+'</strong></div>'
+      +'<div><span style="color:#6b7280">Tests: </span><strong>'+(p.testsDone||0)+'/'+(p.totalTests||0)+'</strong>'
+      +(comp!==null?' <span style="color:'+compColor+';font-weight:700">('+comp+'%)</span>':'')+'</div>'
+      +'</div>'
+      +(p.issues?'<div style="margin-top:6px;font-size:7.5pt;"><span style="color:#6b7280">Issues: </span><span style="color:#991b1b">'+p.issues+'</span></div>':'')
+      +'</div>';
+  }).join('');
 
   // ── Build occupancy rows ────────────────────────────────────────────
   let occRows = occupancy;
@@ -4408,14 +4626,12 @@ function printSection(section) {
     const tt=o.totalTests||0, td=o.testsDone||0;
     const comp = tt>0?Math.round(td/tt*100)+'%':'—';
     return `<tr>
-      <td style="max-width:110px">${o.lab}</td>
+      <td style="max-width:100px">${o.lab}</td>
       <td>${o.project||'—'}</td>
-      <td>${o.test}</td>
+      <td>${o.test||'—'}</td>
       <td>${o.who||'—'}</td>
-      <td>${toDisplay(o.date)||'—'}</td>
-      <td>${toDisplay(o.enddate)||'—'}</td>
-      <td>${toDisplay(o.actualStart)||'—'}</td>
-      <td>${toDisplay(o.actualEnd)||'—'}</td>
+      <td style="font-family:monospace;font-size:7pt">${toDisplay(o.actualStart)||'—'}</td>
+      <td style="font-family:monospace;font-size:7pt">${toDisplay(o.actualEnd)||'—'}</td>
       <td style="text-align:center">${th}</td>
       <td style="text-align:center">${dt}</td>
       <td style="text-align:center;font-weight:700">${util}</td>
@@ -4423,6 +4639,10 @@ function printSection(section) {
       <td style="text-align:center">${td}</td>
       <td style="text-align:center;font-weight:700">${comp}</td>
       <td>${statusBadge(o.status)}</td>
+      <td>${o.shift?'Shift '+o.shift:'—'}</td>
+      <td>${o.product||'—'}</td>
+      <td style="font-size:7pt">${o.projectCode||'—'}</td>
+      <td style="font-size:7pt">${o.testType||'—'}</td>
     </tr>`;
   }).join('');
 
@@ -4530,29 +4750,9 @@ function printSection(section) {
 
   ${showProj ? `
   <div class="section-title">📁 Project Details (${projRows.length} records)</div>
-  <table class="pt">
-    <colgroup><col><col><col><col><col><col><col><col><col><col><col><col><col><col></colgroup>
-    <thead><tr>
-      <th>Project Name</th><th>Type</th><th>Lab</th><th>Assigned To</th>
-      <th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th>
-      <th>TTM Date</th><th>Total Tests</th><th>Done</th><th>Test%</th>
-      <th>Status</th><th>Issues</th>
-    </tr></thead>
-    <tbody>${projHTML || '<tr><td colspan="14" style="text-align:center;color:#999">No projects</td></tr>'}</tbody>
-  </table>` : ''}
+  ${projHTML || '<div style="color:#999;text-align:center;padding:16px">No projects</div>'}` : ''}
 
-  ${showOcc ? `
-  <div class="section-title" style="margin-top:16px">🔬 Utilization Details (${occRows.length} records)</div>
-  <table class="ot">
-    <colgroup><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col></colgroup>
-    <thead><tr>
-      <th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th>
-      <th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th>
-      <th>Test Hrs</th><th>Downtime</th><th>Util%</th>
-      <th>Total Tests</th><th>Done</th><th>Comp%</th><th>Status</th>
-    </tr></thead>
-    <tbody>${occHTML || '<tr><td colspan="15" style="text-align:center;color:#999">No records</td></tr>'}</tbody>
-  </table>` : ''}
+  ${showOcc ? buildOccupancyPrintSection(occRows, occHTML) : ''}
 
   ${showTask ? `
   <div class="section-title" style="margin-top:16px">✦ NABL (${tasks.length} records)</div>
@@ -4931,6 +5131,47 @@ function filterReportOcc() {
       <td>${badge(o.status)}</td>
     </tr>`;
   }).join('') || `<tr><td colspan="16"><div class="empty-state">No entries match the selected filters</div></td></tr>`;
+}
+
+function renderUtilAnalyticsReport() {
+  // Populate lab dropdown
+  const labSel = document.getElementById('rpt-util-lab-filter');
+  if (labSel) {
+    const labs = [...new Set(occupancy.map(o=>o.lab).filter(Boolean))].sort();
+    const cur  = labSel.value;
+    labSel.innerHTML = '<option value="">All Labs</option>'
+      + labs.map(l=>`<option value="${l}"${l===cur?' selected':''}>${l}</option>`).join('');
+  }
+
+  const period = document.getElementById('rpt-util-period')?.value||'month';
+  const shiftF = document.getElementById('rpt-util-shift')?.value||'';
+  const labF   = document.getElementById('rpt-util-lab-filter')?.value||'';
+
+  const base = occupancy.filter(o=>(!shiftF||o.shift===shiftF)&&(!labF||o.lab===labF));
+  const allKeys = [...new Set(base.map(o=>getPeriodKey(o,period)).filter(k=>k!=='Unknown'))].sort().slice(-10);
+
+  const grouped = {};
+  allKeys.forEach(k=>{ grouped[k]={}; PRODUCTS.forEach(p=>{ grouped[k][p]=[]; }); });
+  base.forEach(o=>{
+    const k=getPeriodKey(o,period); const p=o.product||'';
+    if(grouped[k]&&PRODUCTS.includes(p)) grouped[k][p].push(o);
+  });
+
+  renderGroupedBarChart('rpt-productivity', allKeys, grouped, 'productivity', '%', 100, 'var(--card)');
+  renderGroupedBarChart('rpt-utilization',  allKeys, grouped, 'utilization',  '%', 100, 'var(--card)');
+  renderGroupedBarChart('rpt-max-util',     allKeys, grouped, 'maxUtil',      '%', 100, 'var(--card)');
+
+  // Rugby charts in report
+  renderBarChart('rpt-rugby-opex', [
+    {l:'Total Budget', v:capexData.rugbyBudget||0, c:'#4ade80'},
+    {l:'PR Raised',    v:capexData.rugbyPR||0,     c:'#fbbf24'},
+    {l:'Balance',      v:Math.max((capexData.rugbyBudget||0)-(capexData.rugbyPR||0),0), c:'#4ade80'},
+  ], fmt);
+  renderBarChart('rpt-rugby-capex', [
+    {l:'Total Budget', v:capexData.capexBudget||0, c:'#5b8cff'},
+    {l:'PR Raised',    v:capexData.capexPR||0,     c:'#a78bfa'},
+    {l:'Balance',      v:Math.max((capexData.capexBudget||0)-(capexData.capexPR||0),0), c:'#5b8cff'},
+  ], fmtCapex);
 }
 
 function filterReportNabl() {
