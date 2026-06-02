@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard — Project and Lab Management system</title>
+<title>EPQ Dashboard — EPQ Project and Lab Management System</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1912,7 +1912,8 @@ function getLabData(prefix) {
     done:    parseFloat(row.querySelector('.lab-done')?.value)||0,
     pending: parseFloat(row.querySelector('.lab-pending')?.value)||0,
     notes:   row.querySelector('.lab-notes')?.value||''
-  }));
+  })).filter(l => l.total > 0 || l.done > 0 || l.notes);
+  // Only keep labs where data was actually entered
 }
 
 function populateLabRows(prefix, labData) {
@@ -1941,12 +1942,15 @@ function populateLabRows(prefix, labData) {
 
 async function addProject() {
   const name=document.getElementById('p-name').value.trim();
+  // Auto-refresh lab rows from checked boxes (in case user didn't click Refresh)
+  refreshLabRows('p');
   const labData = getLabData('p');
   const lab = labData.map(l=>l.lab).join(', ');
   const totalTestsAll = labData.reduce((s,l)=>s+l.total,0);
   const testsDoneAll  = labData.reduce((s,l)=>s+l.done,0);
   const labDataJson   = JSON.stringify(labData);
-  if(!name||!lab){alert('Project name and lab are required.');return;}
+  if(!name){alert('Project name is required.');return;}
+  if(!lab){alert('Please select at least one lab.');return;}
   const obj = {
     name, lab,
     lab_data:     labDataJson,
@@ -1989,8 +1993,9 @@ function renderProjects(){
   if(!list.length){tb.innerHTML=`<tr><td colspan="12"><div class="empty-state"><div class="icon">◈</div>No projects found</div></td></tr>`;return;}
   tb.innerHTML=list.map(p=>{
     // Per-lab breakdown
-    const labBreakdown = p.labData && p.labData.length
-      ? p.labData.map(l=>{
+    const activeLabsP = (p.labData||[]).filter(l=>l.total>0||l.done>0||l.notes);
+    const labBreakdown = activeLabsP.length
+      ? activeLabsP.map(l=>{
           const lComp = l.total>0?Math.round(l.done/l.total*100):0;
           const lCol  = lComp>=80?'#4ade80':lComp>=50?'#fbbf24':'#ef4444';
           return `<div style="font-size:10px;margin-bottom:2px;">`
@@ -2604,8 +2609,9 @@ function renderDashboard(){
     <div class="stat-card yellow" onmouseenter="showTip(event,'occ')" onmouseleave="hideTooltip()">
       <div class="stat-label">Utilization Sessions</div><div class="stat-value">${occ}</div><div class="stat-sub">Currently active</div></div>`;
   document.getElementById('dash-projects').innerHTML=projects.slice(0,5).map(p=>{
-    const totalAll = p.labData&&p.labData.length ? p.labData.reduce((s,l)=>s+l.total,0) : p.totalTests||0;
-    const doneAll  = p.labData&&p.labData.length ? p.labData.reduce((s,l)=>s+l.done,0)  : p.testsDone||0;
+    const activeL  = (p.labData||[]).filter(l=>l.total>0||l.done>0||l.notes);
+    const totalAll = activeL.length ? activeL.reduce((s,l)=>s+l.total,0) : p.totalTests||0;
+    const doneAll  = activeL.length ? activeL.reduce((s,l)=>s+l.done,0)  : p.testsDone||0;
     const comp = totalAll>0?Math.round(doneAll/totalAll*100):0;
     const col  = comp>=80?'#4ade80':comp>=50?'#fbbf24':'#ef4444';
     return `<tr>
@@ -4320,12 +4326,15 @@ function editProject(id) {
 
 async function saveProjectEdit() {
   const name = document.getElementById('ep-name').value.trim();
+  // Auto-refresh lab rows from checked boxes
+  refreshLabRows('ep');
   const labData     = getLabData('ep');
   const lab         = labData.map(l=>l.lab).join(', ');
   const totalTestsAll = labData.reduce((s,l)=>s+l.total,0);
   const testsDoneAll  = labData.reduce((s,l)=>s+l.done,0);
   const labDataJson   = JSON.stringify(labData);
-  if (!name || !lab) { alert('Project name and lab are required.'); return; }
+  if (!name) { alert('Project name is required.'); return; }
+  if (!lab)  { alert('Please select at least one lab.'); return; }
   const idx = projects.findIndex(x => x.id === editingProjId);
   if (idx === -1) return;
   const upd = {
@@ -5091,8 +5100,9 @@ function filterReportProjects() {
   if(countEl) countEl.textContent = `Showing ${filtered.length} of ${projects.length} projects`;
 
   document.getElementById('report-table').innerHTML = filtered.map(p=>{
-    const totalAll = p.labData&&p.labData.length ? p.labData.reduce((s,l)=>s+l.total,0) : p.totalTests||0;
-    const doneAll  = p.labData&&p.labData.length ? p.labData.reduce((s,l)=>s+l.done,0)  : p.testsDone||0;
+    const activeL  = (p.labData||[]).filter(l=>l.total>0||l.done>0||l.notes);
+    const totalAll = activeL.length ? activeL.reduce((s,l)=>s+l.total,0) : p.totalTests||0;
+    const doneAll  = activeL.length ? activeL.reduce((s,l)=>s+l.done,0)  : p.testsDone||0;
     const comp     = totalAll>0?Math.round(doneAll/totalAll*100):0;
     const col      = comp>=80?'var(--success)':comp>=50?'var(--yellow)':'var(--warn)';
     const labBreak = p.labData&&p.labData.length
