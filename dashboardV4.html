@@ -664,6 +664,53 @@
       </select>
     </div>
   </div>
+  <!-- ── LAB ANALYTICS GRAPHS ─────────────────────────────────────────── -->
+  <div class="table-card" style="padding:16px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+      <h2 style="font-size:15px;margin:0;">📊 Lab Analytics — Productivity / Utilization / Max Util</h2>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+        <select id="graph-period" onchange="renderUtilGraphs()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
+          <option value="day">Per Day</option>
+          <option value="week">Per Week (W1–W4)</option>
+          <option value="month" selected>Per Month</option>
+          <option value="year">Per Year</option>
+        </select>
+        <select id="graph-shift" onchange="renderUtilGraphs()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
+          <option value="">All Shifts</option>
+          <option value="A">Shift A</option>
+          <option value="B">Shift B</option>
+          <option value="C">Shift C</option>
+        </select>
+        <select id="graph-lab" onchange="renderUtilGraphs()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;max-width:180px;">
+          <option value="">All Labs</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;" class="charts-3col">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px;">
+          🎯 Productivity
+          <span style="font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;">Testing Hrs ÷ (Testing + Downtime)</span>
+        </div>
+        <div id="graph-productivity"></div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:10px;">
+          📈 Utilization
+          <span style="font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;">Testing Hrs ÷ Available Hrs</span>
+        </div>
+        <div id="graph-utilization"></div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--success);margin-bottom:10px;">
+          ⚡ Max Utilization
+          <span style="font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;">Testing Hrs ÷ Total Shift Hrs (8h)</span>
+        </div>
+        <div id="graph-max-util"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="search-bar">
     <input type="text" id="occ-search" placeholder="Search by lab, project, test..." oninput="renderOccupancy()">
     <select id="occ-filter" onchange="renderOccupancy()">
@@ -1597,7 +1644,6 @@ let tasks = [];
 const SUPA_URL = 'https://mbimdmxxhekyriqnyvml.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1iaW1kbXh4aGVreXJpcW55dm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NDgyNDIsImV4cCI6MjA5NDEyNDI0Mn0.Yj5mufcDfxDXbXr-7Ag8T30RF9_5M5YFFE3bjvzZvKM';
 
-
 async function supaFetch(endpoint, options={}) {
   const res = await fetch(SUPA_URL + '/rest/v1/' + endpoint, {
     ...options,
@@ -1971,7 +2017,10 @@ async function addProject() {
     const rows = await supaFetch('projects', { method:'POST', body: JSON.stringify(obj) });
     projects.unshift(mapProject(rows[0]));
   } catch(e) { alert('Save failed: ' + e.message); return; }
-  ['p-name','p-lab','p-start','p-end','p-actual-start','p-actual-end','p-ttm','p-assigned','p-issues','p-total-tests','p-tests-done','p-notes'].forEach(id=>document.getElementById(id).value='');
+  ['p-name','p-start','p-end','p-actual-start','p-actual-end','p-ttm','p-assigned','p-issues','p-notes'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
+  document.getElementById('p-lab-rows').innerHTML='';
+  document.querySelectorAll('#p-lab-checks input').forEach(cb=>cb.checked=false);
+  document.getElementById('p-overall-progress').innerHTML='';
   document.getElementById('p-type').value='';
   document.getElementById('p-status').value='Planning';
   renderProjects(); alert('✅ Project added!');
@@ -2057,7 +2106,7 @@ async function addOccupancy(){
     const rows = await supaFetch('occupancy', { method:'POST', body: JSON.stringify(obj) });
     occupancy.unshift(mapOccupancy(rows[0]));
   } catch(e) { alert('Save failed: '+e.message); return; }
-  ['o-project','o-test','o-who','o-date','o-enddate','o-actual-start','o-actual-end','o-start','o-end'].forEach(id=>document.getElementById(id).value='');
+  ['o-project','o-who','o-actual-start','o-actual-end','o-start','o-end'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
   document.getElementById('o-lab').value='';
   document.getElementById('o-testhours').value='';
   document.getElementById('o-downtime').value='';
@@ -2135,21 +2184,23 @@ function populateLabDropdown() {
 
 function renderUtilGraphs() {
   populateLabDropdown();
-  const period   = document.getElementById('graph-period')?.value||'month';
-  const shiftF   = document.getElementById('graph-shift')?.value||'';
-  const labF     = document.getElementById('graph-lab')?.value||'';
+  const period = document.getElementById('graph-period')?.value||'month';
+  const shiftF = document.getElementById('graph-shift')?.value||'';
+  const labF   = document.getElementById('graph-lab')?.value||'';
 
-  // Filter base data
   let base = occupancy.filter(o =>
     (!shiftF || o.shift===shiftF) &&
     (!labF   || o.lab===labF)
   );
 
-  // Get all period keys sorted
   const allKeys = [...new Set(base.map(o=>getPeriodKey(o,period)).filter(k=>k!=='Unknown'))].sort();
-  if (!allKeys.length) {
-  if (!allKeys.length) { return; }
-  // Build grouped data: { periodKey: { RAC:{...}, PAC:{...}, VRF:{...} } }
+
+  ['graph-productivity','graph-utilization','graph-max-util'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && !allKeys.length) el.innerHTML='<div style="color:var(--muted);font-size:11px;padding:8px">No data yet — add utilization entries first</div>';
+  });
+  if (!allKeys.length) return;
+
   const grouped = {};
   allKeys.forEach(k=>{ grouped[k]={}; PRODUCTS.forEach(p=>{ grouped[k][p]=[]; }); });
   base.forEach(o=>{
@@ -2158,11 +2209,9 @@ function renderUtilGraphs() {
     if (grouped[k] && PRODUCTS.includes(p)) grouped[k][p].push(o);
   });
 
-  // Render each graph
-
-
-
-}
+  renderGroupedBarChart('graph-productivity', allKeys, grouped, 'productivity', '%', 100, '#1a2f45');
+  renderGroupedBarChart('graph-utilization',  allKeys, grouped, 'utilization',  '%', 100, '#1a2f45');
+  renderGroupedBarChart('graph-max-util',     allKeys, grouped, 'maxUtil',      '%', 100, '#1a2f45');
 }
 
 function renderGroupedBarChart(containerId, keys, grouped, metric, unit, maxScale, bgColor) {
@@ -4318,8 +4367,6 @@ function editProject(id) {
   document.getElementById('ep-type').value     = p.type    || '';
   document.getElementById('ep-status').value   = p.status  || 'Planning';
   document.getElementById('ep-issues').value      = p.issues     || '';
-  document.getElementById('ep-total-tests').value = p.totalTests || '';
-  document.getElementById('ep-tests-done').value  = p.testsDone  || '';
   document.getElementById('ep-notes').value       = p.notes      || '';
   openModal('edit-proj-modal');
 }
@@ -4371,36 +4418,39 @@ function editOccupancy(id) {
   const o = occupancy.find(x => x.id === id);
   if (!o) return;
   editingOccId = id;
-  document.getElementById('eo-lab').value     = o.lab     || '';
-  document.getElementById('eo-project').value = o.project || '';
-  document.getElementById('eo-test').value    = o.test    || '';
-  document.getElementById('eo-who').value     = o.who     || '';
-  document.getElementById('eo-date').value = o.date || '';
-  document.getElementById('eo-enddate').value = o.enddate || '';
-  document.getElementById('eo-actual-start').value = o.actualStart || '';
-  document.getElementById('eo-actual-end').value = o.actualEnd || '';
-  document.getElementById('eo-start').value      = o.start    || '';
-  document.getElementById('eo-end').value        = o.end      || '';
-  document.getElementById('eo-testhours').value   = o.testHours  || '';
-  document.getElementById('eo-downtime').value    = o.downtime   || '';
-  document.getElementById('eo-total-tests').value = o.totalTests || '';
-  document.getElementById('eo-tests-done').value  = o.testsDone  || '';
-  document.getElementById('eo-status').value     = o.status   || 'Scheduled';
+  document.getElementById('eo-lab').value          = o.lab        || '';
+  document.getElementById('eo-project').value      = o.project    || '';
+  document.getElementById('eo-test').value         = o.test       || '';
+  document.getElementById('eo-who').value          = o.who        || '';
+  document.getElementById('eo-actual-start').value = o.actualStart|| '';
+  document.getElementById('eo-actual-end').value   = o.actualEnd  || '';
+  document.getElementById('eo-start').value        = o.start      || '';
+  document.getElementById('eo-end').value          = o.end        || '';
+  document.getElementById('eo-testhours').value    = o.testHours  || '';
+  document.getElementById('eo-downtime').value     = o.downtime   || '';
+  document.getElementById('eo-total-tests').value  = o.totalTests || '';
+  document.getElementById('eo-tests-done').value   = o.testsDone  || '';
+  document.getElementById('eo-status').value       = o.status     || 'Scheduled';
+  document.getElementById('eo-shift').value        = o.shift      || '';
+  document.getElementById('eo-project-code').value = o.projectCode|| '';
+  document.getElementById('eo-test-type').value    = o.testType   || '';
+  document.getElementById('eo-product').value      = o.product    || '';
+  document.getElementById('eo-avail-hrs').value    = o.availHrs   || '';
   openModal('edit-occ-modal');
 }
 
 async function saveOccupancyEdit() {
   const lab  = document.getElementById('eo-lab').value.trim();
   const test = document.getElementById('eo-test').value.trim();
-  if (!lab || !test) { alert('Lab name and test name are required.'); return; }
+  if (!lab || !test) { alert('Lab name and test stage are required.'); return; }
   const idx = occupancy.findIndex(x => x.id === editingOccId);
   if (idx === -1) return;
   const upd = {
     lab, test,
     project:      document.getElementById('eo-project').value.trim(),
     researcher:   document.getElementById('eo-who').value.trim(),
-    planned_start:getDate('eo-date'),
-    planned_end:  getDate('eo-enddate'),
+    planned_start:'',
+    planned_end:  '',
     actual_start: getDate('eo-actual-start'),
     actual_end:   getDate('eo-actual-end'),
     start_time:   document.getElementById('eo-start').value,
