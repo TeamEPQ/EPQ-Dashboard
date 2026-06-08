@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard — Projetc and Lab management system</title>
+<title>EPQ Dashboard — EPQ Project and Lab Management System</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -446,7 +446,7 @@
       <div class="form-group"><label>Project Name</label><input type="text" id="p-name" placeholder="e.g. Project Alpha"></div>
       <div class="form-group full">
         <label>Labs (select all that apply)</label>
-        <div id="p-lab-checks" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;" onchange="refreshLabRows('p')">
+        <div id="p-lab-checks" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;">
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-3" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-3</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-4" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-4</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF APF" style="cursor:pointer;accent-color:var(--accent)"> VRF APF</label>
@@ -468,10 +468,6 @@
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC RAC Sound LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC RAC Sound LAB</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Software DQA LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC Software DQA LAB</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Structure Test Lab" style="cursor:pointer;accent-color:var(--accent)"> GDC Structure Test Lab</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-1" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-1</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-2" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-2</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-3" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-3</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-4" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-4</label>
         </div>
       </div>
       <!-- Per-lab test counts -->
@@ -573,15 +569,7 @@
               <option>GDC PAC Sound LAB</option>
               <option>GDC RAC Sound LAB</option>
               <option>GDC Software DQA LAB</option>
-              <option>GDC Structure Test Lab</option>
-              <option>VRF 40HP Lab-1</option>
-              <option>VRF 40HP Lab-2</option>
-              <option>VRF 40HP Lab-3</option>
-              <option>VRF 40HP Lab-4</option>
-              <option>VRF 40HP Lab-1</option>
-              <option>VRF 40HP Lab-2</option>
-              <option>VRF 40HP Lab-3</option>
-              <option>VRF 40HP Lab-4</option></select></div>
+              <option>GDC Structure Test Lab</option></select></div>
       <div class="form-group"><label>Product</label>
         <select id="o-product">
           <option value="">— Select Product —</option>
@@ -676,53 +664,6 @@
       </select>
     </div>
   </div>
-  <!-- ── LAB ANALYTICS GRAPHS ─────────────────────────────────────────── -->
-  <div class="table-card" style="padding:16px;margin-bottom:20px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-      <h2 style="font-size:15px;margin:0;">📊 Lab Analytics — Productivity / Utilization / Max Util</h2>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-        <select id="graph-period" onchange="renderUtilGraphs()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
-          <option value="day">Per Day</option>
-          <option value="week">Per Week (W1–W4)</option>
-          <option value="month" selected>Per Month</option>
-          <option value="year">Per Year</option>
-        </select>
-        <select id="graph-shift" onchange="renderUtilGraphs()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
-          <option value="">All Shifts</option>
-          <option value="A">Shift A</option>
-          <option value="B">Shift B</option>
-          <option value="C">Shift C</option>
-        </select>
-        <select id="graph-lab" onchange="renderUtilGraphs()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;max-width:180px;">
-          <option value="">All Labs</option>
-        </select>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;" class="charts-3col">
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px;">
-          🎯 Productivity
-          <span style="font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;">Testing Hrs ÷ (Testing + Downtime)</span>
-        </div>
-        <div id="graph-productivity"></div>
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:10px;">
-          📈 Utilization
-          <span style="font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;">Testing Hrs ÷ Available Hrs</span>
-        </div>
-        <div id="graph-utilization"></div>
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--success);margin-bottom:10px;">
-          ⚡ Max Utilization
-          <span style="font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;">Testing Hrs ÷ Total Shift Hrs (8h)</span>
-        </div>
-        <div id="graph-max-util"></div>
-      </div>
-    </div>
-  </div>
-
   <div class="search-bar">
     <input type="text" id="occ-search" placeholder="Search by lab, project, test..." oninput="renderOccupancy()">
     <select id="occ-filter" onchange="renderOccupancy()">
@@ -1020,7 +961,7 @@
       <div class="form-group"><label>Project Name</label><input type="text" id="ep-name" placeholder="Project name"></div>
       <div class="form-group full">
         <label>Labs (select all that apply)</label>
-        <div id="ep-lab-checks" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;" onchange="refreshLabRows('ep')">
+        <div id="ep-lab-checks" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;">
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-3" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-3</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-4" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-4</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF APF" style="cursor:pointer;accent-color:var(--accent)"> VRF APF</label>
@@ -1042,10 +983,6 @@
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC RAC Sound LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC RAC Sound LAB</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Software DQA LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC Software DQA LAB</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Structure Test Lab" style="cursor:pointer;accent-color:var(--accent)"> GDC Structure Test Lab</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-1" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-1</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-2" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-2</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-3" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-3</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-4" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-4</label>
         </div>
       </div>
       <div class="form-group full">
@@ -1138,15 +1075,7 @@
               <option>GDC PAC Sound LAB</option>
               <option>GDC RAC Sound LAB</option>
               <option>GDC Software DQA LAB</option>
-              <option>GDC Structure Test Lab</option>
-              <option>VRF 40HP Lab-1</option>
-              <option>VRF 40HP Lab-2</option>
-              <option>VRF 40HP Lab-3</option>
-              <option>VRF 40HP Lab-4</option>
-              <option>VRF 40HP Lab-1</option>
-              <option>VRF 40HP Lab-2</option>
-              <option>VRF 40HP Lab-3</option>
-              <option>VRF 40HP Lab-4</option></select></div>
+              <option>GDC Structure Test Lab</option></select></div>
       <div class="form-group"><label>Product</label>
         <select id="eo-product">
           <option value="">— Select Product —</option>
@@ -1924,27 +1853,25 @@ function refreshLabRows(prefix) {
   const checks = document.querySelectorAll(`#${prefix}-lab-checks input[type=checkbox]:checked`);
   const container = document.getElementById(`${prefix}-lab-rows`);
   if (!container) return;
-  // Save existing entered values
+  // Keep existing values when refreshing
   const existing = {};
   container.querySelectorAll('[data-lab]').forEach(row => {
     const lab = row.dataset.lab;
     if (!lab) return;
     existing[lab] = {
-      total: row.querySelector('.lab-total')?.value || '',
-      done:  row.querySelector('.lab-done')?.value  || '',
-      notes: row.querySelector('.lab-notes')?.value || ''
+      total:   row.querySelector('.lab-total')?.value   || '',
+      done:    row.querySelector('.lab-done')?.value    || '',
+      notes:   row.querySelector('.lab-notes')?.value   || ''
     };
   });
-  const selected = [...checks].map(cb => cb.value);
-  // Add new rows for newly checked labs, remove rows for unchecked labs
-  container.innerHTML = selected.map(lab => getLabRow(prefix, lab)).join('');
-  // Restore previously entered values
+  container.innerHTML = [...checks].map(cb => getLabRow(prefix, cb.value)).join('');
+  // Restore values
   container.querySelectorAll('[data-lab]').forEach(row => {
     const lab = row.dataset.lab;
     if (existing[lab]) {
-      row.querySelector('.lab-total').value = existing[lab].total;
-      row.querySelector('.lab-done').value  = existing[lab].done;
-      row.querySelector('.lab-notes').value = existing[lab].notes;
+      row.querySelector('.lab-total').value  = existing[lab].total;
+      row.querySelector('.lab-done').value   = existing[lab].done;
+      row.querySelector('.lab-notes').value  = existing[lab].notes;
     }
   });
   calcLabProgress(prefix);
@@ -2044,10 +1971,7 @@ async function addProject() {
     const rows = await supaFetch('projects', { method:'POST', body: JSON.stringify(obj) });
     projects.unshift(mapProject(rows[0]));
   } catch(e) { alert('Save failed: ' + e.message); return; }
-  ['p-name','p-start','p-end','p-actual-start','p-actual-end','p-ttm','p-assigned','p-issues','p-notes'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
-  document.getElementById('p-lab-rows').innerHTML='';
-  document.querySelectorAll('#p-lab-checks input').forEach(cb=>cb.checked=false);
-  document.getElementById('p-overall-progress').innerHTML='';
+  ['p-name','p-lab','p-start','p-end','p-actual-start','p-actual-end','p-ttm','p-assigned','p-issues','p-total-tests','p-tests-done','p-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('p-type').value='';
   document.getElementById('p-status').value='Planning';
   renderProjects(); alert('✅ Project added!');
@@ -2133,7 +2057,7 @@ async function addOccupancy(){
     const rows = await supaFetch('occupancy', { method:'POST', body: JSON.stringify(obj) });
     occupancy.unshift(mapOccupancy(rows[0]));
   } catch(e) { alert('Save failed: '+e.message); return; }
-  ['o-project','o-who','o-actual-start','o-actual-end','o-start','o-end'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
+  ['o-project','o-test','o-who','o-date','o-enddate','o-actual-start','o-actual-end','o-start','o-end'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('o-lab').value='';
   document.getElementById('o-testhours').value='';
   document.getElementById('o-downtime').value='';
@@ -2211,23 +2135,21 @@ function populateLabDropdown() {
 
 function renderUtilGraphs() {
   populateLabDropdown();
-  const period = document.getElementById('graph-period')?.value||'month';
-  const shiftF = document.getElementById('graph-shift')?.value||'';
-  const labF   = document.getElementById('graph-lab')?.value||'';
+  const period   = document.getElementById('graph-period')?.value||'month';
+  const shiftF   = document.getElementById('graph-shift')?.value||'';
+  const labF     = document.getElementById('graph-lab')?.value||'';
 
+  // Filter base data
   let base = occupancy.filter(o =>
     (!shiftF || o.shift===shiftF) &&
     (!labF   || o.lab===labF)
   );
 
+  // Get all period keys sorted
   const allKeys = [...new Set(base.map(o=>getPeriodKey(o,period)).filter(k=>k!=='Unknown'))].sort();
-
-  ['graph-productivity','graph-utilization','graph-max-util'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el && !allKeys.length) el.innerHTML='<div style="color:var(--muted);font-size:11px;padding:8px">No data yet — add utilization entries first</div>';
-  });
-  if (!allKeys.length) return;
-
+  if (!allKeys.length) {
+  if (!allKeys.length) { return; }
+  // Build grouped data: { periodKey: { RAC:{...}, PAC:{...}, VRF:{...} } }
   const grouped = {};
   allKeys.forEach(k=>{ grouped[k]={}; PRODUCTS.forEach(p=>{ grouped[k][p]=[]; }); });
   base.forEach(o=>{
@@ -2236,9 +2158,11 @@ function renderUtilGraphs() {
     if (grouped[k] && PRODUCTS.includes(p)) grouped[k][p].push(o);
   });
 
-  renderGroupedBarChart('graph-productivity', allKeys, grouped, 'productivity', '%', 100, '#1a2f45');
-  renderGroupedBarChart('graph-utilization',  allKeys, grouped, 'utilization',  '%', 100, '#1a2f45');
-  renderGroupedBarChart('graph-max-util',     allKeys, grouped, 'maxUtil',      '%', 100, '#1a2f45');
+  // Render each graph
+
+
+
+}
 }
 
 function renderGroupedBarChart(containerId, keys, grouped, metric, unit, maxScale, bgColor) {
@@ -4377,28 +4301,27 @@ function editProject(id) {
   const p = projects.find(x => x.id === id);
   if (!p) return;
   editingProjId = id;
-  document.getElementById('ep-name').value         = p.name      || '';
-  document.getElementById('ep-start').value        = p.start     || '';
-  document.getElementById('ep-end').value          = p.end       || '';
-  document.getElementById('ep-actual-start').value = p.actualStart|| '';
-  document.getElementById('ep-actual-end').value   = p.actualEnd || '';
-  document.getElementById('ep-ttm').value          = p.ttm       || '';
-  document.getElementById('ep-assigned').value     = p.assigned  || '';
-  document.getElementById('ep-type').value         = p.type      || '';
-  document.getElementById('ep-status').value       = p.status    || 'Planning';
-  document.getElementById('ep-issues').value       = p.issues    || '';
-  document.getElementById('ep-notes').value        = p.notes     || '';
-  // Open modal first so DOM elements are visible and queryable
+  document.getElementById('ep-name').value     = p.name    || '';
+  // Populate lab checkboxes and rows
+  if (p.labData && p.labData.length) {
+    populateLabRows('ep', p.labData);
+  } else if (p.lab) {
+    const legacyLabs = p.lab.split(',').map(l=>l.trim()).filter(Boolean);
+    populateLabRows('ep', legacyLabs.map(l=>({lab:l,total:0,done:0,notes:''})));
+  }
+  document.getElementById('ep-start').value = p.start || '';
+  document.getElementById('ep-end').value = p.end || '';
+  document.getElementById('ep-actual-start').value = p.actualStart || '';
+  document.getElementById('ep-actual-end').value = p.actualEnd || '';
+  document.getElementById('ep-ttm').value = p.ttm || '';
+  document.getElementById('ep-assigned').value = p.assigned|| '';
+  document.getElementById('ep-type').value     = p.type    || '';
+  document.getElementById('ep-status').value   = p.status  || 'Planning';
+  document.getElementById('ep-issues').value      = p.issues     || '';
+  document.getElementById('ep-total-tests').value = p.totalTests || '';
+  document.getElementById('ep-tests-done').value  = p.testsDone  || '';
+  document.getElementById('ep-notes').value       = p.notes      || '';
   openModal('edit-proj-modal');
-  // Then populate lab checkboxes and rows
-  setTimeout(() => {
-    if (p.labData && p.labData.length) {
-      populateLabRows('ep', p.labData);
-    } else if (p.lab) {
-      const legacyLabs = p.lab.split(',').map(l=>l.trim()).filter(Boolean);
-      populateLabRows('ep', legacyLabs.map(l=>({lab:l,total:0,done:0,notes:''})));
-    }
-  }, 50);
 }
 
 async function saveProjectEdit() {
@@ -4416,7 +4339,6 @@ async function saveProjectEdit() {
   if (idx === -1) return;
   const upd = {
     name, lab,
-    lab_data:     labDataJson,
     start_date:   getDate('ep-start'),
     end_date:     getDate('ep-end'),
     actual_start: getDate('ep-actual-start'),
@@ -4437,8 +4359,7 @@ async function saveProjectEdit() {
     projects[idx] = {...projects[idx], ...mapProject({id:editingProjId, ...upd,
       start_date:upd.start_date, end_date:upd.end_date,
       actual_start:upd.actual_start, actual_end:upd.actual_end,
-      total_tests:upd.total_tests, tests_done:upd.tests_done,
-      lab_data: labDataJson
+      total_tests:upd.total_tests, tests_done:upd.tests_done
     })};
   } catch(e) { alert('Update failed: '+e.message); return; }
   closeModal('edit-proj-modal');
@@ -4450,39 +4371,36 @@ function editOccupancy(id) {
   const o = occupancy.find(x => x.id === id);
   if (!o) return;
   editingOccId = id;
-  document.getElementById('eo-lab').value          = o.lab        || '';
-  document.getElementById('eo-project').value      = o.project    || '';
-  document.getElementById('eo-test').value         = o.test       || '';
-  document.getElementById('eo-who').value          = o.who        || '';
-  document.getElementById('eo-actual-start').value = o.actualStart|| '';
-  document.getElementById('eo-actual-end').value   = o.actualEnd  || '';
-  document.getElementById('eo-start').value        = o.start      || '';
-  document.getElementById('eo-end').value          = o.end        || '';
-  document.getElementById('eo-testhours').value    = o.testHours  || '';
-  document.getElementById('eo-downtime').value     = o.downtime   || '';
-  document.getElementById('eo-total-tests').value  = o.totalTests || '';
-  document.getElementById('eo-tests-done').value   = o.testsDone  || '';
-  document.getElementById('eo-status').value       = o.status     || 'Scheduled';
-  document.getElementById('eo-shift').value        = o.shift      || '';
-  document.getElementById('eo-project-code').value = o.projectCode|| '';
-  document.getElementById('eo-test-type').value    = o.testType   || '';
-  document.getElementById('eo-product').value      = o.product    || '';
-  document.getElementById('eo-avail-hrs').value    = o.availHrs   || '';
+  document.getElementById('eo-lab').value     = o.lab     || '';
+  document.getElementById('eo-project').value = o.project || '';
+  document.getElementById('eo-test').value    = o.test    || '';
+  document.getElementById('eo-who').value     = o.who     || '';
+  document.getElementById('eo-date').value = o.date || '';
+  document.getElementById('eo-enddate').value = o.enddate || '';
+  document.getElementById('eo-actual-start').value = o.actualStart || '';
+  document.getElementById('eo-actual-end').value = o.actualEnd || '';
+  document.getElementById('eo-start').value      = o.start    || '';
+  document.getElementById('eo-end').value        = o.end      || '';
+  document.getElementById('eo-testhours').value   = o.testHours  || '';
+  document.getElementById('eo-downtime').value    = o.downtime   || '';
+  document.getElementById('eo-total-tests').value = o.totalTests || '';
+  document.getElementById('eo-tests-done').value  = o.testsDone  || '';
+  document.getElementById('eo-status').value     = o.status   || 'Scheduled';
   openModal('edit-occ-modal');
 }
 
 async function saveOccupancyEdit() {
   const lab  = document.getElementById('eo-lab').value.trim();
   const test = document.getElementById('eo-test').value.trim();
-  if (!lab || !test) { alert('Lab name and test stage are required.'); return; }
+  if (!lab || !test) { alert('Lab name and test name are required.'); return; }
   const idx = occupancy.findIndex(x => x.id === editingOccId);
   if (idx === -1) return;
   const upd = {
     lab, test,
     project:      document.getElementById('eo-project').value.trim(),
     researcher:   document.getElementById('eo-who').value.trim(),
-    planned_start:'',
-    planned_end:  '',
+    planned_start:getDate('eo-date'),
+    planned_end:  getDate('eo-enddate'),
     actual_start: getDate('eo-actual-start'),
     actual_end:   getDate('eo-actual-end'),
     start_time:   document.getElementById('eo-start').value,
@@ -4492,11 +4410,6 @@ async function saveOccupancyEdit() {
     total_tests:  parseInt(document.getElementById('eo-total-tests').value)||0,
     tests_done:   parseInt(document.getElementById('eo-tests-done').value)||0,
     status:       document.getElementById('eo-status').value,
-    shift:        document.getElementById('eo-shift').value,
-    project_code: document.getElementById('eo-project-code').value.trim(),
-    test_type:    document.getElementById('eo-test-type').value,
-    product:      document.getElementById('eo-product').value,
-    avail_hrs:    parseFloat(document.getElementById('eo-avail-hrs').value)||0,
   };
   try {
     await supaFetch('occupancy?id=eq.'+editingOccId, {
@@ -4507,9 +4420,7 @@ async function saveOccupancyEdit() {
       planned_start:upd.planned_start, planned_end:upd.planned_end,
       actual_start:upd.actual_start, actual_end:upd.actual_end,
       start_time:upd.start_time, end_time:upd.end_time,
-      test_hours:upd.test_hours, total_tests:upd.total_tests, tests_done:upd.tests_done,
-      shift:upd.shift, project_code:upd.project_code, test_type:upd.test_type,
-      product:upd.product, avail_hrs:upd.avail_hrs
+      test_hours:upd.test_hours, total_tests:upd.total_tests, tests_done:upd.tests_done
     })};
   } catch(e) { alert('Update failed: '+e.message); return; }
   closeModal('edit-occ-modal');
