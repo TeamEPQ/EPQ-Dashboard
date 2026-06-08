@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard — EPQ Project and Lab Management System</title>
+<title>EPQ Dashboard — Projetc and Lab management system title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -446,7 +446,7 @@
       <div class="form-group"><label>Project Name</label><input type="text" id="p-name" placeholder="e.g. Project Alpha"></div>
       <div class="form-group full">
         <label>Labs (select all that apply)</label>
-        <div id="p-lab-checks" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;">
+        <div id="p-lab-checks" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;" onchange="refreshLabRows('p')">
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-3" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-3</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-4" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-4</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF APF" style="cursor:pointer;accent-color:var(--accent)"> VRF APF</label>
@@ -468,6 +468,10 @@
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC RAC Sound LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC RAC Sound LAB</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Software DQA LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC Software DQA LAB</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Structure Test Lab" style="cursor:pointer;accent-color:var(--accent)"> GDC Structure Test Lab</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-1" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-1</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-2" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-2</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-3" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-3</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-4" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-4</label>
         </div>
       </div>
       <!-- Per-lab test counts -->
@@ -569,7 +573,15 @@
               <option>GDC PAC Sound LAB</option>
               <option>GDC RAC Sound LAB</option>
               <option>GDC Software DQA LAB</option>
-              <option>GDC Structure Test Lab</option></select></div>
+              <option>GDC Structure Test Lab</option>
+              <option>VRF 40HP Lab-1</option>
+              <option>VRF 40HP Lab-2</option>
+              <option>VRF 40HP Lab-3</option>
+              <option>VRF 40HP Lab-4</option>
+              <option>VRF 40HP Lab-1</option>
+              <option>VRF 40HP Lab-2</option>
+              <option>VRF 40HP Lab-3</option>
+              <option>VRF 40HP Lab-4</option></select></div>
       <div class="form-group"><label>Product</label>
         <select id="o-product">
           <option value="">— Select Product —</option>
@@ -1008,7 +1020,7 @@
       <div class="form-group"><label>Project Name</label><input type="text" id="ep-name" placeholder="Project name"></div>
       <div class="form-group full">
         <label>Labs (select all that apply)</label>
-        <div id="ep-lab-checks" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;">
+        <div id="ep-lab-checks" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;" onchange="refreshLabRows('ep')">
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-3" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-3</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-4" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-4</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF APF" style="cursor:pointer;accent-color:var(--accent)"> VRF APF</label>
@@ -1030,6 +1042,10 @@
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC RAC Sound LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC RAC Sound LAB</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Software DQA LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC Software DQA LAB</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Structure Test Lab" style="cursor:pointer;accent-color:var(--accent)"> GDC Structure Test Lab</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-1" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-1</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-2" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-2</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-3" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-3</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-4" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-4</label>
         </div>
       </div>
       <div class="form-group full">
@@ -1122,7 +1138,15 @@
               <option>GDC PAC Sound LAB</option>
               <option>GDC RAC Sound LAB</option>
               <option>GDC Software DQA LAB</option>
-              <option>GDC Structure Test Lab</option></select></div>
+              <option>GDC Structure Test Lab</option>
+              <option>VRF 40HP Lab-1</option>
+              <option>VRF 40HP Lab-2</option>
+              <option>VRF 40HP Lab-3</option>
+              <option>VRF 40HP Lab-4</option>
+              <option>VRF 40HP Lab-1</option>
+              <option>VRF 40HP Lab-2</option>
+              <option>VRF 40HP Lab-3</option>
+              <option>VRF 40HP Lab-4</option></select></div>
       <div class="form-group"><label>Product</label>
         <select id="eo-product">
           <option value="">— Select Product —</option>
@@ -1644,6 +1668,7 @@ let tasks = [];
 const SUPA_URL = 'https://mbimdmxxhekyriqnyvml.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1iaW1kbXh4aGVreXJpcW55dm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NDgyNDIsImV4cCI6MjA5NDEyNDI0Mn0.Yj5mufcDfxDXbXr-7Ag8T30RF9_5M5YFFE3bjvzZvKM';
 
+
 async function supaFetch(endpoint, options={}) {
   const res = await fetch(SUPA_URL + '/rest/v1/' + endpoint, {
     ...options,
@@ -1899,25 +1924,27 @@ function refreshLabRows(prefix) {
   const checks = document.querySelectorAll(`#${prefix}-lab-checks input[type=checkbox]:checked`);
   const container = document.getElementById(`${prefix}-lab-rows`);
   if (!container) return;
-  // Keep existing values when refreshing
+  // Save existing entered values
   const existing = {};
   container.querySelectorAll('[data-lab]').forEach(row => {
     const lab = row.dataset.lab;
     if (!lab) return;
     existing[lab] = {
-      total:   row.querySelector('.lab-total')?.value   || '',
-      done:    row.querySelector('.lab-done')?.value    || '',
-      notes:   row.querySelector('.lab-notes')?.value   || ''
+      total: row.querySelector('.lab-total')?.value || '',
+      done:  row.querySelector('.lab-done')?.value  || '',
+      notes: row.querySelector('.lab-notes')?.value || ''
     };
   });
-  container.innerHTML = [...checks].map(cb => getLabRow(prefix, cb.value)).join('');
-  // Restore values
+  const selected = [...checks].map(cb => cb.value);
+  // Add new rows for newly checked labs, remove rows for unchecked labs
+  container.innerHTML = selected.map(lab => getLabRow(prefix, lab)).join('');
+  // Restore previously entered values
   container.querySelectorAll('[data-lab]').forEach(row => {
     const lab = row.dataset.lab;
     if (existing[lab]) {
-      row.querySelector('.lab-total').value  = existing[lab].total;
-      row.querySelector('.lab-done').value   = existing[lab].done;
-      row.querySelector('.lab-notes').value  = existing[lab].notes;
+      row.querySelector('.lab-total').value = existing[lab].total;
+      row.querySelector('.lab-done').value  = existing[lab].done;
+      row.querySelector('.lab-notes').value = existing[lab].notes;
     }
   });
   calcLabProgress(prefix);
@@ -4350,25 +4377,28 @@ function editProject(id) {
   const p = projects.find(x => x.id === id);
   if (!p) return;
   editingProjId = id;
-  document.getElementById('ep-name').value     = p.name    || '';
-  // Populate lab checkboxes and rows
-  if (p.labData && p.labData.length) {
-    populateLabRows('ep', p.labData);
-  } else if (p.lab) {
-    const legacyLabs = p.lab.split(',').map(l=>l.trim()).filter(Boolean);
-    populateLabRows('ep', legacyLabs.map(l=>({lab:l,total:0,done:0,notes:''})));
-  }
-  document.getElementById('ep-start').value = p.start || '';
-  document.getElementById('ep-end').value = p.end || '';
-  document.getElementById('ep-actual-start').value = p.actualStart || '';
-  document.getElementById('ep-actual-end').value = p.actualEnd || '';
-  document.getElementById('ep-ttm').value = p.ttm || '';
-  document.getElementById('ep-assigned').value = p.assigned|| '';
-  document.getElementById('ep-type').value     = p.type    || '';
-  document.getElementById('ep-status').value   = p.status  || 'Planning';
-  document.getElementById('ep-issues').value      = p.issues     || '';
-  document.getElementById('ep-notes').value       = p.notes      || '';
+  document.getElementById('ep-name').value         = p.name      || '';
+  document.getElementById('ep-start').value        = p.start     || '';
+  document.getElementById('ep-end').value          = p.end       || '';
+  document.getElementById('ep-actual-start').value = p.actualStart|| '';
+  document.getElementById('ep-actual-end').value   = p.actualEnd || '';
+  document.getElementById('ep-ttm').value          = p.ttm       || '';
+  document.getElementById('ep-assigned').value     = p.assigned  || '';
+  document.getElementById('ep-type').value         = p.type      || '';
+  document.getElementById('ep-status').value       = p.status    || 'Planning';
+  document.getElementById('ep-issues').value       = p.issues    || '';
+  document.getElementById('ep-notes').value        = p.notes     || '';
+  // Open modal first so DOM elements are visible and queryable
   openModal('edit-proj-modal');
+  // Then populate lab checkboxes and rows
+  setTimeout(() => {
+    if (p.labData && p.labData.length) {
+      populateLabRows('ep', p.labData);
+    } else if (p.lab) {
+      const legacyLabs = p.lab.split(',').map(l=>l.trim()).filter(Boolean);
+      populateLabRows('ep', legacyLabs.map(l=>({lab:l,total:0,done:0,notes:''})));
+    }
+  }, 50);
 }
 
 async function saveProjectEdit() {
@@ -4386,6 +4416,7 @@ async function saveProjectEdit() {
   if (idx === -1) return;
   const upd = {
     name, lab,
+    lab_data:     labDataJson,
     start_date:   getDate('ep-start'),
     end_date:     getDate('ep-end'),
     actual_start: getDate('ep-actual-start'),
@@ -4406,7 +4437,8 @@ async function saveProjectEdit() {
     projects[idx] = {...projects[idx], ...mapProject({id:editingProjId, ...upd,
       start_date:upd.start_date, end_date:upd.end_date,
       actual_start:upd.actual_start, actual_end:upd.actual_end,
-      total_tests:upd.total_tests, tests_done:upd.tests_done
+      total_tests:upd.total_tests, tests_done:upd.tests_done,
+      lab_data: labDataJson
     })};
   } catch(e) { alert('Update failed: '+e.message); return; }
   closeModal('edit-proj-modal');
@@ -4460,6 +4492,11 @@ async function saveOccupancyEdit() {
     total_tests:  parseInt(document.getElementById('eo-total-tests').value)||0,
     tests_done:   parseInt(document.getElementById('eo-tests-done').value)||0,
     status:       document.getElementById('eo-status').value,
+    shift:        document.getElementById('eo-shift').value,
+    project_code: document.getElementById('eo-project-code').value.trim(),
+    test_type:    document.getElementById('eo-test-type').value,
+    product:      document.getElementById('eo-product').value,
+    avail_hrs:    parseFloat(document.getElementById('eo-avail-hrs').value)||0,
   };
   try {
     await supaFetch('occupancy?id=eq.'+editingOccId, {
@@ -4470,7 +4507,9 @@ async function saveOccupancyEdit() {
       planned_start:upd.planned_start, planned_end:upd.planned_end,
       actual_start:upd.actual_start, actual_end:upd.actual_end,
       start_time:upd.start_time, end_time:upd.end_time,
-      test_hours:upd.test_hours, total_tests:upd.total_tests, tests_done:upd.tests_done
+      test_hours:upd.test_hours, total_tests:upd.total_tests, tests_done:upd.tests_done,
+      shift:upd.shift, project_code:upd.project_code, test_type:upd.test_type,
+      product:upd.product, avail_hrs:upd.avail_hrs
     })};
   } catch(e) { alert('Update failed: '+e.message); return; }
   closeModal('edit-occ-modal');
