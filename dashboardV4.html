@@ -1665,8 +1665,9 @@ let tasks = [];
 // );
 // alter table tasks enable row level security;
 // create policy "Allow all" on tasks for all using (true) with check (true);
-const SUPA_URL = 'YOUR_SUPABASE_URL';
-const SUPA_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPA_URL = 'https://mbimdmxxhekyriqnyvml.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1iaW1kbXh4aGVreXJpcW55dm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NDgyNDIsImV4cCI6MjA5NDEyNDI0Mn0.Yj5mufcDfxDXbXr-7Ag8T30RF9_5M5YFFE3bjvzZvKM';
+
 
 async function supaFetch(endpoint, options={}) {
   const res = await fetch(SUPA_URL + '/rest/v1/' + endpoint, {
