@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard — EPQ Project and Lab Management system</title>
+<title>EPQ Dashboard </title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -56,9 +56,9 @@
   .stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
   .stat-value { font-size: 32px; font-weight: 700; margin-top: 8px; }
   .stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
-  .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+  .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
   .form-card h2 { font-size: 15px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group.full { grid-column: 1 / -1; }
   label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.8px; }
@@ -133,6 +133,58 @@
   .week-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
   /* ── RESPONSIVE ── */
+
+  /* ── LOGIN SCREEN ────────────────────────────────────────────────────── */
+  #login-screen {
+    position:fixed; inset:0; z-index:9999;
+    background:linear-gradient(135deg,#0d1b2a 0%,#112240 60%,#0d1b2a 100%);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .login-card {
+    background:var(--card,#112240); border:1px solid #1e3a5f;
+    border-radius:18px; padding:40px 36px; width:100%; max-width:380px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.5);
+    display:flex; flex-direction:column; align-items:center; gap:0;
+  }
+  .login-logo {
+    font-size:36px; margin-bottom:8px;
+  }
+  .login-title {
+    font-size:20px; font-weight:700; color:#e2e8f0; margin-bottom:4px;
+    letter-spacing:0.5px;
+  }
+  .login-sub {
+    font-size:12px; color:#64748b; margin-bottom:28px; text-align:center;
+  }
+  .login-field {
+    width:100%; margin-bottom:14px;
+  }
+  .login-field label {
+    display:block; font-size:11px; color:#94a3b8;
+    text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;
+  }
+  .login-field input {
+    width:100%; padding:11px 14px; border-radius:10px;
+    border:1px solid #1e3a5f; background:#0d1b2a; color:#e2e8f0;
+    font-size:14px; outline:none; box-sizing:border-box;
+    transition:border-color 0.2s;
+  }
+  .login-field input:focus { border-color:#00e5c3; }
+  .login-btn {
+    width:100%; padding:12px; border-radius:10px; border:none;
+    background:linear-gradient(135deg,#00e5c3,#00b89c);
+    color:#0d1b2a; font-size:15px; font-weight:700;
+    cursor:pointer; margin-top:6px; transition:opacity 0.2s;
+    letter-spacing:0.5px;
+  }
+  .login-btn:hover { opacity:0.9; }
+  .login-error {
+    color:#ef4444; font-size:12px; margin-top:10px;
+    text-align:center; min-height:18px;
+  }
+  .login-version {
+    font-size:10px; color:#334155; margin-top:20px;
+  }
   /* ── RESPONSIVE BREAKPOINTS ─────────────────────────────────────────── */
 
   /* Large laptop 1280-1440px */
@@ -223,6 +275,13 @@
     box-sizing: border-box;
     overflow: hidden;
   }
+
+  /* Invoice Booking page — full fix */
+  #page-capex { max-width: 100%; overflow-x: hidden; }
+  #page-capex .form-card { width: 100%; box-sizing: border-box; }
+  #page-capex .form-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  #page-capex input,
+  #page-capex select { width: 100%; box-sizing: border-box; }
 
   /* Capex page — all grids responsive */
   @media (max-width: 1100px) {
@@ -378,6 +437,27 @@
 </head>
 <body>
 <div class="layout">
+
+<!-- ══ LOGIN SCREEN ════════════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-title">EPQ Dashboard</div>
+    <div class="login-sub"> <br>Please sign in to continue</div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="Enter username"
+        autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Enter password"
+        autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-version">EPQ Dashboard v2.0 · Confidential</div>
+  </div>
+</div>
 
 <aside class="sidebar">
   <div class="logo"><span>EPQ Dashboard</span><small>v2.0 ☁️ Cloud</small><div id="srv-status" style="font-size:10px;margin-top:8px;display:flex;align-items:center;gap:4px;color:var(--accent2)">🔵 <span>Connecting...</span></div></div>
@@ -1458,7 +1538,7 @@
       <div class="btn-row" style="margin-top:12px;"><button class="btn btn-primary" onclick="addOpexEntry()">➕ Add OPEX Entry</button></div>
       <div id="opex-entries-table" style="margin-top:16px;"></div>
       <div style="margin-top:8px;font-size:13px;color:var(--accent);font-weight:700;" id="opex-total"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;width:100%;box-sizing:border-box;">
         <div><div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Monthly Breakdown</div><div id="opex-month-chart"></div></div>
         <div><div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Quarterly Breakdown</div><div id="opex-quarter-chart"></div></div>
       </div>
@@ -1512,7 +1592,7 @@
       <div class="btn-row" style="margin-top:12px;"><button class="btn btn-primary" onclick="addCapexEntry()">➕ Add NPI Entry</button></div>
       <div id="capex-entries-table" style="margin-top:16px;"></div>
       <div style="margin-top:8px;font-size:13px;color:var(--accent2);font-weight:700;" id="capex-total"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;width:100%;box-sizing:border-box;">
         <div><div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Monthly Breakdown</div><div id="capex-month-chart"></div></div>
         <div><div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Quarterly Breakdown</div><div id="capex-quarter-chart"></div></div>
       </div>
@@ -1537,7 +1617,7 @@
   <div class="form-card" style="margin-bottom:20px;">
     <h2 style="margin-bottom:16px;font-size:15px;color:var(--success)">🏉 Part 5 — Rugby Budget</h2>
 
-    <div class="inv-status-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+    <div class="inv-status-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;box-sizing:border-box;">
 
       <!-- 5a: Rugby OPEX Budget -->
       <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
@@ -1782,7 +1862,7 @@ function setStatus(state) {
   const el = document.getElementById('srv-status');
   if (!el) return;
   if (state === 'online') {
-    el.innerHTML = '🟢 <span>Live — Supabase Cloud</span>';
+    el.innerHTML = '🟢 <span>Live</span>';
     el.style.color = 'var(--success)';
   } else if (state === 'loading') {
     el.innerHTML = '🔵 <span>Connecting to database...</span>';
@@ -1985,8 +2065,8 @@ function getLabData(prefix) {
     done:    parseFloat(row.querySelector('.lab-done')?.value)||0,
     pending: parseFloat(row.querySelector('.lab-pending')?.value)||0,
     notes:   row.querySelector('.lab-notes')?.value||''
-  })).filter(l => l.total > 0 || l.done > 0 || l.notes);
-  // Only keep labs where data was actually entered
+  }));
+  // Return ALL rows — filtering happens at display level only
 }
 
 function populateLabRows(prefix, labData) {
@@ -4398,20 +4478,18 @@ function editProject(id) {
       const legacyLabs = p.lab.split(',').map(l=>l.trim()).filter(Boolean);
       populateLabRows('ep', legacyLabs.map(l=>({lab:l,total:0,done:0,notes:''})));
     }
-  }, 50);
+  }, 100);
 }
 
 async function saveProjectEdit() {
   const name = document.getElementById('ep-name').value.trim();
-  // Auto-refresh lab rows from checked boxes
-  refreshLabRows('ep');
-  const labData     = getLabData('ep');
-  const lab         = labData.map(l=>l.lab).join(', ');
+  if (!name) { alert('Project name is required.'); return; }
+  // Read lab data directly from already-populated rows (populated by editProject's setTimeout)
+  const labData       = getLabData('ep');
+  const lab           = labData.length ? labData.map(l=>l.lab).join(', ') : '';
   const totalTestsAll = labData.reduce((s,l)=>s+l.total,0);
   const testsDoneAll  = labData.reduce((s,l)=>s+l.done,0);
   const labDataJson   = JSON.stringify(labData);
-  if (!name) { alert('Project name is required.'); return; }
-  if (!lab)  { alert('Please select at least one lab.'); return; }
   const idx = projects.findIndex(x => x.id === editingProjId);
   if (idx === -1) return;
   const upd = {
@@ -5361,7 +5439,49 @@ function clearReportOccFilters() {
   filterReportOcc();
 }
 
+// ── LOGIN ─────────────────────────────────────────────────────────────────
+const CREDENTIALS = {
+  'admin':  'Admin@26',
+  'team':   'EPQTeam26',
+};
+
+function doLogin() {
+  const user = document.getElementById('login-user').value.trim().toLowerCase();
+  const pass = document.getElementById('login-pass').value;
+  const errEl = document.getElementById('login-error');
+  if (!user || !pass) {
+    errEl.textContent = 'Please enter username and password.'; return;
+  }
+  if (CREDENTIALS[user] && CREDENTIALS[user] === pass) {
+    document.getElementById('login-screen').style.display = 'none';
+    sessionStorage.setItem('epq_auth', btoa(user + ':' + pass));
+    errEl.textContent = '';
+  } else {
+    errEl.textContent = '❌ Incorrect username or password.';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').focus();
+  }
+}
+
+function checkAuth() {
+  const stored = sessionStorage.getItem('epq_auth');
+  if (stored) {
+    try {
+      const decoded = atob(stored);
+      const [user, pass] = decoded.split(':');
+      if (CREDENTIALS[user] && CREDENTIALS[user] === pass) {
+        document.getElementById('login-screen').style.display = 'none';
+        return true;
+      }
+    } catch(e) {}
+  }
+  // Show login screen
+  document.getElementById('login-screen').style.display = 'flex';
+  return false;
+}
+
 // INIT
+checkAuth();
 loadData();
 </script>
 </body>
