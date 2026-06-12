@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard </title>
+<title>EPQ Dashboard — Project and Lab Management</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -24,9 +24,9 @@
   .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
   .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,229,195,0.06); }
   .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
-  .main { margin-left: 200px; flex: 1; padding: 20px; min-width: 0; overflow-x: hidden; max-width: calc(100vw - 200px); overflow-x: hidden; box-sizing: border-box; }
+  .main { margin-left: 190px; flex: 1; padding: 24px; min-width: 0; overflow-x: hidden; max-width: calc(100vw - 190px); box-sizing: border-box; }
   .page { display: none; animation: fadeIn 0.3s ease; }
-  .page.active { display: block; }
+  .page.active { display: block; width: 100%; box-sizing: border-box; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   .page-header { margin-bottom: 28px; }
   .page-header h1 { font-size: 24px; font-weight: 700; }
@@ -147,7 +147,7 @@
     display:flex; flex-direction:column; align-items:center; gap:0;
   }
   .login-logo {
-    font-size:36px; margin-bottom:8px;
+    font-size:32px; margin-bottom:6px;
   }
   .login-title {
     font-size:20px; font-weight:700; color:#e2e8f0; margin-bottom:4px;
@@ -211,13 +211,14 @@
     .charts-3col      { grid-template-columns: 1fr 1fr; }
     .charts-2col      { grid-template-columns: 1fr; }
     .report-grid      { grid-template-columns: 1fr; }
-    .form-grid        { grid-template-columns: 1fr 1fr; }
+    .form-grid        { grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); }
+    #page-capex .form-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   /* Tablet 768-900px */
   @media (max-width: 900px) {
     .sidebar          { width: 180px; }
-    .main             { margin-left: 180px; padding: 14px; max-width: calc(100vw - 180px); }
+    .main             { margin-left: 180px; padding: 16px; max-width: calc(100vw - 180px); }
     .charts-3col      { grid-template-columns: 1fr; }
     .charts-2col      { grid-template-columns: 1fr; }
     .stats-row        { grid-template-columns: repeat(2,1fr); }
@@ -231,7 +232,7 @@
     .sidebar          { width: 56px; }
     .sidebar .logo span, .sidebar .nav-item span,
     .sidebar small, #srv-status span { display: none; }
-    .main             { margin-left: 56px; padding: 10px; max-width: calc(100vw - 56px); }
+    .main             { margin-left: 56px; padding: 12px; max-width: calc(100vw - 56px); }
     .stats-row        { grid-template-columns: 1fr 1fr; }
     .kpi-grid         { grid-template-columns: 1fr 1fr; }
     .form-grid        { grid-template-columns: 1fr; }
@@ -276,12 +277,18 @@
     overflow: hidden;
   }
 
-  /* Invoice Booking page — full fix */
-  #page-capex { max-width: 100%; overflow-x: hidden; }
-  #page-capex .form-card { width: 100%; box-sizing: border-box; }
-  #page-capex .form-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-  #page-capex input,
-  #page-capex select { width: 100%; box-sizing: border-box; }
+  /* ── ALL PAGES — base responsive rules ─────────────────────────────── */
+  .page         { width:100%; max-width:100%; overflow-x:hidden; box-sizing:border-box; }
+  .form-card    { width:100%; max-width:100%; box-sizing:border-box; overflow:hidden; margin-bottom:20px; display:block; min-width:0; }
+  .inner-card   { width:100%; box-sizing:border-box; }
+  input, select, textarea { max-width:100%; box-sizing:border-box; width:100%; }
+  /* Invoice Booking specific */
+  #page-capex                  { width: 100%; box-sizing: border-box; }
+  #page-capex .form-card       { padding:20px; border-radius:14px; }
+  #page-capex .form-grid       { grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; }
+  #page-capex .inner-card      { padding:16px; border-radius:10px; margin-bottom:14px; }
+  /* Inline grid containment */
+  [style*="grid-template-columns"] { min-width:0; box-sizing:border-box; }
 
   /* Capex page — all grids responsive */
   @media (max-width: 1100px) {
@@ -442,7 +449,7 @@
 <div id="login-screen">
   <div class="login-card">
     <div class="login-title">EPQ Dashboard</div>
-    <div class="login-sub"> <br>Please sign in to continue</div>
+    <div class="login-sub">Bosch GDC — Team EPQ<br>Please sign in to continue</div>
     <div class="login-field">
       <label>Username</label>
       <input type="text" id="login-user" placeholder="Enter username"
@@ -455,7 +462,7 @@
     </div>
     <button class="login-btn" onclick="doLogin()">Sign In →</button>
     <div class="login-error" id="login-error"></div>
-    <div class="login-version">EPQ Dashboard v2.0 · Confidential</div>
+    <div class="login-version">EPQ Dashboard v2.0 · Bosch GDC Confidential</div>
   </div>
 </div>
 
@@ -1065,7 +1072,6 @@
     </div>
   </div>
 
-</div>
 
 <!-- TIMELINE REPORT -->
 <div class="page" id="page-timeline">
@@ -1475,9 +1481,9 @@
   <div class="page-header"><h1>💰 Invoice Booking</h1><p>Track PR/PO summary, invoice bookings and budget utilization</p></div>
 
   <!-- PART 1: PR PO SUMMARY -->
-  <div class="form-card" style="margin-bottom:20px;">
+  <div class="form-card">
     <h2 style="margin-bottom:16px;font-size:15px;color:var(--accent)">📋 Part 1 — PR / PO Summary</h2>
-    <div class="form-grid">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;">
       <div class="form-group"><label>Total No. of PR</label><input type="number" id="cx-total-pr" placeholder="0" min="0" oninput="calcCapex()"></div>
       <div class="form-group"><label>Total No. of Released PR</label><input type="number" id="cx-released-pr" placeholder="0" min="0" oninput="calcCapex()"></div>
       <div class="form-group"><label>Total No. of Pending PR <small style="color:var(--accent)">(Auto)</small></label><input type="number" id="cx-pending-pr" placeholder="Auto calculated" readonly style="color:var(--accent);font-weight:700;"></div>
@@ -1492,9 +1498,9 @@
   </div>
 
   <!-- PART 2: PR vs PO vs BOOKING STATUS -->
-  <div class="form-card" style="margin-bottom:20px;">
+  <div class="form-card">
     <h2 style="margin-bottom:16px;font-size:15px;color:var(--accent2)">📊 Part 2 — PR vs PO vs Booking Status</h2>
-    <div class="form-grid">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;">
       <div class="form-group"><label>Total Invoice Booked Amount (₹)</label><input type="number" id="cx-inv-booked" placeholder="0" min="0" oninput="calcCapex()"></div>
       <div class="form-group"><label>Total Service Booked Amount (₹)</label><input type="number" id="cx-svc-booked" placeholder="0" min="0" oninput="calcCapex()"></div>
       <div class="form-group"><label>Total Material GRN Booked Amount (₹)</label><input type="number" id="cx-grn-booked" placeholder="0" min="0" oninput="calcCapex()"></div>
@@ -1506,13 +1512,13 @@
   </div>
 
   <!-- PART 3: OPEX BOOKING -->
-  <div class="form-card" style="margin-bottom:20px;">
+  <div class="form-card">
     <h2 style="margin-bottom:16px;font-size:15px;color:var(--yellow)">📄 Part 3 — OPEX Booking</h2>
 
     <!-- 3a: OPEX Invoice Booking -->
-    <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;margin-bottom:16px;">
+    <div class="inner-card" style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;margin-bottom:16px;">
       <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;">📄 OPEX Invoice Booking</div>
-      <div class="form-grid">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;">
         <div class="form-group"><label>Quarter</label>
           <select id="cx-opex-quarter">
             <option value="">— Select Quarter —</option>
@@ -1545,9 +1551,9 @@
     </div>
 
     <!-- 3b: OPEX Invoice Status -->
-    <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;margin-bottom:16px;">
+    <div class="inner-card" style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;margin-bottom:16px;">
       <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;">📊 OPEX Invoice Status</div>
-      <div class="form-grid">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;">
         <div class="form-group"><label>Total No. of Invoices</label><input type="number" id="cx-opex-total-inv" placeholder="0" min="0" oninput="calcInvStatus('opex')"></div>
         <div class="form-group"><label>Yet to Start</label><input type="number" id="cx-opex-yts" placeholder="0" min="0" oninput="calcInvStatus('opex')"></div>
         <div class="form-group"><label>In Progress</label><input type="number" id="cx-opex-inp" placeholder="0" min="0" oninput="calcInvStatus('opex')"></div>
@@ -1560,13 +1566,13 @@
   </div>
 
   <!-- PART 4: CAPEX BOOKING -->
-  <div class="form-card" style="margin-bottom:20px;">
+  <div class="form-card">
     <h2 style="margin-bottom:16px;font-size:15px;color:var(--accent2)">🏗️ Part 4 — CAPEX Booking</h2>
 
     <!-- 4a: NPI Invoice Booking -->
-    <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;margin-bottom:16px;">
+    <div class="inner-card" style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;margin-bottom:16px;">
       <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;">🏗️ NPI Invoice Booking</div>
-      <div class="form-grid">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;">
         <div class="form-group"><label>Quarter</label>
           <select id="cx-capex-quarter">
             <option value="">— Select Quarter —</option>
@@ -1599,9 +1605,9 @@
     </div>
 
     <!-- 4b: CAPEX Invoice Status -->
-    <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
+    <div class="inner-card" style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
       <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;">📊 CAPEX Invoice Status</div>
-      <div class="form-grid">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;">
         <div class="form-group"><label>Total No. of Invoices</label><input type="number" id="cx-capex-total-inv" placeholder="0" min="0" oninput="calcInvStatus('capex')"></div>
         <div class="form-group"><label>Yet to Start</label><input type="number" id="cx-capex-yts" placeholder="0" min="0" oninput="calcInvStatus('capex')"></div>
         <div class="form-group"><label>In Progress</label><input type="number" id="cx-capex-inp" placeholder="0" min="0" oninput="calcInvStatus('capex')"></div>
@@ -1614,15 +1620,15 @@
   </div>
 
   <!-- PART 5: RUGBY BUDGET -->
-  <div class="form-card" style="margin-bottom:20px;">
+  <div class="form-card">
     <h2 style="margin-bottom:16px;font-size:15px;color:var(--success)">🏉 Part 5 — Rugby Budget</h2>
 
     <div class="inv-status-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;box-sizing:border-box;">
 
       <!-- 5a: Rugby OPEX Budget -->
-      <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
+      <div class="inner-card" style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
         <div style="font-size:13px;font-weight:700;color:var(--success);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;">🏉 Rugby OPEX Budget</div>
-        <div class="form-grid">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;">
           <div class="form-group"><label>Total Budget (₹)</label><input type="number" id="cx-rugby-budget" placeholder="0" min="0" oninput="calcCapex()"></div>
           <div class="form-group"><label>PR Raised Against Rugby OPEX (₹)</label><input type="number" id="cx-rugby-pr" placeholder="0" min="0" oninput="calcCapex()"></div>
           <div class="form-group"><label>Balance Rugby OPEX (₹) <small style="color:var(--accent)">(Auto)</small></label><input type="number" id="cx-rugby-balance" placeholder="Auto calculated" readonly style="color:var(--accent);font-weight:700;"></div>
@@ -1632,9 +1638,9 @@
       </div>
 
       <!-- 5b: Rugby CAPEX Budget -->
-      <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
+      <div class="inner-card" style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
         <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;">🏗️ Rugby CAPEX Budget (mUSD)</div>
-        <div class="form-grid">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;">
           <div class="form-group"><label>Total CAPEX Budget (mUSD)</label><input type="number" id="cx-capex-budget" placeholder="0" min="0" oninput="calcCapex()"></div>
           <div class="form-group"><label>PR Raised Against CAPEX (mUSD)</label><input type="number" id="cx-capex-pr" placeholder="0" min="0" oninput="calcCapex()"></div>
           <div class="form-group"><label>Balance CAPEX (mUSD) <small style="color:var(--accent2)">(Auto)</small></label><input type="number" id="cx-capex-balance" placeholder="Auto calculated" readonly style="color:var(--accent2);font-weight:700;"></div>
@@ -1647,11 +1653,11 @@
 
     <!-- Separate bar charts -->
     <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="inv-status-grid">
-      <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
+      <div class="inner-card" style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
         <div style="font-size:13px;font-weight:700;color:var(--success);margin-bottom:12px;">📊 Rugby OPEX Overview (₹)</div>
         <div id="rugby-opex-bar"></div>
       </div>
-      <div style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
+      <div class="inner-card" style="background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:16px;">
         <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:12px;">📊 Rugby CAPEX Overview (mUSD)</div>
         <div id="rugby-capex-bar"></div>
       </div>
@@ -1659,8 +1665,8 @@
   </div>
 </div>
 
+
 </main>
-</div>
 
 <!-- EDIT OPEX ENTRY MODAL -->
 <div class="modal-overlay" id="edit-opex-modal" onclick="if(event.target===this)closeModal('edit-opex-modal')">
@@ -4701,7 +4707,17 @@ function buildProjectKPIPrint() {
 
   // Project entries table
   const projRows = projects.map(p=>{
-    const comp = p.totalTests>0 ? Math.round(p.testsDone/p.totalTests*100)+'%' : '—';
+    const activeLP = (p.labData||[]).filter(l=>l.total>0||l.done>0||l.notes);
+    const labPrint = activeLP.length
+      ? activeLP.map(l=>{
+          const lc=l.total>0?Math.round(l.done/l.total*100):0;
+          const lCol=lc>=80?'#166534':lc>=50?'#92400e':'#991b1b';
+          return '<div style="font-size:7pt"><b>'+l.lab+'</b>: <span style="color:'+lCol+';font-weight:700">'+l.done+'/'+l.total+'</span>'+(l.notes?' — '+l.notes:'')+'</div>';
+        }).join('')
+      : (p.lab||'—');
+    const totalAll2 = activeLP.length ? activeLP.reduce((s,l)=>s+l.total,0) : p.totalTests||0;
+    const doneAll2  = activeLP.length ? activeLP.reduce((s,l)=>s+l.done,0)  : p.testsDone||0;
+    const comp = totalAll2>0 ? Math.round(doneAll2/totalAll2*100)+'%' : '—';
     return '<tr>'
       +'<td><strong>'+p.name+'</strong></td>'
       +'<td>'+( p.type||'—')+'</td>'
@@ -4711,8 +4727,8 @@ function buildProjectKPIPrint() {
       +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.end)||'—')+'</td>'
       +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.actualStart)||'—')+'</td>'
       +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.actualEnd)||'—')+'</td>'
-      +'<td style="text-align:center">'+p.totalTests+'</td>'
-      +'<td style="text-align:center">'+p.testsDone+'</td>'
+      +'<td style="text-align:center">'+totalAll2+'</td>'
+      +'<td style="text-align:center">'+doneAll2+'</td>'
       +'<td style="text-align:center;font-weight:700;color:'+(p.totalTests>0?'#166534':'#666')+'">'+comp+'</td>'
       +'<td><span style="background:'+(statColors[p.status]||'#999')+'22;color:'+(statColors[p.status]||'#999')+';padding:1px 6px;border-radius:4px;font-size:7pt;font-weight:700;-webkit-print-color-adjust:exact">'+p.status+'</span></td>'
       +'<td style="font-size:7pt;max-width:80px;word-break:break-word">'+(p.issues||'—')+'</td>'
@@ -4774,7 +4790,9 @@ function buildEntryTable(type) {
 
 function printSection(section) {
   const win = window.open('', '_blank', 'width=1100,height=800');
-  if (!win) { alert('Please allow popups for printing.'); return; }
+  if (!win) { alert('Please allow popups for this site to enable printing.'); return; }
+
+  try {
 
   const pageSize = document.getElementById('print-size')?.value || 'A3 landscape';
   const now = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
@@ -4799,7 +4817,19 @@ function printSection(section) {
 
   // Build KPI card HTML for projects
   const projHTML = projRows.map(p => {
-    const comp = p.totalTests>0 ? Math.round(p.testsDone/p.totalTests*100) : null;
+    const activeLabsPrint = (p.labData||[]).filter(l=>l.total>0||l.done>0||l.notes);
+    const labPrint = activeLabsPrint.length
+      ? activeLabsPrint.map(l=>{
+          const lc=l.total>0?Math.round(l.done/l.total*100):0;
+          const lCol=lc>=80?'#166534':lc>=50?'#92400e':'#991b1b';
+          return '<span style="display:inline-block;margin-right:8px;font-size:7pt">'
+            +'<b>'+l.lab+':</b> <span style="color:'+lCol+';font-weight:700">'+l.done+'/'+l.total+'</span>'
+            +(l.notes?' ('+l.notes+')'  :'')+'</span>';
+        }).join('')
+      : (p.lab||'—');
+    const totalAll = activeLabsPrint.length ? activeLabsPrint.reduce((s,l)=>s+l.total,0) : p.totalTests||0;
+    const doneAll  = activeLabsPrint.length ? activeLabsPrint.reduce((s,l)=>s+l.done,0)  : p.testsDone||0;
+    const comp = totalAll>0 ? Math.round(doneAll/totalAll*100) : null;
     const compColor = comp!==null ? (comp>=80?'#166534':comp>=50?'#92400e':'#991b1b') : '#666';
     const statusColors = {'Planning':'#1d4ed8','In Progress':'#0f766e','Completed':'#166534','On Hold':'#92400e'};
     const sColor = statusColors[p.status]||'#374151';
@@ -4994,6 +5024,11 @@ function printSection(section) {
   </body></html>`);
   win.document.close();
   setTimeout(() => win.print(), 600);
+  } catch(err) {
+    win.close();
+    alert('Print error: ' + err.message + '\n\nCheck browser console for details.');
+    console.error('Print error:', err);
+  }
 }
 
 
@@ -5441,7 +5476,7 @@ function clearReportOccFilters() {
 
 // ── LOGIN ─────────────────────────────────────────────────────────────────
 const CREDENTIALS = {
-  'admin':  'Admin@26',
+  'admin':  'EPQ@Bosch26',
   'team':   'EPQTeam26',
 };
 
