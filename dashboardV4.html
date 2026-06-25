@@ -4180,6 +4180,7 @@ function doLogin() {
   if (CREDENTIALS[user] && CREDENTIALS[user] === pass) {
     document.getElementById('login-screen').style.display = 'none';
     sessionStorage.setItem('epq_auth', btoa(user + ':' + pass));
+    loadData();
     errEl.textContent = '';
   } else {
     errEl.textContent = '❌ Incorrect username or password.';
@@ -4206,8 +4207,9 @@ function checkAuth() {
 }
 
 // INIT
-checkAuth();
-loadData();
+if (checkAuth()) {
+  loadData();
+}
 </script>
 </body>
 </html><!DOCTYPE html>
@@ -4657,27 +4659,6 @@ loadData();
 </head>
 <body>
 <div class="layout">
-
-<!-- ══ LOGIN SCREEN ════════════════════════════════════════════════════ -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-title">EPQ Dashboard</div>
-    <div class="login-sub">Bosch GDC — Team EPQ<br>Please sign in to continue</div>
-    <div class="login-field">
-      <label>Username</label>
-      <input type="text" id="login-user" placeholder="Enter username"
-        autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <div class="login-field">
-      <label>Password</label>
-      <input type="password" id="login-pass" placeholder="Enter password"
-        autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="login-btn" onclick="doLogin()">Sign In →</button>
-    <div class="login-error" id="login-error"></div>
-    <div class="login-version">EPQ Dashboard v2.0 · Bosch GDC Confidential</div>
-  </div>
-</div>
 
 <aside class="sidebar">
   <div class="logo"><span>EPQ Dashboard</span><small>v2.0 ☁️ Cloud</small><div id="srv-status" style="font-size:10px;margin-top:8px;display:flex;align-items:center;gap:4px;color:var(--accent2)">🔵 <span>Connecting...</span></div></div>
