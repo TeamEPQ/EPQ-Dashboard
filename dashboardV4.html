@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard —  Project and Lab Management System</title>
+<title>EPQ Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -38,17 +38,17 @@
   .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
 
   /* Tooltip */
-  .kpi-tooltip { position: fixed; z-index: 9999; background: #1a2f45; border: 1px solid var(--border);
+  .kpi-tooltip { position: fixed; z-index: 9999; background: #1e3a5f; border: 1px solid #2d5a8e;
     border-radius: 12px; padding: 14px 18px; min-width: 220px; max-width: 300px;
     box-shadow: 0 12px 40px rgba(0,0,0,0.5); pointer-events: none;
     opacity: 0; transition: opacity 0.15s; font-size: 12px; }
   .kpi-tooltip.show { opacity: 1; }
-  .kpi-tooltip-title { font-weight: 700; font-size: 13px; color: var(--accent); margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-  .kpi-tooltip-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; color: var(--text); }
-  .kpi-tooltip-row span:first-child { color: var(--muted); font-size: 11px; }
+  .kpi-tooltip-title { font-weight: 700; font-size: 13px; color: #00e5c3; margin-bottom: 10px; border-bottom: 1px solid #2d5a8e; padding-bottom: 8px; }
+  .kpi-tooltip-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; color: #e2e8f0; }
+  .kpi-tooltip-row span:first-child { color: #94a3b8; font-size: 11px; }
   .kpi-tooltip-row span:last-child { font-weight: 600; font-family: 'DM Mono', monospace; }
   .kpi-tooltip-list { margin-top: 6px; max-height: 220px; overflow-y: auto; scrollbar-width: thin; }
-  .kpi-tooltip-item { padding: 3px 0; color: var(--text); font-size: 11px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .kpi-tooltip-item { padding: 3px 0; color: #e2e8f0; font-size: 11px; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
   .stat-card.blue::before { background: var(--accent2); }
   .stat-card.red::before { background: var(--warn); }
@@ -451,17 +451,19 @@
   <div class="login-card">
     <div class="login-title">EPQ Dashboard</div>
     <div class="login-sub">Bosch GDC — Team EPQ<br>Please sign in to continue</div>
+    <form onsubmit="doLogin();return false;" autocomplete="off">
     <div class="login-field">
       <label>Username</label>
       <input type="text" id="login-user" placeholder="Enter username"
-        autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+        autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
     <div class="login-field">
       <label>Password</label>
       <input type="password" id="login-pass" placeholder="Enter password"
-        autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+        autocomplete="new-password" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <button class="login-btn" type="submit">Sign In →</button>
+    </form>
     <div class="login-error" id="login-error"></div>
     <div class="login-version">EPQ Dashboard v2.0 · Bosch GDC Confidential</div>
   </div>
@@ -472,11 +474,12 @@
   <nav class="nav">
     <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">⬡</span><span>EPQ Dashboard</span></div>
     <div class="nav-item" onclick="showPage('projects',this)"><span class="icon">◈</span><span>Projects</span></div>
-    <div class="nav-item" onclick="showPage('occupancy',this)"><span class="icon">◉</span><span>Utilization</span></div>
+    
     <div class="nav-item" onclick="showPage('reports',this)"><span class="icon">▦</span><span>Reports</span></div>
     <div class="nav-item" onclick="showPage('tasks',this)"><span class="icon">✦</span><span>NABL</span></div>
-    <div class="nav-item" onclick="showPage('capex',this)"><span class="icon">💰</span><span>Invoice Booking</span></div>
     <div class="nav-item" onclick="showPage('timeline',this)"><span class="icon">◫</span><span>Timeline Report</span></div>
+    <div class="nav-item" onclick="showPage('capex',this)"><span class="icon">💰</span><span>Invoice Booking</span></div>
+    
   </nav>
 </aside>
 
@@ -491,17 +494,7 @@
       <div class="table-header"><h2>Recent Projects</h2></div>
       <table><thead><tr><th>Project</th><th>Status</th><th>End Date</th><th>Progress</th></tr></thead><tbody id="dash-projects"></tbody></table>
     </div>
-    <div class="table-card" style="padding:16px;">
-      <div class="table-header" style="display:flex;justify-content:space-between;align-items:center;">
-        <h2>📈 Lab Utilization</h2>
-        <div style="display:flex;gap:6px;">
-          <button id="dash-util-monthly-btn" class="btn btn-primary" style="font-size:11px;padding:4px 10px;" onclick="setDashUtilView('monthly')">Monthly</button>
-          <button id="dash-util-yearly-btn"  class="btn" style="font-size:11px;padding:4px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);" onclick="setDashUtilView('yearly')">Yearly</button>
         </div>
-      </div>
-      <div id="dash-util-chart" style="padding:8px 0;min-height:120px;"></div>
-    </div>
-  </div>
   <div class="dash-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
     <div class="table-card" style="padding:16px;">
       <div class="table-header"><h2>💰 PR/PO Summary</h2></div>
@@ -635,197 +628,6 @@
 </div>
 
 <!-- OCCUPANCY -->
-<div class="page" id="page-occupancy">
-  <div class="page-header"><h1>Utilization</h1><p>Track who is using which lab, when, and for what</p></div>
-  <div class="form-card">
-    <h2>➕ Add Utilization Entry</h2>
-    <div class="form-grid">
-      <div class="form-group"><label>Lab Name</label><select id="o-lab"><option value="">— Select Lab —</option>
-              <option>RAC APF-3</option>
-              <option>RAC APF-4</option>
-              <option>VRF APF</option>
-              <option>RAC Sound Lab</option>
-              <option>GDC PAC APF Lab-1</option>
-              <option>GDC PAC APF Lab-2</option>
-              <option>GDC PAC APF Lab-3</option>
-              <option>GDC PAC APF Lab-4</option>
-              <option>GDC PAC APF Lab-5</option>
-              <option>GDC RAC APF Lab-1</option>
-              <option>GDC PAC HALT LAB-1</option>
-              <option>GDC PAC HALT LAB-2</option>
-              <option>GDC PAC HALT LAB-3</option>
-              <option>GDC PAC HALT LAB-4</option>
-              <option>GDC PAC HALT LAB-5</option>
-              <option>GDC PAC EMC LAB</option>
-              <option>GDC Safety Lab</option>
-              <option>GDC PAC Sound LAB</option>
-              <option>GDC RAC Sound LAB</option>
-              <option>GDC Software DQA LAB</option>
-              <option>GDC Structure Test Lab</option>
-              <option>VRF 40HP Lab-1</option>
-              <option>VRF 40HP Lab-2</option>
-              <option>VRF 40HP Lab-3</option>
-              <option>VRF 40HP Lab-4</option>
-              <option>VRF 40HP Lab-1</option>
-              <option>VRF 40HP Lab-2</option>
-              <option>VRF 40HP Lab-3</option>
-              <option>VRF 40HP Lab-4</option></select></div>
-      <div class="form-group"><label>Product</label>
-        <select id="o-product">
-          <option value="">— Select Product —</option>
-          <option value="RAC">RAC</option>
-          <option value="PAC">PAC</option>
-          <option value="VRF">VRF</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Project Name</label><input type="text" id="o-project" placeholder="e.g. Project Alpha"></div>
-      <div class="form-group"><label>Test Stage</label>
-        <select id="o-test">
-          <option value="">— Select Stage —</option>
-          <option value="ETU">ETU</option>
-          <option value="CTU">CTU</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="o-who" placeholder="e.g. John"></div>
-      <div class="form-group"><label>Lab Shift</label>
-        <select id="o-shift">
-          <option value="">— Select Shift —</option>
-          <option value="A">Shift A (8 hrs)</option>
-          <option value="B">Shift B (8 hrs)</option>
-          <option value="C">Shift C (8 hrs)</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Test Type</label>
-        <select id="o-test-type" onchange="autoCalcDowntime('o')">
-          <option value="">— Select Test Type —</option>
-          <option>Testing Hrs</option>
-          <option>Unit Installation/Teardown</option>
-          <option>Unit Modification</option>
-          <option>Waiting on Technician</option>
-          <option>Maintenance</option>
-          <option>Calibration</option>
-          <option>Facility Issue (Hardware)</option>
-          <option>Facility Issue (Software)</option>
-          <option>Control / Stability Issue</option>
-          <option>Supervisor Decision</option>
-          <option>Retest</option>
-          <option>Waiting on Parts</option>
-          <option>Waiting on Engineer</option>
-          <option>No Unit to Test</option>
-          <option>Unscheduled Time</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Project Code</label><input type="text" id="o-project-code" placeholder="e.g. GDC-2026-001"></div>
-      <div class="form-group"><label>Start Date</label><div class="date-wrap" style="position:relative;display:flex;align-items:center;">
-  <input type="text" id="o-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)" autocomplete="off"
-    style="padding:10px 36px 10px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;font-family:'DM Mono',monospace;cursor:text;">
-  <span onclick="openCal('o-actual-start')" title="Pick date" style="position:absolute;right:10px;cursor:pointer;font-size:16px;user-select:none;">📅</span>
-  <input type="date" id="o-actual-start-cal" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"
-    onchange="calToText('o-actual-start')">
-</div></div>
-      <div class="form-group"><label>End Date</label><div class="date-wrap" style="position:relative;display:flex;align-items:center;">
-  <input type="text" id="o-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)" autocomplete="off"
-    style="padding:10px 36px 10px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;font-family:'DM Mono',monospace;cursor:text;">
-  <span onclick="openCal('o-actual-end')" title="Pick date" style="position:absolute;right:10px;cursor:pointer;font-size:16px;user-select:none;">📅</span>
-  <input type="date" id="o-actual-end-cal" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"
-    onchange="calToText('o-actual-end')">
-</div></div>
-      <div class="form-group"><label>Start Time</label><input type="time" id="o-start"></div>
-      <div class="form-group"><label>End Time</label><input type="time" id="o-end"></div>
-      <div class="form-group"><label>Available Hrs</label><input type="number" id="o-avail-hrs" placeholder="e.g. 24" min="0" step="0.5"></div>
-      <div class="form-group"><label>Testing Hrs</label><input type="number" id="o-testhours" placeholder="e.g. 8" min="0" step="0.5" oninput="autoCalcDowntime('o')"></div>
-      <div class="form-group"><label>Downtime Hours <small style="color:var(--accent)">(Auto from Test Type)</small></label><input type="number" id="o-downtime" placeholder="Auto calculated" step="0.5"></div>
-      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="o-total-tests" placeholder="e.g. 10" min="0"></div>
-      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="o-tests-done" placeholder="e.g. 6" min="0"></div>
-      <div class="form-group"><label>Status</label>
-        <select id="o-status"><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option></select>
-      </div>
-    </div>
-    <div class="btn-row"><button class="btn btn-primary" onclick="addOccupancy()">Add Entry</button></div>
-  </div>
-  <!-- Timeline view tabs -->
-  <div class="no-print" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-    <button id="util-tab-all"     class="btn btn-primary" onclick="setUtilView('all')"     style="font-size:12px;padding:6px 14px;">All Entries</button>
-    <button id="util-tab-date"    class="btn" onclick="setUtilView('date')"    style="font-size:12px;padding:6px 14px;background:var(--surface);border:1px solid var(--border);color:var(--text);">By Date</button>
-    <button id="util-tab-weekly"  class="btn" onclick="setUtilView('weekly')"  style="font-size:12px;padding:6px 14px;background:var(--surface);border:1px solid var(--border);color:var(--text);">Weekly (W1–W4)</button>
-    <button id="util-tab-monthly" class="btn" onclick="setUtilView('monthly')" style="font-size:12px;padding:6px 14px;background:var(--surface);border:1px solid var(--border);color:var(--text);">Monthly</button>
-    <button id="util-tab-quarterly" class="btn" onclick="setUtilView('quarterly')" style="font-size:12px;padding:6px 14px;background:var(--surface);border:1px solid var(--border);color:var(--text);">Quarterly</button>
-    <button id="util-tab-yearly"  class="btn" onclick="setUtilView('yearly')"  style="font-size:12px;padding:6px 14px;background:var(--surface);border:1px solid var(--border);color:var(--text);">Yearly</button>
-    <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-      <select id="util-filter-year" onchange="renderOccupancy()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
-        <option value="">All Years</option>
-        <option>2024</option><option>2025</option><option>2026</option><option>2027</option>
-      </select>
-      <select id="util-filter-month" onchange="renderOccupancy()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
-        <option value="">All Months</option>
-        <option>January</option><option>February</option><option>March</option><option>April</option>
-        <option>May</option><option>June</option><option>July</option><option>August</option>
-        <option>September</option><option>October</option><option>November</option><option>December</option>
-      </select>
-    </div>
-  </div>
-  <!-- ── LAB ANALYTICS GRAPHS ─────────────────────────────────────────── -->
-  <div class="table-card" style="padding:16px;margin-bottom:20px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-      <h2 style="font-size:15px;margin:0;">📊 Lab Analytics — Productivity / Utilization / Max Util</h2>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-        <select id="graph-period" onchange="renderUtilGraphs()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
-          <option value="day">Per Day</option>
-          <option value="week">Per Week (W1–W4)</option>
-          <option value="month" selected>Per Month</option>
-          <option value="year">Per Year</option>
-        </select>
-        <select id="graph-shift" onchange="renderUtilGraphs()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
-          <option value="">All Shifts</option>
-          <option value="A">Shift A</option>
-          <option value="B">Shift B</option>
-          <option value="C">Shift C</option>
-        </select>
-        <select id="graph-lab" onchange="renderUtilGraphs()" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;max-width:180px;">
-          <option value="">All Labs</option>
-        </select>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;" class="charts-3col">
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px;">
-          🎯 Productivity
-          <span style="font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;">Testing Hrs ÷ (Testing + Downtime)</span>
-        </div>
-        <div id="graph-productivity"></div>
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:10px;">
-          📈 Utilization
-          <span style="font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;">Testing Hrs ÷ Available Hrs</span>
-        </div>
-        <div id="graph-utilization"></div>
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--success);margin-bottom:10px;">
-          ⚡ Max Utilization
-          <span style="font-size:10px;color:var(--muted);font-weight:400;display:block;margin-top:2px;">Testing Hrs ÷ Total Shift Hrs (8h)</span>
-        </div>
-        <div id="graph-max-util"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="search-bar">
-    <input type="text" id="occ-search" placeholder="Search by lab, project, test..." oninput="renderOccupancy()">
-    <select id="occ-filter" onchange="renderOccupancy()">
-      <option value="">All Statuses</option><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option>
-    </select>
-  </div>
-  <div class="table-card">
-    <div class="table-header"><h2>Occupancy Log</h2><span id="occ-count" style="font-size:12px;color:var(--muted)"></span></div>
-    <table>
-      <thead><tr><th>Lab</th><th>Project</th><th>Test Stage</th><th>Assigned To</th><th>Start Date</th><th>End Date</th><th>Time Slot</th><th>Test Hrs</th><th>Downtime Hrs</th><th>Utilization %</th><th>Total Tests</th><th>Tests Done</th><th>Test %</th><th>Status</th><th>Shift</th><th>Proj Code</th><th>Test Type</th><th>Action</th></tr></thead>
-      <tbody id="occupancy-table"></tbody>
-    </table>
-  </div>
-</div>
-
 <!-- REPORTS -->
 <div class="page" id="page-reports">
   <div class="page-header">
@@ -849,7 +651,6 @@
     </div>
     <div class="sep-actions">
       <button class="section-print-btn" onclick="printSection('projects')">🖨 Print Project Report</button>
-      <button class="section-print-btn blue" onclick="printSection('occupancy')">🖨 Print Utilization Report</button>
       <button class="section-print-btn" style="border-color:var(--yellow);color:var(--yellow)" onclick="printSection('nabl_prpo')">🖨 Print NABL & PR/PO Report</button>
     </div>
   </div>
@@ -913,152 +714,6 @@
   </div>
 
   <!-- ═══ SECTION 2: LAB UTILISATION REPORT ═══ -->
-  <div id="section-occupancy" style="margin-top:8px;">
-    <div class="report-section-title"><span>◉</span> Utilization Report</div>
-    <div class="charts-3col">
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#5b8cff"></span>Occupancy per Lab</h3>
-        <div id="rpt-occ-lab"></div>
-      </div>
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#fbbf24"></span>Test Activity</h3>
-        <div id="rpt-tests"></div>
-      </div>
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#4ade80"></span>Session Status</h3>
-        <div id="rpt-occ-status"></div>
-      </div>
-    </div>
-    <div class="charts-2col" style="margin-bottom:20px">
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#00e5c3"></span>Lab Utilization % (Test Hrs / Total Hrs)</h3>
-        <div id="rpt-lab-util"></div>
-      </div>
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#5b8cff"></span>Test Hours vs Downtime per Lab</h3>
-        <div id="rpt-lab-hours"></div>
-      </div>
-    </div>
-    <div class="table-card">
-      <div class="table-header">
-        <h2>🔬 Utilization Details</h2>
-        <button class="section-print-btn blue no-print" onclick="printSection('occupancy')">🖨 Print</button>
-      </div>
-      <div class="no-print" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);">
-        <input type="text"   id="rf-occ-search"  placeholder="🔍 Search lab / test / assigned..." oninput="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
-        <select id="rf-occ-status"  onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
-          <option value="">All Statuses</option>
-          <option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option>
-        </select>
-        <select id="rf-occ-lab"     onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
-          <option value="">All Labs</option>
-        </select>
-        <select id="rf-occ-util"    onchange="filterReportOcc()" style="font-size:12px;padding:8px 12px;">
-          <option value="">All Utilization</option>
-          <option value="high">🟢 High (≥80%)</option>
-          <option value="mid">🟡 Medium (50–79%)</option>
-          <option value="low">🔴 Low (&lt;50%)</option>
-          <option value="none">— No data</option>
-        </select>
-        <button onclick="clearReportOccFilters()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap;font-family:'Sora',sans-serif;transition:all 0.2s" onmouseover="this.style.color='var(--warn)';this.style.borderColor='var(--warn)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">✕ Clear</button>
-      </div>
-      <div style="padding:6px 16px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;border-bottom:1px solid var(--border);background:var(--surface)" id="rf-occ-count"></div>
-      <table>
-        <thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time Slot</th><th>Test Hrs</th><th>Downtime</th><th>Utilization</th><th>Total Tests</th><th>Tests Done</th><th>Test %</th><th>Status</th></tr></thead>
-        <tbody id="rpt-occ-table"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ═══ SECTION 3: NABL + PR/PO REPORT ═══ -->
-  <div id="section-nabl-prpo" style="margin-top:8px;">
-    <div class="report-section-title"><span>✦</span> NABL &amp; Invoice Booking Report</div>
-
-    <!-- NABL charts row -->
-    <div class="charts-2col" style="margin-bottom:20px;">
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#00e5c3"></span>NABL Tasks by Status</h3>
-        <div id="rpt-nabl-status"></div>
-      </div>
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#a78bfa"></span>NABL Tasks by Assigned</h3>
-        <div id="rpt-nabl-person"></div>
-      </div>
-    </div>
-
-    <!-- NABL table -->
-    <div class="table-card" style="margin-bottom:20px;">
-      <div class="table-header">
-        <h2>✦ NABL Task Details</h2>
-        <button class="section-print-btn no-print" style="border-color:var(--yellow);color:var(--yellow)" onclick="printSection('nabl_prpo')">🖨 Print</button>
-      </div>
-      <div class="no-print" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);">
-        <input type="text" id="rf-nabl-search" placeholder="🔍 Search task / assigned..." oninput="filterReportNabl()" style="font-size:12px;padding:8px 12px;">
-        <select id="rf-nabl-status" onchange="filterReportNabl()" style="font-size:12px;padding:8px 12px;">
-          <option value="">All Statuses</option>
-          <option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option>
-        </select>
-        <button onclick="document.getElementById('rf-nabl-search').value='';document.getElementById('rf-nabl-status').value='';filterReportNabl();" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Sora',sans-serif;">✕ Clear</button>
-      </div>
-      <div style="padding:6px 16px;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;border-bottom:1px solid var(--border);background:var(--surface)" id="rf-nabl-count"></div>
-      <div style="overflow-x:auto;">
-        <table style="min-width:800px;">
-          <thead><tr><th>Task Name</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Description</th><th>Issues</th><th>Status</th></tr></thead>
-          <tbody id="rpt-nabl-table"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- PR/PO Summary -->
-    <div class="charts-2col" style="margin-bottom:20px;">
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#4ade80"></span>PR/PO Count Summary</h3>
-        <div id="rpt-prpo-count"></div>
-      </div>
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#5b8cff"></span>Invoice Booking Amounts (₹)</h3>
-        <div id="rpt-prpo-amount"></div>
-      </div>
-    </div>
-
-    <!-- OPEX/CAPEX pie charts -->
-    <div class="charts-2col" style="margin-bottom:20px;">
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#fbbf24"></span>OPEX — Monthly Breakdown</h3>
-        <div id="rpt-opex-month"></div>
-      </div>
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#f97316"></span>CAPEX — Monthly Breakdown</h3>
-        <div id="rpt-capex-month"></div>
-      </div>
-    </div>
-
-    <!-- Budget summary -->
-    <div class="table-card">
-      <div class="table-header"><h2>💰 Budget Summary</h2></div>
-      <div id="rpt-budget-summary" style="padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;"></div>
-    </div>
-  </div>
-
-  <!-- SECTION 4: LAB UTILIZATION ANALYTICS -->
-    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-      <select id="rpt-util-period" onchange="renderUtilAnalyticsReport()" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
-        <option value="day">Per Day</option><option value="week">Per Week</option>
-        <option value="month" selected>Per Month</option><option value="year">Per Year</option>
-      </select>
-      <select id="rpt-util-shift" onchange="renderUtilAnalyticsReport()" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
-        <option value="">All Shifts</option>
-        <option value="A">Shift A</option><option value="B">Shift B</option><option value="C">Shift C</option>
-      </select>
-      <select id="rpt-util-lab-filter" onchange="renderUtilAnalyticsReport()" style="padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;">
-        <option value="">All Labs</option>
-      </select>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;" class="charts-3col">
-      <div class="chart-card"><h3><span class="dot" style="background:#00e5c3"></span>🎯 Productivity (%)</h3><div id="rpt-productivity"></div></div>
-      <div class="chart-card"><h3><span class="dot" style="background:#5b8cff"></span>📈 Utilization (%)</h3><div id="rpt-utilization"></div></div>
-      <div class="chart-card"><h3><span class="dot" style="background:#4ade80"></span>⚡ Max Utilization (%)</h3><div id="rpt-max-util"></div></div>
-    </div>
 
     <!-- Rugby Budget in Report -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="inv-status-grid">
@@ -1080,7 +735,7 @@
   <div class="tl-controls">
     <div class="period-tabs">
       <div class="period-tab active" id="tab-proj" onclick="switchType('projects')">📁 Projects</div>
-      <div class="period-tab" id="tab-occ" onclick="switchType('occupancy')">🔬 Utilization</div>
+      <div class="period-tab" id="tab-nabl" onclick="switchType('nabl')">📋 NABL</div>
     </div>
     <div class="breadcrumb" id="tl-bc"></div>
   </div>
@@ -1093,252 +748,6 @@
     <button class="section-print-btn" style="margin-left:auto" onclick="exportTimelineCSV()">⬇ Export CSV</button>
   </div>
   <div id="tl-body"></div>
-</div>
-
-
-<!-- EDIT PROJECT MODAL -->
-<div class="modal-overlay" id="edit-proj-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>✏️ Edit Project</h2>
-      <button class="modal-close" onclick="closeModal('edit-proj-modal')">✕</button>
-    </div>
-    <div class="form-grid">
-      <div class="form-group"><label>Project Name</label><input type="text" id="ep-name" placeholder="Project name"></div>
-      <div class="form-group full">
-        <label>Labs (select all that apply)</label>
-        <div id="ep-lab-checks" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;" onchange="refreshLabRows('ep')">
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-3" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-3</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC APF-4" style="cursor:pointer;accent-color:var(--accent)"> RAC APF-4</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF APF" style="cursor:pointer;accent-color:var(--accent)"> VRF APF</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="RAC Sound Lab" style="cursor:pointer;accent-color:var(--accent)"> RAC Sound Lab</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC APF Lab-1" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC APF Lab-1</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC APF Lab-2" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC APF Lab-2</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC APF Lab-3" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC APF Lab-3</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC APF Lab-4" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC APF Lab-4</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC APF Lab-5" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC APF Lab-5</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC RAC APF Lab-1" style="cursor:pointer;accent-color:var(--accent)"> GDC RAC APF Lab-1</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC HALT LAB-1" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC HALT LAB-1</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC HALT LAB-2" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC HALT LAB-2</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC HALT LAB-3" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC HALT LAB-3</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC HALT LAB-4" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC HALT LAB-4</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC HALT LAB-5" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC HALT LAB-5</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC EMC LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC EMC LAB</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Safety Lab" style="cursor:pointer;accent-color:var(--accent)"> GDC Safety Lab</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC PAC Sound LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC PAC Sound LAB</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC RAC Sound LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC RAC Sound LAB</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Software DQA LAB" style="cursor:pointer;accent-color:var(--accent)"> GDC Software DQA LAB</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="GDC Structure Test Lab" style="cursor:pointer;accent-color:var(--accent)"> GDC Structure Test Lab</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-1" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-1</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-2" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-2</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-3" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-3</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-4" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-4</label>
-        </div>
-      </div>
-      <div class="form-group full">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <label>Lab-wise Test Counts</label>
-          <button type="button" class="btn" style="font-size:11px;padding:4px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);" onclick="refreshLabRows('ep')">🔄 Refresh from selected labs</button>
-        </div>
-        <div id="ep-lab-rows" style="display:flex;flex-direction:column;gap:6px;"></div>
-        <div style="margin-top:10px;padding:10px;background:var(--surface);border-radius:8px;border:1px solid var(--border);font-size:12px;" id="ep-overall-progress"></div>
-      </div>
-      <div class="form-group"><label>Planned Start Date</label><div class="date-wrap" style="position:relative;display:flex;align-items:center;">
-  <input type="text" id="ep-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)" autocomplete="off"
-    style="padding:10px 36px 10px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;font-family:'DM Mono',monospace;cursor:text;">
-  <span onclick="openCal('ep-start')" title="Pick date" style="position:absolute;right:10px;cursor:pointer;font-size:16px;user-select:none;">📅</span>
-  <input type="date" id="ep-start-cal" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"
-    onchange="calToText('ep-start')">
-</div></div>
-      <div class="form-group"><label>Planned End Date</label><div class="date-wrap" style="position:relative;display:flex;align-items:center;">
-  <input type="text" id="ep-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)" autocomplete="off"
-    style="padding:10px 36px 10px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;font-family:'DM Mono',monospace;cursor:text;">
-  <span onclick="openCal('ep-end')" title="Pick date" style="position:absolute;right:10px;cursor:pointer;font-size:16px;user-select:none;">📅</span>
-  <input type="date" id="ep-end-cal" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"
-    onchange="calToText('ep-end')">
-</div></div>
-      <div class="form-group"><label>Actual Start Date</label><div class="date-wrap" style="position:relative;display:flex;align-items:center;">
-  <input type="text" id="ep-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)" autocomplete="off"
-    style="padding:10px 36px 10px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;font-family:'DM Mono',monospace;cursor:text;">
-  <span onclick="openCal('ep-actual-start')" title="Pick date" style="position:absolute;right:10px;cursor:pointer;font-size:16px;user-select:none;">📅</span>
-  <input type="date" id="ep-actual-start-cal" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"
-    onchange="calToText('ep-actual-start')">
-</div></div>
-      <div class="form-group"><label>Actual End Date</label><div class="date-wrap" style="position:relative;display:flex;align-items:center;">
-  <input type="text" id="ep-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)" autocomplete="off"
-    style="padding:10px 36px 10px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;font-family:'DM Mono',monospace;cursor:text;">
-  <span onclick="openCal('ep-actual-end')" title="Pick date" style="position:absolute;right:10px;cursor:pointer;font-size:16px;user-select:none;">📅</span>
-  <input type="date" id="ep-actual-end-cal" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"
-    onchange="calToText('ep-actual-end')">
-</div></div>
-      <div class="form-group"><label>TTM Date</label><div class="date-wrap" style="position:relative;display:flex;align-items:center;">
-  <input type="text" id="ep-ttm" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)" autocomplete="off"
-    style="padding:10px 36px 10px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;font-family:'DM Mono',monospace;cursor:text;">
-  <span onclick="openCal('ep-ttm')" title="Pick date" style="position:absolute;right:10px;cursor:pointer;font-size:16px;user-select:none;">📅</span>
-  <input type="date" id="ep-ttm-cal" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"
-    onchange="calToText('ep-ttm')">
-</div></div>
-      <div class="form-group"><label>Assigned To</label><input type="text" id="ep-assigned" placeholder="e.g. John"></div>
-      <div class="form-group"><label>Project Type</label>
-        <select id="ep-type"><option value="">— Select Type —</option><option>RAC</option><option>WAC</option><option>VRF</option><option>PAC</option></select>
-      </div>
-      <div class="form-group"><label>Status</label>
-        <select id="ep-status"><option>Planning</option><option>In Progress</option><option>On Hold</option><option>Completed</option></select>
-      </div>
-      <div class="form-group full"><label>Issues</label><textarea id="ep-issues" placeholder="e.g. Resource delay, Unit unavailable..." style="min-height:70px;resize:vertical;"></textarea></div>
-
-      <div class="form-group full"><label>Notes</label><textarea id="ep-notes" placeholder="Additional notes..."></textarea></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal('edit-proj-modal')">Cancel</button>
-      <button class="btn-save" onclick="saveProjectEdit()">💾 Save Changes</button>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT OCCUPANCY MODAL -->
-<div class="modal-overlay" id="edit-occ-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>✏️ Edit Utilization Entry</h2>
-      <button class="modal-close" onclick="closeModal('edit-occ-modal')">✕</button>
-    </div>
-    <div class="form-grid">
-      <div class="form-group"><label>Lab Name</label><select id="eo-lab"><option value="">— Select Lab —</option>
-              <option>RAC APF-3</option>
-              <option>RAC APF-4</option>
-              <option>VRF APF</option>
-              <option>RAC Sound Lab</option>
-              <option>GDC PAC APF Lab-1</option>
-              <option>GDC PAC APF Lab-2</option>
-              <option>GDC PAC APF Lab-3</option>
-              <option>GDC PAC APF Lab-4</option>
-              <option>GDC PAC APF Lab-5</option>
-              <option>GDC RAC APF Lab-1</option>
-              <option>GDC PAC HALT LAB-1</option>
-              <option>GDC PAC HALT LAB-2</option>
-              <option>GDC PAC HALT LAB-3</option>
-              <option>GDC PAC HALT LAB-4</option>
-              <option>GDC PAC HALT LAB-5</option>
-              <option>GDC PAC EMC LAB</option>
-              <option>GDC Safety Lab</option>
-              <option>GDC PAC Sound LAB</option>
-              <option>GDC RAC Sound LAB</option>
-              <option>GDC Software DQA LAB</option>
-              <option>GDC Structure Test Lab</option>
-              <option>VRF 40HP Lab-1</option>
-              <option>VRF 40HP Lab-2</option>
-              <option>VRF 40HP Lab-3</option>
-              <option>VRF 40HP Lab-4</option>
-              <option>VRF 40HP Lab-1</option>
-              <option>VRF 40HP Lab-2</option>
-              <option>VRF 40HP Lab-3</option>
-              <option>VRF 40HP Lab-4</option></select></div>
-      <div class="form-group"><label>Product</label>
-        <select id="eo-product">
-          <option value="">— Select Product —</option>
-          <option value="RAC">RAC</option>
-          <option value="PAC">PAC</option>
-          <option value="VRF">VRF</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Project Name</label><input type="text" id="eo-project" placeholder="Project name"></div>
-      <div class="form-group"><label>Test Stage</label>
-        <select id="eo-test">
-          <option value="">— Select Stage —</option>
-          <option value="ETU">ETU</option>
-          <option value="CTU">CTU</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Assigned To / Team</label><input type="text" id="eo-who" placeholder="e.g. John"></div>
-      <div class="form-group"><label>Lab Shift</label>
-        <select id="eo-shift">
-          <option value="">— Select Shift —</option>
-          <option value="A">Shift A (8 hrs)</option>
-          <option value="B">Shift B (8 hrs)</option>
-          <option value="C">Shift C (8 hrs)</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Test Type</label>
-        <select id="eo-test-type" onchange="autoCalcDowntime('eo')">
-          <option value="">— Select Test Type —</option>
-          <option>Testing Hrs</option>
-          <option>Unit Installation/Teardown</option>
-          <option>Unit Modification</option>
-          <option>Waiting on Technician</option>
-          <option>Maintenance</option>
-          <option>Calibration</option>
-          <option>Facility Issue (Hardware)</option>
-          <option>Facility Issue (Software)</option>
-          <option>Control / Stability Issue</option>
-          <option>Supervisor Decision</option>
-          <option>Retest</option>
-          <option>Waiting on Parts</option>
-          <option>Waiting on Engineer</option>
-          <option>No Unit to Test</option>
-          <option>Unscheduled Time</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Project Code</label><input type="text" id="eo-project-code" placeholder="e.g. GDC-2026-001"></div>
-      <div class="form-group"><label>Start Date</label><div class="date-wrap" style="position:relative;display:flex;align-items:center;">
-  <input type="text" id="eo-actual-start" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)" autocomplete="off"
-    style="padding:10px 36px 10px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;font-family:'DM Mono',monospace;cursor:text;">
-  <span onclick="openCal('eo-actual-start')" title="Pick date" style="position:absolute;right:10px;cursor:pointer;font-size:16px;user-select:none;">📅</span>
-  <input type="date" id="eo-actual-start-cal" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"
-    onchange="calToText('eo-actual-start')">
-</div></div>
-      <div class="form-group"><label>End Date</label><div class="date-wrap" style="position:relative;display:flex;align-items:center;">
-  <input type="text" id="eo-actual-end" placeholder="dd/mm/yyyy" maxlength="10" oninput="autoSlash(this)" autocomplete="off"
-    style="padding:10px 36px 10px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);width:100%;font-size:13px;font-family:'DM Mono',monospace;cursor:text;">
-  <span onclick="openCal('eo-actual-end')" title="Pick date" style="position:absolute;right:10px;cursor:pointer;font-size:16px;user-select:none;">📅</span>
-  <input type="date" id="eo-actual-end-cal" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;"
-    onchange="calToText('eo-actual-end')">
-</div></div>
-      <div class="form-group"><label>Start Time</label><input type="time" id="eo-start"></div>
-      <div class="form-group"><label>End Time</label><input type="time" id="eo-end"></div>
-      <div class="form-group"><label>Available Hrs</label><input type="number" id="eo-avail-hrs" placeholder="e.g. 24" min="0" step="0.5"></div>
-      <div class="form-group"><label>Testing Hrs</label><input type="number" id="eo-testhours" placeholder="e.g. 8" min="0" step="0.5" oninput="autoCalcDowntime('eo')"></div>
-      <div class="form-group"><label>Downtime Hours <small style="color:var(--accent)">(Auto from Test Type)</small></label><input type="number" id="eo-downtime" placeholder="Auto calculated" step="0.5"></div>
-      <div class="form-group"><label>Total No. of Tests</label><input type="number" id="eo-total-tests" placeholder="e.g. 10" min="0"></div>
-      <div class="form-group"><label>No. of Tests Completed</label><input type="number" id="eo-tests-done" placeholder="e.g. 6" min="0"></div>
-      <div class="form-group"><label>Status</label>
-        <select id="eo-status"><option>Scheduled</option><option>In Progress</option><option>Completed</option><option>Cancelled</option></select>
-      </div>
-      <div class="form-group"><label>Lab Shift</label>
-        <select id="eo-shift">
-          <option value="">— Select Shift —</option>
-          <option value="A">Shift A (8 hrs)</option>
-          <option value="B">Shift B (8 hrs)</option>
-          <option value="C">Shift C (8 hrs)</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Project Code</label><input type="text" id="eo-project-code" placeholder="e.g. GDC-2026-001"></div>
-      <div class="form-group"><label>Test Type</label>
-        <select id="eo-test-type" onchange="autoCalcDowntime('eo')">
-          <option value="">— Select Test Type —</option>
-          <option>Testing Hrs</option>
-          <option>Unit Installation/Teardown</option>
-          <option>Unit Modification</option>
-          <option>Waiting on Technician</option>
-          <option>Maintenance</option>
-          <option>Calibration</option>
-          <option>Facility Issue (Hardware)</option>
-          <option>Facility Issue (Software)</option>
-          <option>Control / Stability Issue</option>
-          <option>Supervisor Decision</option>
-          <option>Retest</option>
-          <option>Waiting on Parts</option>
-          <option>Waiting on Engineer</option>
-          <option>No Unit to Test</option>
-          <option>Unscheduled Time</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeModal('edit-occ-modal')">Cancel</button>
-      <button class="btn-save" onclick="saveOccupancyEdit()">💾 Save Changes</button>
-    </div>
-  </div>
 </div>
 
 
@@ -1664,7 +1073,6 @@
       </div>
     </div>
   </div>
-</div>
 
 
 </main>
@@ -1757,6 +1165,10 @@ const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 
 
 async function supaFetch(endpoint, options={}) {
+  if (!SUPA_URL || SUPA_URL === 'YOUR_SUPABASE_URL') {
+    console.warn('Supabase not configured — add URL and key');
+    return options.noJson ? null : [];
+  }
   const res = await fetch(SUPA_URL + '/rest/v1/' + endpoint, {
     ...options,
     headers: {
@@ -1842,14 +1254,16 @@ function mapTask(r) {
 async function loadData() {
   setStatus('loading');
   try {
-    const [pRows, oRows, tRows] = await Promise.all([
+    const [pRows, tRows, cRows, ceRows] = await Promise.all([
       supaFetch('projects?order=id.asc&limit=1000'),
-      supaFetch('occupancy?order=id.asc&limit=1000'),
-      supaFetch('tasks?order=id.asc&limit=1000')
+      supaFetch('tasks?order=id.asc&limit=1000'),
+      supaFetch('capex_summary?limit=1'),
+      supaFetch('capex_entries?order=id.asc&limit=1000')
     ]);
-    projects  = (pRows||[]).map(mapProject);
-    occupancy = (oRows||[]).map(mapOccupancy);
-    tasks     = (tRows||[]).map(mapTask);
+    projects     = (pRows||[]).map(mapProject);
+    tasks        = (tRows||[]).map(mapTask);
+    // capexEntries handled by renderCapexPage via restoreCapexFields
+    if (cRows&&cRows[0]) loadCapexFields(cRows[0]);
     setStatus('online');
   } catch(e) {
     console.error('Supabase load error:', e);
@@ -1857,7 +1271,6 @@ async function loadData() {
   }
   renderDashboard();
   restoreCapexFields();
-  renderUtilGraphs();
 }
 
 // Save is now handled per-operation (insert/update/delete)
@@ -1892,13 +1305,11 @@ setInterval(async () => {
 // Auto-refresh every 30 seconds
 setInterval(async () => {
   try {
-    const [pRows, oRows, tRows] = await Promise.all([
+    const [pRows, tRows] = await Promise.all([
       supaFetch('projects?order=id.asc&limit=1000'),
-      supaFetch('occupancy?order=id.asc&limit=1000'),
       supaFetch('tasks?order=id.asc&limit=1000')
     ]);
     projects  = (pRows||[]).map(mapProject);
-    occupancy = (oRows||[]).map(mapOccupancy);
     tasks     = (tRows||[]).map(mapTask);
     renderDashboard();
   } catch(e) {}
@@ -1977,11 +1388,11 @@ function showPage(name, el) {
   if(el) el.classList.add('active');
   if(name==='dashboard') renderDashboard();
   if(name==='projects')  renderProjects();
-  if(name==='occupancy') { renderOccupancy(); renderUtilGraphs(); }
+  if(name==='occupancy') { }
   if(name==='reports')   renderReports();
   if(name==='tasks')     renderTasks();
   if(name==='capex')     restoreCapexFields();
-  if(name==='timeline')  { tlType='projects'; tlView='year'; tlYear=null; tlMonth=null; renderTimeline(); }
+  if(name==='timeline') { tlType='projects'; tlView='year'; tlYear=null; tlMonth=null; renderTimeline(); }
 }
 
 function badge(s) {
@@ -2232,12 +1643,11 @@ async function addOccupancy(){
   document.getElementById('o-product').value='';
   document.getElementById('o-avail-hrs').value='';
   document.getElementById('o-downtime').value='';
-  renderOccupancy(); alert('✅ Utilization entry added!');
+  // renderOccupancy removed alert('✅ Utilization entry added!');
 }
 async function deleteOccupancy(id){
   if(!confirm('Delete this entry?'))return;
-  occupancy=occupancy.filter(o=>o.id!==id); save(); renderOccupancy();
-}
+  occupancy=occupancy.filter(o=>o.id!==id); save(); }
 let utilView = 'all';
 
 // ── UTILITY GRAPH CONSTANTS ────────────────────────────────────────────────
@@ -2257,8 +1667,7 @@ function getPeriodKey(o, period) {
   const parts = d.split('/');
   if (parts.length < 3) return 'Unknown';
   const [day, mon, yr] = parts;
-  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const mName = MONTHS[parseInt(mon)-1] || mon;
+    const mName = MONTHS[parseInt(mon)-1] || mon;
   const dayN = parseInt(day);
   const week = dayN<=7?'W1':dayN<=14?'W2':dayN<=21?'W3':'W4';
   if (period==='day')     return `${day}/${mon}/${yr}`;
@@ -2476,8 +1885,7 @@ function setUtilView(view) {
       btn.style.background='var(--surface)'; btn.style.color='var(--text)'; btn.style.border='1px solid var(--border)';
     }
   });
-  renderOccupancy();
-}
+  }
 
 function getWeekOfMonth(dateStr) {
   if (!dateStr) return '—';
@@ -2658,22 +2066,7 @@ document.addEventListener('mousemove', e => {
 
 let dashUtilView = 'monthly';
 
-function setDashUtilView(view) {
-  dashUtilView = view;
-  const mb = document.getElementById('dash-util-monthly-btn');
-  const yb = document.getElementById('dash-util-yearly-btn');
-  if (mb && yb) {
-    if (view==='monthly') {
-      mb.style.cssText='font-size:11px;padding:4px 10px;background:var(--accent);color:#0d1b2a;border:none;border-radius:6px;cursor:pointer;';
-      yb.style.cssText='font-size:11px;padding:4px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;cursor:pointer;';
-    } else {
-      yb.style.cssText='font-size:11px;padding:4px 10px;background:var(--accent);color:#0d1b2a;border:none;border-radius:6px;cursor:pointer;';
-      mb.style.cssText='font-size:11px;padding:4px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;cursor:pointer;';
-    }
-  }
-  renderDashUtilChart();
-}
-
+// setDashUtilView removed (no util)
 function renderDashUtilChart() {
   const el = document.getElementById('dash-util-chart');
   if (!el) return;
@@ -2824,7 +2217,6 @@ function renderDashboard(){
       <td><span style="color:${col};font-weight:700;font-size:11px">${totalAll>0?doneAll+'/'+totalAll+' ('+comp+'%)':'—'}</span></td>
     </tr>`;
   }).join('')||`<tr><td colspan="4"><div class="empty-state"><div class="icon">◈</div>No projects yet</div></td></tr>`;
-  renderDashUtilChart();
   // NABL tasks on dashboard
   renderDashboardNablPie();
   renderDashboardInvoice();
@@ -2840,19 +2232,17 @@ function renderReports(){
   const active=projects.filter(p=>p.status==='In Progress').length;
   const completed=projects.filter(p=>p.status==='Completed').length;
   const onHold=projects.filter(p=>p.status==='On Hold').length;
-  const labCount=[...new Set(occupancy.map(o=>o.lab))].length;
-  const occTotal=occupancy.length;
   const issueCount=projects.reduce((a,p)=>a+(p.issues?p.issues.split(',').length:0),0);
   const compRate=total>0?Math.round(completed/total*100):0;
   // Tooltip data for report KPI cards
-  const totalTestHrs2 = occupancy.reduce((a,o)=>a+(parseFloat(o.testHours)||0),0);
-  const totalDowntime = occupancy.reduce((a,o)=>a+(parseFloat(o.downtime)||0),0);
-  const avgUtil = (totalTestHrs2+totalDowntime)>0 ? Math.round(totalTestHrs2/(totalTestHrs2+totalDowntime)*100) : 0;
+  const totalTestHrs2 = 0;
+  const totalDowntime = 0;
+  const avgUtil = 0;
   const inProgProjs = projects.filter(p=>p.status==='In Progress').map(p=>p.name);
   const compProjs   = projects.filter(p=>p.status==='Completed').map(p=>p.name);
   const holdProjs   = projects.filter(p=>p.status==='On Hold').map(p=>p.name);
   const issueList   = projects.filter(p=>p.issues).map(p=>p.name+': '+p.issues);
-  const activeLabs  = [...new Set(occupancy.map(o=>o.lab))];
+  const activeLabs  = [];
 
   window._tipRpt = {
     total:    {title:'📊 Total Projects',    rows:[{label:'In Progress',value:active,color:'#00e5c3'},{label:'Completed',value:completed,color:'#4ade80'},{label:'On Hold',value:onHold,color:'#fbbf24'},{label:'Planning',value:total-active-completed-onHold,color:'#5b8cff'}]},
@@ -2860,8 +2250,6 @@ function renderReports(){
     completed:{title:'✅ Completed Projects', rows:[{label:'Count',value:completed,color:'#4ade80'},{label:'Rate',value:compRate+'%',color:'#4ade80'},{type:'list',label:'Projects:',items:compProjs}]},
     hold:     {title:'⏸ On Hold',            rows:[{label:'Count',value:onHold,color:'#fbbf24'},{type:'list',label:'Projects:',items:holdProjs}]},
     issues:   {title:'⚠️ Issues',            rows:[{label:'Total issues',value:issueCount,color:'#ef4444'},{type:'list',label:'Details:',items:issueList}]},
-    labs:     {title:'🏭 Active Labs',        rows:[{label:'Labs used',value:labCount,color:'#5b8cff'},{label:'Total sessions',value:occTotal,color:'#00e5c3'},{type:'list',label:'Labs:',items:activeLabs}]},
-    sessions: {title:'🔬 Utilization Sessions',       rows:[{label:'Total sessions',value:occTotal,color:'#00e5c3'},{label:'Total test hrs',value:totalTestHrs2.toFixed(1)+'h',color:'#4ade80'},{label:'Total downtime',value:totalDowntime.toFixed(1)+'h',color:'#ef4444'},{label:'Avg utilization',value:avgUtil+'%',color:'#fbbf24'}]},
     comprate: {title:'🎯 Completion Rate',    rows:[{label:'Completed',value:completed,color:'#4ade80'},{label:'Total',value:total,color:'#00e5c3'},{label:'Rate',value:compRate+'%',color:'#4ade80'},{label:'Remaining',value:total-completed,color:'#fbbf24'}]}
   };
 
@@ -2871,8 +2259,6 @@ function renderReports(){
     <div class="kpi-card c3" onmouseenter="showTipRpt(event,'completed')" onmouseleave="hideTooltip()"><span class="kpi-icon">✓</span><div class="kpi-label">Completed</div><div class="kpi-value">${completed}</div><div class="kpi-value" style="font-size:14px;margin-top:2px">${compRate}%</div></div>
     <div class="kpi-card c4" onmouseenter="showTipRpt(event,'hold')"     onmouseleave="hideTooltip()"><span class="kpi-icon">⏸</span><div class="kpi-label">On Hold</div><div class="kpi-value">${onHold}</div><div class="kpi-sub">Paused</div></div>
     <div class="kpi-card c5" onmouseenter="showTipRpt(event,'issues')"   onmouseleave="hideTooltip()"><span class="kpi-icon">⚠</span><div class="kpi-label">Total Issues</div><div class="kpi-value">${issueCount}</div><div class="kpi-sub">Across projects</div></div>
-    <div class="kpi-card c7" onmouseenter="showTipRpt(event,'labs')"     onmouseleave="hideTooltip()"><span class="kpi-icon">◉</span><div class="kpi-label">Active Labs</div><div class="kpi-value">${labCount}</div><div class="kpi-sub">With sessions</div></div>
-    <div class="kpi-card c8" onmouseenter="showTipRpt(event,'sessions')" onmouseleave="hideTooltip()"><span class="kpi-icon">🔬</span><div class="kpi-label">Utilization Sessions</div><div class="kpi-value">${occTotal}</div><div class="kpi-sub">Total logged</div></div>
     <div class="kpi-card c6" onmouseenter="showTipRpt(event,'comprate')" onmouseleave="hideTooltip()"><span class="kpi-icon">🎯</span><div class="kpi-label">Completion Rate</div><div class="kpi-value">${compRate}%</div><div class="kpi-sub">Projects done</div></div>
   `;
 
@@ -3043,39 +2429,15 @@ function renderReports(){
     progress('On Hold', sn[3], total, '#fbbf24'),
   ].join('') || '<div class="empty-state">No data</div>';
 
-  // ── OCCUPANCY CHARTS ──────────────────────────────────────────────────
-  const occLabs=[...new Set(occupancy.map(o=>o.lab))];
-  const occLC=occLabs.map(l=>occupancy.filter(o=>o.lab===l).length);
-  const occMax=Math.max(...occLC,1);
-  document.getElementById('rpt-occ-lab').innerHTML = occLabs.length ?
-    occLabs.map((l,i)=>bar(l,occLC[i],occMax,PALETTE[i%PALETTE.length],i)).join('')
-    : '<div class="empty-state">No occupancy data yet</div>';
-
-  const tests=[...new Set(occupancy.map(o=>o.test))];
-  const tc=tests.map(t=>occupancy.filter(o=>o.test===t).length);
-  const mt=Math.max(...tc,1);
-  document.getElementById('rpt-tests').innerHTML = tests.length ?
-    tests.map((t,i)=>bar(t,tc[i],mt,PALETTE[(i+3)%PALETTE.length],i)).join('')
-    : '<div class="empty-state">No test data yet</div>';
-
-  const oSS=['Scheduled','In Progress','Completed','Cancelled'];
-  const oSC=['#5b8cff','#00e5c3','#4ade80','#ff6b6b'];
-  const oSN=oSS.map(s=>occupancy.filter(o=>o.status===s).length);
-  const oMax=Math.max(...oSN,1);
-  document.getElementById('rpt-occ-status').innerHTML = oSS.map((s,i)=>progress(s,oSN[i],occTotal||1,oSC[i])).join('') || '<div class="empty-state">No data</div>';
 
   // ── TABLES ────────────────────────────────────────────────────────────
   // Populate lab dropdowns in filters
   const projLabOpts = [...new Set(projects.map(p=>p.lab).filter(Boolean))].sort();
   const rfPL = document.getElementById('rf-proj-lab');
-  const rfOL = document.getElementById('rf-occ-lab');
-  if(rfPL){ rfPL.innerHTML='<option value="">All Labs</option>'+projLabOpts.map(l=>`<option>${l}</option>`).join(''); }
-  const occLabOpts = [...new Set(occupancy.map(o=>o.lab).filter(Boolean))].sort();
-  if(rfOL){ rfOL.innerHTML='<option value="">All Labs</option>'+occLabOpts.map(l=>`<option>${l}</option>`).join(''); }
+
 
   filterReportProjects();
 
-  // Lab Utilization chart
   const utilLabs = [...new Set(occupancy.map(o=>o.lab))];
   const utilData = utilLabs.map(l => {
     const entries = occupancy.filter(o=>o.lab===l);
@@ -3120,8 +2482,19 @@ function renderReports(){
       <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#ff6b6b;display:inline-block;flex-shrink:0"></span><span style="color:var(--muted)">Downtime</span></span>
     </div>` : '<div class="empty-state">No hours data yet</div>';
 
-  filterReportOcc();
   renderNablReport();
+
+  // Rugby Budget charts
+  renderBarChart('rpt-rugby-opex', [
+    {l:'Total Budget', v:capexData.rugbyBudget||0, c:'#4ade80'},
+    {l:'PR Raised',    v:capexData.rugbyPR||0,     c:'#fbbf24'},
+    {l:'Balance',      v:Math.max((capexData.rugbyBudget||0)-(capexData.rugbyPR||0),0), c:'#00e5c3'},
+  ], fmt);
+  renderBarChart('rpt-rugby-capex', [
+    {l:'Total Budget', v:capexData.capexBudget||0, c:'#5b8cff'},
+    {l:'PR Raised',    v:capexData.capexPR||0,     c:'#a78bfa'},
+    {l:'Balance',      v:Math.max((capexData.capexBudget||0)-(capexData.capexPR||0),0), c:'#5b8cff'},
+  ], fmtCapex);
 }
 
 // ── NABL + PR/PO REPORT RENDERING ────────────────────────────────────────
@@ -3242,49 +2615,8 @@ function renderNablReport() {
 
   // NABL table
   filterReportNabl();
-  renderUtilAnalyticsReport();
 }
 
-function renderUtilAnalyticsReport() {
-  // Populate lab dropdown
-  const labSel = document.getElementById('rpt-util-lab-filter');
-  if (labSel) {
-    const labs = [...new Set(occupancy.map(o=>o.lab).filter(Boolean))].sort();
-    const cur  = labSel.value;
-    labSel.innerHTML = '<option value="">All Labs</option>'
-      + labs.map(l=>`<option value="${l}"${l===cur?' selected':''}>${l}</option>`).join('');
-  }
-
-  const period = document.getElementById('rpt-util-period')?.value||'month';
-  const shiftF = document.getElementById('rpt-util-shift')?.value||'';
-  const labF   = document.getElementById('rpt-util-lab-filter')?.value||'';
-
-  const base = occupancy.filter(o=>(!shiftF||o.shift===shiftF)&&(!labF||o.lab===labF));
-  const allKeys = [...new Set(base.map(o=>getPeriodKey(o,period)).filter(k=>k!=='Unknown'))].sort().slice(-10);
-
-  const grouped = {};
-  allKeys.forEach(k=>{ grouped[k]={}; PRODUCTS.forEach(p=>{ grouped[k][p]=[]; }); });
-  base.forEach(o=>{
-    const k=getPeriodKey(o,period); const p=o.product||'';
-    if(grouped[k]&&PRODUCTS.includes(p)) grouped[k][p].push(o);
-  });
-
-  renderGroupedBarChart('rpt-productivity', allKeys, grouped, 'productivity', '%', 100, 'var(--card)');
-  renderGroupedBarChart('rpt-utilization',  allKeys, grouped, 'utilization',  '%', 100, 'var(--card)');
-  renderGroupedBarChart('rpt-max-util',     allKeys, grouped, 'maxUtil',      '%', 100, 'var(--card)');
-
-  // Rugby charts in report
-  renderBarChart('rpt-rugby-opex', [
-    {l:'Total Budget', v:capexData.rugbyBudget||0, c:'#4ade80'},
-    {l:'PR Raised',    v:capexData.rugbyPR||0,     c:'#fbbf24'},
-    {l:'Balance',      v:Math.max((capexData.rugbyBudget||0)-(capexData.rugbyPR||0),0), c:'#4ade80'},
-  ], fmt);
-  renderBarChart('rpt-rugby-capex', [
-    {l:'Total Budget', v:capexData.capexBudget||0, c:'#5b8cff'},
-    {l:'PR Raised',    v:capexData.capexPR||0,     c:'#a78bfa'},
-    {l:'Balance',      v:Math.max((capexData.capexBudget||0)-(capexData.capexPR||0),0), c:'#5b8cff'},
-  ], fmtCapex);
-}
 
 function filterReportNabl() {
   const s = (document.getElementById('rf-nabl-search')?.value||'').toLowerCase();
@@ -3339,9 +2671,9 @@ function switchType(t){
   renderTimeline();
 }
 
-function tlData(){ return tlType==='projects'?projects:occupancy; }
-function tlDateOf(item){ return tlType==='projects'?item.start:item.date; }
-function tlStatuses(){ return tlType==='projects'?['Planning','In Progress','Completed','On Hold']:['Scheduled','In Progress','Completed','Cancelled']; }
+function tlData(){ return tlType==='projects'?projects:tlType==='nabl'?tasks:[]; }
+function tlDateOf(item){ return tlType==='projects'?item.start : tlType==='nabl'?item.start : item.date; }
+function tlStatuses(){ return tlType==='projects'?['Planning','In Progress','Completed','On Hold']:tlType==='nabl'?['Planning','In Progress','Completed','On Hold']:['Scheduled','In Progress','Completed','Cancelled']; }
 
 function pills(items){
   return tlStatuses().map(s=>{
@@ -4395,7 +3727,7 @@ function renderTimeline(){
   document.getElementById('tl-bc').innerHTML=bc;
 
   const data=tlData();
-  const label=tlType==='projects'?'projects':'sessions';
+  const label=tlType==='projects'?'projects':tlType==='nabl'?'tasks':'items';
   let html='';
 
   if(tlView==='year'){
@@ -4675,8 +4007,7 @@ async function saveOccupancyEdit() {
     })};
   } catch(e) { alert('Update failed: '+e.message); return; }
   closeModal('edit-occ-modal');
-  renderOccupancy();
-}
+  }
 
 
 // ── PRINT SECTIONS ────────────────────────────────────────────────────────
@@ -5153,9 +4484,8 @@ function printSection(section) {
 // ── PRINT TIMELINE ────────────────────────────────────────────────────────
 function printTimeline(mode) {
   const data   = tlData();
-  const label  = tlType === 'projects' ? 'Projects' : 'Occupancy';
-  const PALETTE= ['#00e5c3','#5b8cff','#4ade80','#fbbf24','#ff6b6b','#f97316','#a78bfa','#06b6d4'];
-
+  const label  = tlType === 'projects' ? 'Projects' : tlType==='nabl' ? 'NABL Tasks' : 'Items';
+  
   // Build a standalone print window so it never disturbs current view
   const win = window.open('', '_blank', 'width=900,height=700');
   if (!win) { alert('Please allow popups for this page to use print.'); return; }
@@ -5239,8 +4569,8 @@ function printTimeline(mode) {
           </div>
           <div class="pills">${statusSummary(items)}</div>
           <table>
-            <thead>${tlType==='projects'?projHeader():occHeader()}</thead>
-            <tbody>${items.map(i=>tlType==='projects'?projRow(i):occRow(i)).join('')}</tbody>
+            <thead>${tlType==='occupancy'?occHeader():projHeader()}</thead>
+            <tbody>${items.map(i=>tlType==='occupancy'?occRow(i):projRow(i)).join('')}</tbody>
           </table>
         </div>`;
     });
@@ -5263,8 +4593,8 @@ function printTimeline(mode) {
             </div>
             <div class="pills">${statusSummary(items)}</div>
             <table>
-              <thead>${tlType==='projects'?projHeader():occHeader()}</thead>
-              <tbody>${items.map(i=>tlType==='projects'?projRow(i):occRow(i)).join('')}</tbody>
+              <thead>${tlType==='occupancy'?occHeader():projHeader()}</thead>
+              <tbody>${items.map(i=>tlType==='occupancy'?occRow(i):projRow(i)).join('')}</tbody>
             </table>
           </div>`;
       });
@@ -5428,6 +4758,8 @@ function clearReportProjFilters() {
 
 // ── REPORT FILTER: OCCUPANCY ──────────────────────────────────────────────
 function filterReportOcc() {
+  // Guard — occupancy elements don't exist in no-util version
+  if (!document.getElementById('rf-occ-search')) return;
   const search = (document.getElementById('rf-occ-search')?.value||'').toLowerCase();
   const status = document.getElementById('rf-occ-status')?.value||'';
   const lab    = document.getElementById('rf-occ-lab')?.value||'';
@@ -5454,7 +4786,10 @@ function filterReportOcc() {
   const countEl = document.getElementById('rf-occ-count');
   if(countEl) countEl.textContent = `Showing ${filtered.length} of ${occupancy.length} entries`;
 
-  document.getElementById('rpt-occ-table').innerHTML = filtered.map(o=>{
+  if (!document.getElementById('rpt-occ-table')) return;
+  const _rptOcc = document.getElementById('rpt-occ-table');
+  if (!_rptOcc) return;
+  _rptOcc.innerHTML = filtered.map(o=>{
     const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
     const pct=tot>0?Math.round(th/tot*100):-1;
     const utilCol=pct>=80?'var(--success)':pct>=50?'var(--yellow)':'var(--warn)';
@@ -5479,77 +4814,13 @@ function filterReportOcc() {
   }).join('') || `<tr><td colspan="16"><div class="empty-state">No entries match the selected filters</div></td></tr>`;
 }
 
-function renderUtilAnalyticsReport() {
-  // Populate lab dropdown
-  const labSel = document.getElementById('rpt-util-lab-filter');
-  if (labSel) {
-    const labs = [...new Set(occupancy.map(o=>o.lab).filter(Boolean))].sort();
-    const cur  = labSel.value;
-    labSel.innerHTML = '<option value="">All Labs</option>'
-      + labs.map(l=>`<option value="${l}"${l===cur?' selected':''}>${l}</option>`).join('');
-  }
-
-  const period = document.getElementById('rpt-util-period')?.value||'month';
-  const shiftF = document.getElementById('rpt-util-shift')?.value||'';
-  const labF   = document.getElementById('rpt-util-lab-filter')?.value||'';
-
-  const base = occupancy.filter(o=>(!shiftF||o.shift===shiftF)&&(!labF||o.lab===labF));
-  const allKeys = [...new Set(base.map(o=>getPeriodKey(o,period)).filter(k=>k!=='Unknown'))].sort().slice(-10);
-
-  const grouped = {};
-  allKeys.forEach(k=>{ grouped[k]={}; PRODUCTS.forEach(p=>{ grouped[k][p]=[]; }); });
-  base.forEach(o=>{
-    const k=getPeriodKey(o,period); const p=o.product||'';
-    if(grouped[k]&&PRODUCTS.includes(p)) grouped[k][p].push(o);
-  });
-
-  renderGroupedBarChart('rpt-productivity', allKeys, grouped, 'productivity', '%', 100, 'var(--card)');
-  renderGroupedBarChart('rpt-utilization',  allKeys, grouped, 'utilization',  '%', 100, 'var(--card)');
-  renderGroupedBarChart('rpt-max-util',     allKeys, grouped, 'maxUtil',      '%', 100, 'var(--card)');
-
-  // Rugby charts in report
-  renderBarChart('rpt-rugby-opex', [
-    {l:'Total Budget', v:capexData.rugbyBudget||0, c:'#4ade80'},
-    {l:'PR Raised',    v:capexData.rugbyPR||0,     c:'#fbbf24'},
-    {l:'Balance',      v:Math.max((capexData.rugbyBudget||0)-(capexData.rugbyPR||0),0), c:'#4ade80'},
-  ], fmt);
-  renderBarChart('rpt-rugby-capex', [
-    {l:'Total Budget', v:capexData.capexBudget||0, c:'#5b8cff'},
-    {l:'PR Raised',    v:capexData.capexPR||0,     c:'#a78bfa'},
-    {l:'Balance',      v:Math.max((capexData.capexBudget||0)-(capexData.capexPR||0),0), c:'#5b8cff'},
-  ], fmtCapex);
-}
-
-function filterReportNabl() {
-  const s = (document.getElementById('rf-nabl-search')?.value||'').toLowerCase();
-  const f = document.getElementById('rf-nabl-status')?.value||'';
-  const list = tasks.filter(t =>
-    (!f || t.status===f) &&
-    (!s || t.name.toLowerCase().includes(s) || (t.assigned||'').toLowerCase().includes(s))
-  );
-  const cnt = document.getElementById('rf-nabl-count');
-  if (cnt) cnt.textContent = list.length + ' task(s)';
-  const tb = document.getElementById('rpt-nabl-table');
-  if (!tb) return;
-  tb.innerHTML = list.map(t=>`<tr>
-    <td><strong>${t.name}</strong></td>
-    <td>${t.assigned||'—'}</td>
-    <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(t.start)||'—'}</td>
-    <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(t.end)||'—'}</td>
-    <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(t.actualStart)||'—'}</td>
-    <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(t.actualEnd)||'—'}</td>
-    <td style="font-size:11px;color:var(--muted)">${t.description?t.description.substring(0,60)+(t.description.length>60?'...':''):'—'}</td>
-    <td>${t.issues||'—'}</td>
-    <td>${badge(t.status)}</td>
-  </tr>`).join('') || '<tr><td colspan="9"><div class="empty-state"><div class="icon">✦</div>No NABL tasks</div></td></tr>';
-}
 
 function clearReportOccFilters() {
+  if (!document.getElementById('rf-occ-search')) return;
   ['rf-occ-search','rf-occ-status','rf-occ-lab','rf-occ-util'].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.value='';
   });
-  filterReportOcc();
 }
 
 // ── LOGIN ─────────────────────────────────────────────────────────────────
@@ -5568,6 +4839,7 @@ function doLogin() {
   if (CREDENTIALS[user] && CREDENTIALS[user] === pass) {
     document.getElementById('login-screen').style.display = 'none';
     sessionStorage.setItem('epq_auth', btoa(user + ':' + pass));
+    loadData();
     errEl.textContent = '';
   } else {
     errEl.textContent = '❌ Incorrect username or password.';
@@ -5593,9 +4865,679 @@ function checkAuth() {
   return false;
 }
 
+
+
+
+function switchType(t){
+  tlType=t; tlView='year'; tlYear=null; tlMonth=null;
+  document.getElementById('tab-proj').classList.toggle('active',t==='projects');
+  document.getElementById('tab-occ').classList.toggle('active',t==='occupancy');
+  renderTimeline();
+}
+
+function tlData(){ return tlType==='projects'?projects:tlType==='nabl'?tasks:[]; }
+
+function renderTimeline(){
+  // Breadcrumb
+  let bc='';
+  if(tlView==='year'){ bc=`<span class="current-crumb">All Years</span>`; }
+  else if(tlView==='month'){ bc=`<span class="crumb" onclick="goYear()">All Years</span><span class="sep"> › </span><span class="current-crumb">${tlYear}</span>`; }
+  else if(tlView==='week'){ bc=`<span class="crumb" onclick="goYear()">All Years</span><span class="sep"> › </span><span class="crumb" onclick="goMonth()"> ${tlYear}</span><span class="sep"> › </span><span class="current-crumb">${MONTHS[tlMonth]} ${tlYear}</span>`; }
+  document.getElementById('tl-bc').innerHTML=bc;
+
+  const data=tlData();
+  const label=tlType==='projects'?'projects':tlType==='nabl'?'tasks':'items';
+  let html='';
+
+  if(tlView==='year'){
+    // Group by year
+    const map={};
+    data.forEach(item=>{ const y=getYear(tlDateOf(item)); if(y){if(!map[y])map[y]=[];map[y].push(item);} });
+    const years=Object.keys(map).sort((a,b)=>b-a);
+    if(!years.length){
+      html=`<div class="empty-state"><div class="icon">◫</div>No ${label} with dates yet.<br>Enter dates in dd/mm/yyyy format when adding entries.</div>`;
+    } else {
+      html+=`<div class="section-sep">Showing ${data.length} ${label} — click a year card to see months</div><div class="drill-grid">`;
+      years.forEach(y=>{
+        const items=map[y];
+        html+=`<div class="drill-card" onclick="goMonth(${y})">
+          <h4>📅 ${y}</h4>
+          <div class="drill-stat"><span>Total ${label}</span><span>${items.length}</span></div>
+          <div class="status-pills">${pills(items)}</div>
+          <div class="mini-bar">${minibar(items)}</div>
+        </div>`;
+      });
+      html+=`</div>`;
+      const noDates=data.filter(i=>!getYear(tlDateOf(i)));
+      if(noDates.length) html+=`<div class="section-sep" style="margin-top:8px">${noDates.length} ${label} without dates</div>`;
+    }
+  }
+
+  else if(tlView==='month'){
+    const items=data.filter(i=>getYear(tlDateOf(i))===tlYear);
+    const map={};
+    items.forEach(i=>{ const m=getMonth(tlDateOf(i)); if(m!==null){if(!map[m])map[m]=[];map[m].push(i);} });
+    const months=Object.keys(map).sort((a,b)=>a-b);
+    if(!months.length){
+      html=`<div class="empty-state"><div class="icon">◫</div>No ${label} in ${tlYear}</div>`;
+    } else {
+      html+=`<div class="section-sep">${tlYear} — ${items.length} ${label} across ${months.length} month(s) — click to see weekly breakdown</div><div class="drill-grid">`;
+      months.forEach(m=>{
+        const mi=map[m];
+        html+=`<div class="drill-card" onclick="goWeek(${tlYear},${m})">
+          <h4>🗓 ${MONTHS[m]}</h4>
+          <div class="drill-stat"><span>Total ${label}</span><span>${mi.length}</span></div>
+          <div class="status-pills">${pills(mi)}</div>
+          <div class="mini-bar">${minibar(mi)}</div>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+  }
+
+  else if(tlView==='week'){
+    const items=data.filter(i=>{
+      const d=parseDate(tlDateOf(i));
+      return d&&d.getFullYear()===tlYear&&d.getMonth()===tlMonth;
+    });
+    const map={};
+    items.forEach(i=>{ const w=weekOfMonth(tlDateOf(i)); if(w){if(!map[w])map[w]=[];map[w].push(i);} });
+    const weeks=Object.keys(map).sort((a,b)=>a-b);
+    if(!weeks.length){
+      html=`<div class="empty-state"><div class="icon">◫</div>No ${label} in ${MONTHS[tlMonth]} ${tlYear}</div>`;
+    } else {
+      html+=`<div class="section-sep">${MONTHS[tlMonth]} ${tlYear} — ${items.length} ${label} — weekly view</div>`;
+      weeks.forEach(w=>{
+        const wi=map[w];
+        const sd=(Number(w)-1)*7+1;
+        const ed=Math.min(Number(w)*7,31);
+        const mm=String(tlMonth+1).padStart(2,'0');
+        html+=`<div class="table-card">
+          <div class="table-header">
+            <div class="week-header" style="width:100%">
+              <h2>Week ${w} &nbsp;<small style="color:var(--muted);font-size:11px;font-weight:400">${String(sd).padStart(2,'0')}/${mm}/${tlYear} – ${String(ed).padStart(2,'0')}/${mm}/${tlYear}</small></h2>
+              <div class="status-pills">${pills(wi)}</div>
+            </div>
+          </div>`;
+        if(tlType==='projects'){
+          html+=`<table><thead><tr><th>Project</th><th>Type</th><th>Lab</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>TTM</th><th>Status</th><th>Issues</th></tr></thead><tbody>`;
+          html+=wi.map(p=>`<tr>
+            <td>${p.name}</td><td>${p.type?`<span class='badge badge-blue'>${p.type}</span>`:'—'}</td><td>${p.lab}</td><td>${p.assigned||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.start)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.end)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(p.actualStart)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(p.actualEnd)||'—'}</td>
+            <td style="color:var(--accent);font-family:'DM Mono',monospace;font-size:11px">${toDisplay(p.ttm)||'—'}</td>
+            <td>${badge(p.status)}</td>
+            <td>${p.issues?p.issues.split(',').map(i=>`<span class="issue-tag">${i.trim()}</span>`).join(''):'—'}</td>
+          </tr>`).join('');
+          html+=`</tbody></table>`;
+        } else {
+          html+=`<table><thead><tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time</th><th>Status</th></tr></thead><tbody>`;
+          html+=wi.map(o=>`<tr>
+            <td>${o.lab}</td><td>${o.project||'—'}</td><td>${o.test}</td><td>${o.who||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(o.date)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px">${toDisplay(o.enddate)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(o.actualStart)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--success)">${toDisplay(o.actualEnd)||'—'}</td>
+            <td style="font-family:'DM Mono',monospace;font-size:12px">${o.start||'?'}→${o.end||'?'}</td>
+            <td>${badge(o.status)}</td>
+          </tr>`).join('');
+          html+=`</tbody></table>`;
+        }
+        html+=`</div>`;
+      });
+    }
+  }
+
+  document.getElementById('tl-body').innerHTML=html;
+}
+
+
+function goYear(){ tlView='year'; tlYear=null; tlMonth=null; renderTimeline(); }
+function goMonth(y){ tlView='month'; if(y!==undefined)tlYear=y; tlMonth=null; renderTimeline(); }
+function goWeek(y,m){ tlView='week'; tlYear=y; tlMonth=m; renderTimeline(); }
+
+
+// ── MODAL HELPERS ─────────────────────────────────────────────────────────
+
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// Close modal on overlay click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// ── EDIT PROJECT ──────────────────────────────────────────────────────────
+function editProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  editingProjId = id;
+  document.getElementById('ep-name').value         = p.name      || '';
+  document.getElementById('ep-start').value        = p.start     || '';
+  document.getElementById('ep-end').value          = p.end       || '';
+  document.getElementById('ep-actual-start').value = p.actualStart|| '';
+  document.getElementById('ep-actual-end').value   = p.actualEnd || '';
+  document.getElementById('ep-ttm').value          = p.ttm       || '';
+  document.getElementById('ep-assigned').value     = p.assigned  || '';
+  document.getElementById('ep-type').value         = p.type      || '';
+  document.getElementById('ep-status').value       = p.status    || 'Planning';
+  document.getElementById('ep-issues').value       = p.issues    || '';
+  document.getElementById('ep-notes').value        = p.notes     || '';
+  // Open modal first so DOM elements are visible and queryable
+  openModal('edit-proj-modal');
+  // Then populate lab checkboxes and rows
+  setTimeout(() => {
+    if (p.labData && p.labData.length) {
+      populateLabRows('ep', p.labData);
+    } else if (p.lab) {
+      const legacyLabs = p.lab.split(',').map(l=>l.trim()).filter(Boolean);
+      populateLabRows('ep', legacyLabs.map(l=>({lab:l,total:0,done:0,notes:''})));
+    }
+  }, 100);
+}
+
+async function saveProjectEdit() {
+  const name = document.getElementById('ep-name').value.trim();
+  if (!name) { alert('Project name is required.'); return; }
+  // Read lab data directly from already-populated rows (populated by editProject's setTimeout)
+  const labData       = getLabData('ep');
+  const lab           = labData.length ? labData.map(l=>l.lab).join(', ') : '';
+  const totalTestsAll = labData.reduce((s,l)=>s+l.total,0);
+  const testsDoneAll  = labData.reduce((s,l)=>s+l.done,0);
+  const labDataJson   = JSON.stringify(labData);
+  const idx = projects.findIndex(x => x.id === editingProjId);
+  if (idx === -1) return;
+  const upd = {
+    name, lab,
+    lab_data:     labDataJson,
+    start_date:   getDate('ep-start'),
+    end_date:     getDate('ep-end'),
+    actual_start: getDate('ep-actual-start'),
+    actual_end:   getDate('ep-actual-end'),
+    ttm:          getDate('ep-ttm'),
+    assigned:     document.getElementById('ep-assigned').value.trim(),
+    type:         document.getElementById('ep-type').value,
+    status:       document.getElementById('ep-status').value,
+    issues:       document.getElementById('ep-issues').value.trim(),
+    total_tests:  totalTestsAll,
+    tests_done:   testsDoneAll,
+    notes:        document.getElementById('ep-notes').value.trim(),
+  };
+  try {
+    await supaFetch('projects?id=eq.'+editingProjId, {
+      method:'PATCH', body: JSON.stringify(upd), prefer:'return=minimal', noJson:true
+    });
+    // Update local array with correct field mapping
+    projects[idx] = {
+      ...projects[idx],
+      name:        upd.name,
+      lab:         upd.lab,
+      labData:     labData,
+      type:        upd.type,
+      status:      upd.status,
+      assigned:    upd.assigned,
+      start:       upd.start_date,
+      end:         upd.end_date,
+      actualStart: upd.actual_start,
+      actualEnd:   upd.actual_end,
+      ttm:         upd.ttm,
+      issues:      upd.issues,
+      notes:       upd.notes,
+      totalTests:  totalTestsAll,
+      testsDone:   testsDoneAll,
+    };
+  } catch(e) { alert('Update failed: '+e.message); return; }
+  closeModal('edit-proj-modal');
+  renderProjects();
+  renderDashboard();
+  alert('✅ Project updated!');
+}
+
+// ── EDIT OCCUPANCY ────────────────────────────────────────────────────────
+function editOccupancy(id) {
+  const o = occupancy.find(x => x.id === id);
+  if (!o) return;
+  editingOccId = id;
+  document.getElementById('eo-lab').value          = o.lab        || '';
+  document.getElementById('eo-project').value      = o.project    || '';
+  document.getElementById('eo-test').value         = o.test       || '';
+  document.getElementById('eo-who').value          = o.who        || '';
+  document.getElementById('eo-actual-start').value = o.actualStart|| '';
+  document.getElementById('eo-actual-end').value   = o.actualEnd  || '';
+  document.getElementById('eo-start').value        = o.start      || '';
+  document.getElementById('eo-end').value          = o.end        || '';
+  document.getElementById('eo-testhours').value    = o.testHours  || '';
+  document.getElementById('eo-downtime').value     = o.downtime   || '';
+  document.getElementById('eo-total-tests').value  = o.totalTests || '';
+  document.getElementById('eo-tests-done').value   = o.testsDone  || '';
+  document.getElementById('eo-status').value       = o.status     || 'Scheduled';
+  document.getElementById('eo-shift').value        = o.shift      || '';
+  document.getElementById('eo-project-code').value = o.projectCode|| '';
+  document.getElementById('eo-test-type').value    = o.testType   || '';
+  document.getElementById('eo-product').value      = o.product    || '';
+  document.getElementById('eo-avail-hrs').value    = o.availHrs   || '';
+  openModal('edit-occ-modal');
+}
+
+async function saveOccupancyEdit() {
+  const lab  = document.getElementById('eo-lab').value.trim();
+  const test = document.getElementById('eo-test').value.trim();
+  if (!lab || !test) { alert('Lab name and test stage are required.'); return; }
+  const idx = occupancy.findIndex(x => x.id === editingOccId);
+  if (idx === -1) return;
+  const upd = {
+    lab, test,
+    project:      document.getElementById('eo-project').value.trim(),
+    researcher:   document.getElementById('eo-who').value.trim(),
+    planned_start:'',
+    planned_end:  '',
+    actual_start: getDate('eo-actual-start'),
+    actual_end:   getDate('eo-actual-end'),
+    start_time:   document.getElementById('eo-start').value,
+    end_time:     document.getElementById('eo-end').value,
+    test_hours:   parseFloat(document.getElementById('eo-testhours').value)||0,
+    downtime:     parseFloat(document.getElementById('eo-downtime').value)||0,
+    total_tests:  parseInt(document.getElementById('eo-total-tests').value)||0,
+    tests_done:   parseInt(document.getElementById('eo-tests-done').value)||0,
+    status:       document.getElementById('eo-status').value,
+    shift:        document.getElementById('eo-shift').value,
+    project_code: document.getElementById('eo-project-code').value.trim(),
+    test_type:    document.getElementById('eo-test-type').value,
+    product:      document.getElementById('eo-product').value,
+    avail_hrs:    parseFloat(document.getElementById('eo-avail-hrs').value)||0,
+  };
+  try {
+    await supaFetch('occupancy?id=eq.'+editingOccId, {
+      method:'PATCH', body: JSON.stringify(upd), prefer:'return=minimal', noJson:true
+    });
+    occupancy[idx] = {...occupancy[idx], ...mapOccupancy({id:editingOccId,
+      ...upd, researcher:upd.researcher,
+      planned_start:upd.planned_start, planned_end:upd.planned_end,
+      actual_start:upd.actual_start, actual_end:upd.actual_end,
+      start_time:upd.start_time, end_time:upd.end_time,
+      test_hours:upd.test_hours, total_tests:upd.total_tests, tests_done:upd.tests_done,
+      shift:upd.shift, project_code:upd.project_code, test_type:upd.test_type,
+      product:upd.product, avail_hrs:upd.avail_hrs
+    })};
+  } catch(e) { alert('Update failed: '+e.message); return; }
+  closeModal('edit-occ-modal');
+  }
+
+
+// ── PRINT SECTIONS ────────────────────────────────────────────────────────
+function buildInvoicePrintSection() {
+  const rugbyBal = (capexData.rugbyBudget||0) - (capexData.rugbyPR||0);
+  const capexBal = (capexData.capexBudget||0) - (capexData.capexPR||0);
+  const opexTotal = capexData.opexEntries.reduce((s,e)=>s+e.amount,0);
+  const capexTotal2 = capexData.capexEntries.reduce((s,e)=>s+e.amount,0);
+
+  // PR/PO KPIs
+  const kpi1 = [
+    {l:'Total PR',      v:capexData.totalPR||0,              c:'#00e5c3', fmt:false},
+    {l:'Released PR',   v:capexData.releasedPR||0,           c:'#4ade80', fmt:false},
+    {l:'Partial PR',    v:capexData.partialPR||0,            c:'#fbbf24', fmt:false},
+    {l:'Total PO',      v:capexData.totalPO||0,              c:'#5b8cff', fmt:false},
+    {l:'Released PO',   v:capexData.releasedPO||0,           c:'#4ade80', fmt:false},
+    {l:'Pending PO',    v:capexData.pendingPO||0,            c:'#ef4444', fmt:false},
+    {l:'Invoice Booked',v:fmt(capexData.invBooked||0),       c:'#00e5c3', fmt:true},
+    {l:'Service Booked',v:fmt(capexData.svcBooked||0),       c:'#5b8cff', fmt:true},
+    {l:'Material GRN',  v:fmt(capexData.grnBooked||0),       c:'#4ade80', fmt:true},
+    {l:'PO Released',   v:fmt(capexData.poAmount||0),        c:'#f97316', fmt:true},
+  ];
+  const kpi2 = [
+    {l:'Rugby OPEX Budget',  v:fmt(capexData.rugbyBudget||0), c:'#4ade80'},
+    {l:'PR vs Rugby OPEX',   v:fmt(capexData.rugbyPR||0),     c:'#fbbf24'},
+    {l:'Rugby OPEX Balance', v:fmt(rugbyBal),                  c:rugbyBal>=0?'#4ade80':'#ef4444'},
+    {l:'CAPEX Budget',       v:fmt(capexData.capexBudget||0),  c:'#5b8cff'},
+    {l:'PR vs CAPEX',        v:fmt(capexData.capexPR||0),      c:'#fbbf24'},
+    {l:'CAPEX Balance',      v:fmt(capexBal),                   c:capexBal>=0?'#5b8cff':'#ef4444'},
+    {l:'Total OPEX Booked',  v:fmt(opexTotal),                  c:'#f97316'},
+    {l:'Total CAPEX Booked', v:fmt(capexTotal2),                c:'#a78bfa'},
+  ];
+
+  // OPEX invoice stats
+  const opexYts  = capexData.opexEntries.filter(e=>e.status==='Yet to Start').length;
+  const opexInp  = capexData.opexEntries.filter(e=>e.status==='In Progress').length;
+  const opexComp = capexData.opexEntries.filter(e=>e.status==='Completed').length;
+  const opexPend = capexData.opexEntries.length - opexInp - opexComp;
+  const capexYts  = capexData.capexEntries.filter(e=>e.status==='Yet to Start').length;
+  const capexInp  = capexData.capexEntries.filter(e=>e.status==='In Progress').length;
+  const capexComp = capexData.capexEntries.filter(e=>e.status==='Completed').length;
+  const capexPend = capexData.capexEntries.length - capexInp - capexComp;
+
+  function kpiBox(item) {
+    return '<div class="kpi-box" style="border-top:3px solid '+item.c+';-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+      +'<div class="lbl">'+item.l+'</div>'
+      +'<div class="val" style="color:'+item.c+'">'+item.v+'</div></div>';
+  }
+
+  let html = '<div class="section-title" style="margin-top:16px;border-left-color:#fbbf24">💰 Invoice Booking Summary</div>';
+  html += '<div class="kpi-grid" style="margin-bottom:12px;">' + kpi1.map(kpiBox).join('') + '</div>';
+  html += '<div class="kpi-grid" style="margin-bottom:16px;">' + kpi2.map(kpiBox).join('') + '</div>';
+
+  // Invoice status summary
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">';
+  html += '<div><div style="font-size:9pt;font-weight:700;color:#f97316;margin-bottom:6px">OPEX Invoice Status</div>'
+    +'<div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);">'
+    +'<div class="kpi-box" style="border-top:3px solid #f97316"><div class="lbl">Total</div><div class="val" style="color:#f97316">'+capexData.opexEntries.length+'</div></div>'
+    +'<div class="kpi-box" style="border-top:3px solid #6b7a99"><div class="lbl">Yet to Start</div><div class="val" style="color:#6b7a99">'+opexYts+'</div></div>'
+    +'<div class="kpi-box" style="border-top:3px solid #00e5c3"><div class="lbl">In Progress</div><div class="val" style="color:#00e5c3">'+opexInp+'</div></div>'
+    +'<div class="kpi-box" style="border-top:3px solid #4ade80"><div class="lbl">Completed</div><div class="val" style="color:#4ade80">'+opexComp+'</div></div>'
+    +'<div class="kpi-box" style="border-top:3px solid #ef4444"><div class="lbl">Pending</div><div class="val" style="color:#ef4444">'+opexPend+'</div></div>'
+    +'</div></div>';
+  html += '<div><div style="font-size:9pt;font-weight:700;color:#a78bfa;margin-bottom:6px">CAPEX Invoice Status</div>'
+    +'<div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);">'
+    +'<div class="kpi-box" style="border-top:3px solid #a78bfa"><div class="lbl">Total</div><div class="val" style="color:#a78bfa">'+capexData.capexEntries.length+'</div></div>'
+    +'<div class="kpi-box" style="border-top:3px solid #6b7a99"><div class="lbl">Yet to Start</div><div class="val" style="color:#6b7a99">'+capexYts+'</div></div>'
+    +'<div class="kpi-box" style="border-top:3px solid #00e5c3"><div class="lbl">In Progress</div><div class="val" style="color:#00e5c3">'+capexInp+'</div></div>'
+    +'<div class="kpi-box" style="border-top:3px solid #4ade80"><div class="lbl">Completed</div><div class="val" style="color:#4ade80">'+capexComp+'</div></div>'
+    +'<div class="kpi-box" style="border-top:3px solid #ef4444"><div class="lbl">Pending</div><div class="val" style="color:#ef4444">'+capexPend+'</div></div>'
+    +'</div></div>';
+  html += '</div>';
+
+  html += buildEntryTable('opex');
+  html += buildEntryTable('capex');
+  return html;
+}
+
+function buildProjectKPIPrint() {
+  if (!projects.length) return '';
+  const statColors = {
+    'Planning':'#5b8cff','In Progress':'#00e5c3','Completed':'#4ade80','On Hold':'#fbbf24'
+  };
+  const statGroups = {};
+  projects.forEach(p => { statGroups[p.status] = (statGroups[p.status]||[]).concat(p); });
+
+  // KPI summary cards
+  const total     = projects.length;
+  const completed = projects.filter(p=>p.status==='Completed').length;
+  const active    = projects.filter(p=>p.status==='In Progress').length;
+  const onHold    = projects.filter(p=>p.status==='On Hold').length;
+  const planning  = projects.filter(p=>p.status==='Planning').length;
+  const compRate  = total>0 ? Math.round(completed/total*100) : 0;
+
+  const kpiCards = [
+    {l:'Total Projects', v:total,     c:'#00e5c3'},
+    {l:'In Progress',    v:active,    c:'#5b8cff'},
+    {l:'Completed',      v:completed, c:'#4ade80'},
+    {l:'On Hold',        v:onHold,    c:'#fbbf24'},
+    {l:'Planning',       v:planning,  c:'#a78bfa'},
+    {l:'Completion Rate',v:compRate+'%', c:'#4ade80'},
+  ].map(k=>'<div class="kpi-box" style="border-top:3px solid '+k.c+';-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+    +'<div class="lbl">'+k.l+'</div>'
+    +'<div class="val" style="color:'+k.c+'">'+k.v+'</div></div>'
+  ).join('');
+
+  // Project entries table
+  const projRows = projects.map(p=>{
+    const activeLP = (p.labData||[]).filter(l=>l.total>0||l.done>0||l.notes);
+    const labPrint = activeLP.length
+      ? activeLP.map(l=>{
+          const lc=l.total>0?Math.round(l.done/l.total*100):0;
+          const lCol=lc>=80?'#166534':lc>=50?'#92400e':'#991b1b';
+          return '<div style="font-size:7pt"><b>'+l.lab+'</b>: <span style="color:'+lCol+';font-weight:700">'+l.done+'/'+l.total+'</span>'+(l.notes?' — '+l.notes:'')+'</div>';
+        }).join('')
+      : (p.lab||'—');
+    const totalAll2 = activeLP.length ? activeLP.reduce((s,l)=>s+l.total,0) : p.totalTests||0;
+    const doneAll2  = activeLP.length ? activeLP.reduce((s,l)=>s+l.done,0)  : p.testsDone||0;
+    const comp = totalAll2>0 ? Math.round(doneAll2/totalAll2*100)+'%' : '—';
+    return '<tr>'
+      +'<td><strong>'+p.name+'</strong></td>'
+      +'<td>'+( p.type||'—')+'</td>'
+      +'<td style="font-size:7pt">'+labPrint+'</td>'
+      +'<td>'+( p.assigned||'—')+'</td>'
+      +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.start)||'—')+'</td>'
+      +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.end)||'—')+'</td>'
+      +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.actualStart)||'—')+'</td>'
+      +'<td style="font-family:monospace;font-size:7pt">'+(toDisplay(p.actualEnd)||'—')+'</td>'
+      +'<td style="text-align:center">'+totalAll2+'</td>'
+      +'<td style="text-align:center">'+doneAll2+'</td>'
+      +'<td style="text-align:center;font-weight:700;color:'+(p.totalTests>0?'#166534':'#666')+'">'+comp+'</td>'
+      +'<td><span style="background:'+(statColors[p.status]||'#999')+'22;color:'+(statColors[p.status]||'#999')+';padding:1px 6px;border-radius:4px;font-size:7pt;font-weight:700;-webkit-print-color-adjust:exact">'+p.status+'</span></td>'
+      +'<td style="font-size:7pt;max-width:80px;word-break:break-word">'+(p.issues||'—')+'</td>'
+      +'</tr>';
+  }).join('');
+
+  return '<div class="section-title">📁 Project Overview</div>'
+    +'<div class="kpi-grid" style="margin-bottom:16px;">'+kpiCards+'</div>'
+    +'<table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:7.5pt">'
+    +'<colgroup><col style="width:14%"><col style="width:5%"><col style="width:10%"><col style="width:8%">'
+    +'<col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%">'
+    +'<col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:8%"><col style="width:12%"></colgroup>'
+    +'<thead><tr style="background:#0d1b2a;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+    +'<th style="padding:4px 5px;text-align:left">Project Name</th><th>Type</th><th>Lab</th><th>Assigned</th>'
+    +'<th>Plan Start</th><th>Plan End</th><th>Act Start</th><th>Act End</th>'
+    +'<th>Tests</th><th>Done</th><th>%</th><th>Status</th><th>Issues</th>'
+    +'</tr></thead><tbody>'+projRows+'</tbody></table>';
+}
+
+function buildOccupancyPrintSection(occRows, occHTML) {
+  const occTable = '<div class="section-title" style="margin-top:14px">🔬 Utilization Details ('+occRows.length+' records)</div>'
+    +'<table class="ot">'
+    +'<colgroup><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col></colgroup>'
+    +'<thead><tr>'
+    +'<th>Lab</th><th>Project</th><th>Test Stage</th><th>Assigned</th>'
+    +'<th>Start Date</th><th>End Date</th>'
+    +'<th>Test Hrs</th><th>Downtime</th><th>Util%</th>'
+    +'<th>Tests</th><th>Done</th><th>Comp%</th>'
+    +'<th>Status</th><th>Shift</th><th>Product</th><th>Proj Code</th><th>Test Type</th>'
+    +'</tr></thead>'
+    +'<tbody>'+(occHTML||'<tr><td colspan="17" style="text-align:center;color:#999">No records</td></tr>')+'</tbody>'
+    +'</table>';
+
+  return occTable;
+}
+
+function buildEntryTable(type) {
+  const entries = type==='opex' ? capexData.opexEntries : capexData.capexEntries;
+  if (!entries.length) return '';
+  const color = type==='opex' ? '#f97316' : '#a78bfa';
+  const label = type==='opex' ? 'OPEX' : 'CAPEX';
+  const bgColor = type==='opex' ? '#fff8f0' : '#f8f0ff';
+  let total = 0;
+  let rows = entries.map((e,i) => {
+    total += e.amount;
+    return '<tr><td>'+(e.quarter||'—')+'</td><td>'+e.month+'</td><td>'+e.year+'</td>'
+      +'<td style="text-align:right;font-weight:600">'+fmt(e.amount)+'</td>'
+      +'<td style="text-align:right;color:'+color+';font-weight:700">'+fmt(total)+'</td></tr>';
+  }).join('');
+  return '<div style="font-size:9pt;font-weight:700;margin-bottom:6px;color:'+color+'">'+label+' Invoice Entries ('+entries.length+')</div>'
+    +'<table class="it" style="margin-bottom:14px;">'
+    +'<colgroup><col><col><col><col><col></colgroup>'
+    +'<thead><tr><th>Quarter</th><th>Month</th><th>Year</th><th>Amount (₹)</th><th>Cumulative Total</th></tr></thead>'
+    +'<tbody>'+rows+'</tbody>'
+    +'<tfoot><tr style="background:'+bgColor+'"><td colspan="3" style="font-weight:700;padding:5px 6px">TOTAL '+label+'</td>'
+    +'<td colspan="2" style="text-align:right;font-weight:700;color:'+color+';padding:5px 6px">'+fmt(total)+'</td></tr></tfoot>'
+    +'</table>';
+}
+
+
+function printTimeline(mode) {
+  const data   = tlData();
+  const label  = tlType === 'projects' ? 'Projects' : tlType==='nabl' ? 'NABL Tasks' : 'Items';
+  
+  // Build a standalone print window so it never disturbs current view
+  const win = window.open('', '_blank', 'width=900,height=700');
+  if (!win) { alert('Please allow popups for this page to use print.'); return; }
+
+  function statusBadge(s) {
+    const col = {'Planning':'#5b8cff','In Progress':'#00e5c3','Completed':'#4ade80','On Hold':'#fbbf24','Scheduled':'#5b8cff','Cancelled':'#ff6b6b'}[s]||'#999';
+    return `<span style="background:${col}22;color:${col};padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;font-family:monospace;text-transform:uppercase">${s}</span>`;
+  }
+
+  function projRow(p) {
+    return `<tr>
+      <td>${p.name}</td>
+      <td>${p.type?`<b>${p.type}</b>`:'—'}</td>
+      <td>${p.lab||'—'}</td>
+      <td>${p.assigned||'—'}</td>
+      <td>${toDisplay(p.start)||'—'}</td><td>${toDisplay(p.end)||'—'}</td>
+      <td style="color:#4ade80">${toDisplay(p.actualStart)||'—'}</td><td style="color:#4ade80">${toDisplay(p.actualEnd)||'—'}</td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.issues||'—'}</td>
+    </tr>`;
+  }
+
+  function occRow(o) {
+    const th=o.testHours||0, dt=o.downtime||0, tot=th+dt;
+    const util = tot>0 ? Math.round(th/tot*100)+'%' : '—';
+    return `<tr>
+      <td>${o.lab}</td><td>${o.project||'—'}</td><td>${o.test}</td><td>${o.who||'—'}</td>
+      <td>${toDisplay(o.date)||'—'}</td><td>${toDisplay(o.enddate)||'—'}</td>
+      <td style="color:#4ade80">${toDisplay(o.actualStart)||'—'}</td><td style="color:#4ade80">${toDisplay(o.actualEnd)||'—'}</td>
+      <td>${o.start||'?'}→${o.end||'?'}</td>
+      <td>${th}h</td><td>${dt}h</td><td><b>${util}</b></td>
+      <td>${statusBadge(o.status)}</td>
+    </tr>`;
+  }
+
+  function projHeader() {
+    return `<tr><th>Project</th><th>Type</th><th>Lab</th><th>Assigned</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Status</th><th>Issues</th></tr>`;
+  }
+  function occHeader() {
+    return `<tr><th>Lab</th><th>Project</th><th>Test</th><th>Assigned To</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>Time</th><th>Test Hrs</th><th>Downtime</th><th>Util%</th><th>Status</th></tr>`;
+  }
+
+  function statusSummary(items) {
+    const statuses = tlType==='projects'
+      ? ['Planning','In Progress','Completed','On Hold']
+      : ['Scheduled','In Progress','Completed','Cancelled'];
+    const cols = {'Planning':'#5b8cff','In Progress':'#00e5c3','Completed':'#4ade80','On Hold':'#fbbf24','Scheduled':'#5b8cff','Cancelled':'#ff6b6b'};
+    return statuses.map(s => {
+      const n = items.filter(i=>i.status===s).length;
+      if(!n) return '';
+      return `<span style="background:${cols[s]}22;color:${cols[s]};padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;font-family:monospace;margin-right:4px">${s}: ${n}</span>`;
+    }).join('');
+  }
+
+  // ── GROUP DATA ──────────────────────────────────────────────────────────
+  const yearMap = {};
+  data.forEach(item => {
+    const y = getYear(tlDateOf(item));
+    if (y) { if (!yearMap[y]) yearMap[y]=[]; yearMap[y].push(item); }
+  });
+  const years = Object.keys(yearMap).sort((a,b)=>b-a);
+
+  // ── BUILD HTML ─────────────────────────────────────────────────────────
+  let body = '';
+  const title = mode==='yearly' ? `Yearly Summary — ${label}`
+              : mode==='monthly'? `Monthly Summary — ${label}`
+              : `Timeline Report — ${label} (${tlView==='year'?'All Years':tlView==='month'?tlYear:MONTHS[tlMonth]+' '+tlYear})`;
+
+  if (mode === 'current') {
+    // Print whatever is currently on screen
+    body = document.getElementById('tl-body').innerHTML;
+
+  } else if (mode === 'yearly') {
+    years.forEach(y => {
+      const items = yearMap[y];
+      body += `
+        <div class="section">
+          <div class="sec-header">
+            <span class="sec-title">📅 ${y}</span>
+            <span class="sec-count">${items.length} ${label.toLowerCase()}</span>
+          </div>
+          <div class="pills">${statusSummary(items)}</div>
+          <table>
+            <thead>${tlType==='occupancy'?occHeader():projHeader()}</thead>
+            <tbody>${items.map(i=>tlType==='occupancy'?occRow(i):projRow(i)).join('')}</tbody>
+          </table>
+        </div>`;
+    });
+    if (!years.length) body = '<p style="color:#999;text-align:center;padding:40px">No data with dates found.</p>';
+
+  } else if (mode === 'monthly') {
+    years.forEach(y => {
+      const monthMap = {};
+      yearMap[y].forEach(item => {
+        const m = getMonth(tlDateOf(item));
+        if (m!==null) { if(!monthMap[m]) monthMap[m]=[]; monthMap[m].push(item); }
+      });
+      Object.keys(monthMap).sort((a,b)=>a-b).forEach(m => {
+        const items = monthMap[m];
+        body += `
+          <div class="section">
+            <div class="sec-header">
+              <span class="sec-title">🗓 ${MONTHS[m]} ${y}</span>
+              <span class="sec-count">${items.length} ${label.toLowerCase()}</span>
+            </div>
+            <div class="pills">${statusSummary(items)}</div>
+            <table>
+              <thead>${tlType==='occupancy'?occHeader():projHeader()}</thead>
+              <tbody>${items.map(i=>tlType==='occupancy'?occRow(i):projRow(i)).join('')}</tbody>
+            </table>
+          </div>`;
+      });
+    });
+    if (!years.length) body = '<p style="color:#999;text-align:center;padding:40px">No data with dates found.</p>';
+  }
+
+  // ── WRITE TO PRINT WINDOW ──────────────────────────────────────────────
+  // Get selected paper size
+  const sizeEl = document.getElementById('print-size');
+  const pageSize = sizeEl ? sizeEl.value : 'A4 portrait';
+  win.document.write(`<!DOCTYPE html><html><head>
+  <meta charset="UTF-8">
+  <title>EPQ Dashboard — \${title}</title>
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Segoe UI',Arial,sans-serif; color:#111; background:#fff; padding:16px; font-size:10pt; }
+    .print-header { border-bottom:3px solid #00e5c3; padding-bottom:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:flex-end; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .print-header h1 { font-size:16pt; font-weight:800; color:#0d1b2a; }
+    .print-header .meta { font-size:9pt; color:#666; text-align:right; }
+    .print-header .badge { display:inline-block; background:#00e5c322; color:#009b85; padding:2px 10px; border-radius:6px; font-weight:700; font-size:9pt; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .section { margin-bottom:20px; page-break-inside:avoid; }
+    .sec-header { display:flex; align-items:center; justify-content:space-between; background:#f0faf8; border-left:4px solid #00e5c3; padding:6px 12px; border-radius:0 8px 8px 0; margin-bottom:6px; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .sec-title { font-size:11pt; font-weight:800; color:#0d1b2a; }
+    .sec-count { font-size:9pt; color:#666; font-family:monospace; }
+    .pills { margin-bottom:8px; }
+    table { width:100%; border-collapse:collapse; font-size:8.5pt; table-layout:fixed; word-wrap:break-word; }
+    th { background:#0d1b2a; color:#fff; padding:5px 8px; text-align:left; font-size:8pt; text-transform:uppercase; letter-spacing:0.5px; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    td { padding:5px 8px; border-bottom:1px solid #eee; vertical-align:top; word-break:break-word; }
+    tr:nth-child(even) td { background:#f8fffe; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .print-footer { margin-top:24px; border-top:1px solid #ddd; padding-top:8px; font-size:8pt; color:#aaa; display:flex; justify-content:space-between; }
+    /* Page size options */
+    @media print {
+      @page { size: ${pageSize}; margin: 10mm 8mm; }
+      body { padding: 0; font-size: 9pt; }
+      .section { page-break-inside: avoid; }
+      .no-print { display:none; }
+      h2,h3 { page-break-after: avoid; }
+      table { page-break-inside: auto; }
+      tr { page-break-inside: avoid; }
+    }
+  </style>
+  </head><body>
+  <div class="print-header">
+    <div>
+      <h1>LabTrack — ${title}</h1>
+      <div style="margin-top:6px"><span class="badge">${tlType==='projects'?'📁 Projects':'🔬 Utilization'}</span></div>
+    </div>
+    <div class="meta">
+      Generated: ${new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'})}<br>
+      Total records: ${data.length}
+    </div>
+  </div>
+  ${body}
+  <div class="print-footer">
+    <span>LabTrack — EPQ Dashboard System</span>
+    <span>Printed: ${new Date().toLocaleString('en-GB')}</span>
+  </div>
+  </body></html>`)
+  setTimeout(()=>win.print(), 500);
+  win.document.close();
+}
+
+// ── EXPORT TIMELINE CSV ───────────────────────────────────────────────────
+
 // INIT
-checkAuth();
-loadData();
+if (checkAuth()) {
+  loadData();
+}
 </script>
 </body>
 </html>
