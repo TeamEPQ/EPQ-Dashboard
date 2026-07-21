@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard</title>
+<title>EPQ Dashboard — </title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1163,7 +1163,6 @@ let tasks = [];
 const SUPA_URL = 'https://mbimdmxxhekyriqnyvml.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1iaW1kbXh4aGVreXJpcW55dm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NDgyNDIsImV4cCI6MjA5NDEyNDI0Mn0.Yj5mufcDfxDXbXr-7Ag8T30RF9_5M5YFFE3bjvzZvKM';
 
-
 async function supaFetch(endpoint, options={}) {
   if (!SUPA_URL || SUPA_URL === 'YOUR_SUPABASE_URL') {
     console.warn('Supabase not configured — add URL and key');
@@ -1262,12 +1261,26 @@ async function loadData() {
     ]);
     projects     = (pRows||[]).map(mapProject);
     tasks        = (tRows||[]).map(mapTask);
-    // capexEntries handled by renderCapexPage via restoreCapexFields
-    if (cRows&&cRows[0]) loadCapexFields(cRows[0]);
+    if (cRows && cRows[0]) {
+      capexData = {...capexData, ...mapCapexSummary(cRows[0])};
+    }
+    if (ceRows && ceRows.length) {
+      // Store capex entries for reports
+      capexData.capexEntries = ceRows.map(r=>({
+        id:r.id, type:r.type||'opex', quarter:r.quarter||'',
+        month:r.month, year:r.year, amount:r.amount||0, status:r.status||''
+      }));
+    }
     setStatus('online');
   } catch(e) {
     console.error('Supabase load error:', e);
-    setStatus('error');
+    // If running from file:// — CORS issue; upload to GitHub Pages
+    if (window.location.protocol === 'file:') {
+      setStatus('error');
+      document.getElementById('srv-status').innerHTML = '⚠️ <span>Upload to GitHub Pages to connect DB</span>';
+    } else {
+      setStatus('error');
+    }
   }
   renderDashboard();
   restoreCapexFields();
@@ -2434,55 +2447,12 @@ function renderReports(){
   // Populate lab dropdowns in filters
   const projLabOpts = [...new Set(projects.map(p=>p.lab).filter(Boolean))].sort();
   const rfPL = document.getElementById('rf-proj-lab');
-
-
+  if (rfPL) {
+    rfPL.innerHTML = '<option value="">All Labs</option>' + projLabOpts.map(l=>`<option>${l}</option>`).join('');
+  }
   filterReportProjects();
 
-  const utilLabs = [...new Set(occupancy.map(o=>o.lab))];
-  const utilData = utilLabs.map(l => {
-    const entries = occupancy.filter(o=>o.lab===l);
-    const th = entries.reduce((s,o)=>s+(o.testHours||0),0);
-    const dt = entries.reduce((s,o)=>s+(o.downtime||0),0);
-    const total = th+dt;
-    return { lab:l, th, dt, total, pct: total>0?Math.round(th/total*100):0 };
-  }).sort((a,b)=>b.pct-a.pct);
 
-  document.getElementById('rpt-lab-util').innerHTML = utilData.length ?
-    utilData.map((d,i)=>{
-      const col = d.pct>=80?'#4ade80':d.pct>=50?'#fbbf24':'#ff6b6b';
-      return `<div class="bar-row2">
-        <div class="bar-label2">${d.lab}</div>
-        <div class="bar-track2">
-          <div class="bar-fill2" style="width:${Math.max(d.pct,3)}%;background:${col};color:#0d0f14">${d.pct}%</div>
-        </div>
-      </div>`;
-    }).join('')
-    : '<div class="empty-state">Enter Test Hours & Downtime to see utilization</div>';
-
-  const maxH = Math.max(...utilData.map(x=>x.total),1);
-  document.getElementById('rpt-lab-hours').innerHTML = utilData.length ? `
-    <div style="display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:6px 10px;">
-      <!-- Header row -->
-      <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Lab</div>
-      <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Hours</div>
-      <div style="font-size:9px;color:#00e5c3;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;text-align:right">Test</div>
-      <div style="font-size:9px;color:#ff6b6b;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;text-align:right">Down</div>
-      ${utilData.map(d=>`
-        <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px" title="${d.lab}">${d.lab}</div>
-        <div style="background:rgba(255,255,255,0.05);border-radius:6px;height:20px;overflow:hidden;display:flex;gap:2px">
-          <div style="width:${d.total>0?Math.max(d.th/maxH*100,0):0}%;background:#00e5c3;height:100%;border-radius:4px 0 0 4px;transition:width 0.6s ease;flex-shrink:0"></div>
-          <div style="width:${d.total>0?Math.max(d.dt/maxH*100,0):0}%;background:#ff6b6b;height:100%;border-radius:0 4px 4px 0;transition:width 0.6s ease;flex-shrink:0"></div>
-        </div>
-        <div style="font-size:11px;font-weight:700;font-family:'DM Mono',monospace;color:#00e5c3;text-align:right;white-space:nowrap">${d.th}h</div>
-        <div style="font-size:11px;font-weight:700;font-family:'DM Mono',monospace;color:#ff6b6b;text-align:right;white-space:nowrap">${d.dt}h</div>
-      `).join('')}
-    </div>
-    <div style="display:flex;gap:16px;margin-top:14px;padding-top:10px;border-top:1px solid var(--border);font-size:11px">
-      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#00e5c3;display:inline-block;flex-shrink:0"></span><span style="color:var(--muted)">Test Hours</span></span>
-      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#ff6b6b;display:inline-block;flex-shrink:0"></span><span style="color:var(--muted)">Downtime</span></span>
-    </div>` : '<div class="empty-state">No hours data yet</div>';
-
-  renderNablReport();
 
   // Rugby Budget charts
   renderBarChart('rpt-rugby-opex', [
