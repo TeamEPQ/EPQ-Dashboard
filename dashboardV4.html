@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard </title>
+<title>EPQ Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -83,11 +83,11 @@
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: rgba(255,255,255,0.02); }
   .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
-  .badge-green  { background: #dcfce7; color: #166534; border: 1px solid #86efac; font-weight: 700; }
-  .badge-blue   { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; font-weight: 700; }
-  .badge-yellow { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; font-weight: 700; }
-  .badge-red    { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; font-weight: 700; }
-  .badge-cyan   { background: #cffafe; color: #0e7490; border: 1px solid #67e8f9; font-weight: 700; }
+  .badge-green { background: rgba(74,222,128,0.12); color: var(--success); }
+  .badge-blue { background: rgba(91,140,255,0.12); color: var(--accent2); }
+  .badge-yellow { background: rgba(251,191,36,0.12); color: var(--yellow); }
+  .badge-red { background: rgba(255,107,107,0.12); color: var(--warn); }
+  .badge-cyan { background: rgba(0,229,195,0.12); color: var(--accent); }
   .issue-tag { display: inline-block; background: rgba(255,107,107,0.1); color: var(--warn); padding: 2px 7px; border-radius: 4px; font-size: 10px; margin: 2px 2px 2px 0; }
   .search-bar { display: flex; gap: 10px; margin-bottom: 16px; }
   .search-bar input { flex: 1; }
@@ -553,8 +553,6 @@
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-2" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-2</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-3" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-3</label>
             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="VRF 40HP Lab-4" style="cursor:pointer;accent-color:var(--accent)"> VRF 40HP Lab-4</label>
-             <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="AB LAB" style="cursor:pointer;accent-color:var(--accent)">AB LAB</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer;background:var(--surface);border:1px solid var(--border);"><input type="checkbox" value="CD LAB" style="cursor:pointer;accent-color:var(--accent)">CD LAB</label>
         </div>
       </div>
       <!-- Per-lab test counts -->
@@ -717,47 +715,7 @@
 
   <!-- ═══ SECTION 2: LAB UTILISATION REPORT ═══ -->
 
-    <!-- Invoice Booking Charts in Report -->
-    <div class="section-title" style="border-left-color:#fbbf24;margin-bottom:16px;">💰 Invoice Booking</div>
-
-    <!-- PR/PO Summary -->
-    <div class="chart-card" style="margin-bottom:16px;">
-      <h3><span class="dot" style="background:#5b8cff"></span>📋 PR / PO Summary</h3>
-      <div id="rpt-prpo-chart"></div>
-    </div>
-
-    <!-- Booking Status -->
-    <div class="chart-card" style="margin-bottom:16px;">
-      <h3><span class="dot" style="background:#00e5c3"></span>📦 Booking Status</h3>
-      <div id="rpt-booking-status"></div>
-    </div>
-
-    <!-- OPEX & CAPEX Invoice Status -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;" class="inv-status-grid">
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#4ade80"></span>📈 OPEX Invoice Status</h3>
-        <div id="rpt-opex-status"></div>
-      </div>
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#5b8cff"></span>📈 CAPEX Invoice Status</h3>
-        <div id="rpt-capex-status"></div>
-      </div>
-    </div>
-
-    <!-- OPEX & CAPEX Booking Monthly -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;" class="inv-status-grid">
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#4ade80"></span>📊 OPEX Monthly Booking</h3>
-        <div id="rpt-opex-monthly"></div>
-      </div>
-      <div class="chart-card">
-        <h3><span class="dot" style="background:#5b8cff"></span>📊 CAPEX Monthly Booking</h3>
-        <div id="rpt-capex-monthly"></div>
-      </div>
-    </div>
-
     <!-- Rugby Budget in Report -->
-    <div class="section-title" style="border-left-color:#4ade80;margin-bottom:16px;">🏉 Rugby Budget</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="inv-status-grid">
       <div class="chart-card">
         <h3><span class="dot" style="background:#4ade80"></span>🏉 Rugby OPEX Budget (₹)</h3>
@@ -1304,26 +1262,12 @@ async function loadData() {
     ]);
     projects     = (pRows||[]).map(mapProject);
     tasks        = (tRows||[]).map(mapTask);
-    if (cRows && cRows[0]) {
-      capexData = {...capexData, ...mapCapexSummary(cRows[0])};
-    }
-    if (ceRows && ceRows.length) {
-      // Store capex entries for reports
-      capexData.capexEntries = ceRows.map(r=>({
-        id:r.id, type:r.type||'opex', quarter:r.quarter||'',
-        month:r.month, year:r.year, amount:r.amount||0, status:r.status||''
-      }));
-    }
+    // capexEntries handled by renderCapexPage via restoreCapexFields
+    if (cRows&&cRows[0]) loadCapexFields(cRows[0]);
     setStatus('online');
   } catch(e) {
     console.error('Supabase load error:', e);
-    // If running from file:// — CORS issue; upload to GitHub Pages
-    if (window.location.protocol === 'file:') {
-      setStatus('error');
-      document.getElementById('srv-status').innerHTML = '⚠️ <span>Upload to GitHub Pages to connect DB</span>';
-    } else {
-      setStatus('error');
-    }
+    setStatus('error');
   }
   renderDashboard();
   restoreCapexFields();
@@ -2490,84 +2434,55 @@ function renderReports(){
   // Populate lab dropdowns in filters
   const projLabOpts = [...new Set(projects.map(p=>p.lab).filter(Boolean))].sort();
   const rfPL = document.getElementById('rf-proj-lab');
-  if (rfPL) {
-    rfPL.innerHTML = '<option value="">All Labs</option>' + projLabOpts.map(l=>`<option>${l}</option>`).join('');
-  }
+
+
   filterReportProjects();
 
+  const utilLabs = [...new Set(occupancy.map(o=>o.lab))];
+  const utilData = utilLabs.map(l => {
+    const entries = occupancy.filter(o=>o.lab===l);
+    const th = entries.reduce((s,o)=>s+(o.testHours||0),0);
+    const dt = entries.reduce((s,o)=>s+(o.downtime||0),0);
+    const total = th+dt;
+    return { lab:l, th, dt, total, pct: total>0?Math.round(th/total*100):0 };
+  }).sort((a,b)=>b.pct-a.pct);
 
+  document.getElementById('rpt-lab-util').innerHTML = utilData.length ?
+    utilData.map((d,i)=>{
+      const col = d.pct>=80?'#4ade80':d.pct>=50?'#fbbf24':'#ff6b6b';
+      return `<div class="bar-row2">
+        <div class="bar-label2">${d.lab}</div>
+        <div class="bar-track2">
+          <div class="bar-fill2" style="width:${Math.max(d.pct,3)}%;background:${col};color:#0d0f14">${d.pct}%</div>
+        </div>
+      </div>`;
+    }).join('')
+    : '<div class="empty-state">Enter Test Hours & Downtime to see utilization</div>';
 
-  // ── Invoice Booking charts ──────────────────────────────────────────────
-  // PR/PO Summary
-  renderBarChart('rpt-prpo-chart', [
-    {l:'Total PR',        v:capexData.totalPR||0,      c:'#5b8cff'},
-    {l:'Released PR',     v:capexData.releasedPR||0,   c:'#4ade80'},
-    {l:'Pending PR',      v:capexData.pendingPR||0,    c:'#ef4444'},
-    {l:'Total PO',        v:capexData.totalPO||0,      c:'#00e5c3'},
-    {l:'Released PO',     v:capexData.releasedPO||0,   c:'#4ade80'},
-    {l:'Partial PO',      v:capexData.partialPO||0,    c:'#fbbf24'},
-    {l:'Pending PO',      v:capexData.pendingPO||0,    c:'#ef4444'},
-  ], fmt);
+  const maxH = Math.max(...utilData.map(x=>x.total),1);
+  document.getElementById('rpt-lab-hours').innerHTML = utilData.length ? `
+    <div style="display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:6px 10px;">
+      <!-- Header row -->
+      <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Lab</div>
+      <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;">Hours</div>
+      <div style="font-size:9px;color:#00e5c3;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;text-align:right">Test</div>
+      <div style="font-size:9px;color:#ff6b6b;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;text-align:right">Down</div>
+      ${utilData.map(d=>`
+        <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px" title="${d.lab}">${d.lab}</div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:6px;height:20px;overflow:hidden;display:flex;gap:2px">
+          <div style="width:${d.total>0?Math.max(d.th/maxH*100,0):0}%;background:#00e5c3;height:100%;border-radius:4px 0 0 4px;transition:width 0.6s ease;flex-shrink:0"></div>
+          <div style="width:${d.total>0?Math.max(d.dt/maxH*100,0):0}%;background:#ff6b6b;height:100%;border-radius:0 4px 4px 0;transition:width 0.6s ease;flex-shrink:0"></div>
+        </div>
+        <div style="font-size:11px;font-weight:700;font-family:'DM Mono',monospace;color:#00e5c3;text-align:right;white-space:nowrap">${d.th}h</div>
+        <div style="font-size:11px;font-weight:700;font-family:'DM Mono',monospace;color:#ff6b6b;text-align:right;white-space:nowrap">${d.dt}h</div>
+      `).join('')}
+    </div>
+    <div style="display:flex;gap:16px;margin-top:14px;padding-top:10px;border-top:1px solid var(--border);font-size:11px">
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#00e5c3;display:inline-block;flex-shrink:0"></span><span style="color:var(--muted)">Test Hours</span></span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#ff6b6b;display:inline-block;flex-shrink:0"></span><span style="color:var(--muted)">Downtime</span></span>
+    </div>` : '<div class="empty-state">No hours data yet</div>';
 
-  // Booking Status
-  renderBarChart('rpt-booking-status', [
-    {l:'Invoice Booked',  v:capexData.invBooked||0,    c:'#4ade80'},
-    {l:'Service Booked',  v:capexData.svcBooked||0,    c:'#5b8cff'},
-    {l:'GRN Booked',      v:capexData.grnBooked||0,    c:'#fbbf24'},
-    {l:'PO Amount',       v:capexData.poAmount||0,     c:'#a78bfa'},
-  ], fmt);
-
-  // OPEX Status
-  const opexTotal = capexData.opexTotal||0;
-  if (opexTotal > 0) {
-    renderBarChart('rpt-opex-status', [
-      {l:'Total',       v:opexTotal,                c:'#4ade80'},
-      {l:'YTS',         v:capexData.opexYts||0,     c:'#fbbf24'},
-      {l:'In Progress', v:capexData.opexInp||0,     c:'#00e5c3'},
-      {l:'Completed',   v:capexData.opexComp||0,    c:'#4ade80'},
-      {l:'Pending',     v:capexData.opexPend||0,    c:'#ef4444'},
-    ], fmt);
-  }
-
-  // CAPEX Status
-  const capexTotal = capexData.capexTotal||0;
-  if (capexTotal > 0) {
-    renderBarChart('rpt-capex-status', [
-      {l:'Total',       v:capexTotal,               c:'#5b8cff'},
-      {l:'YTS',         v:capexData.capexYts||0,    c:'#fbbf24'},
-      {l:'In Progress', v:capexData.capexInp||0,    c:'#00e5c3'},
-      {l:'Completed',   v:capexData.capexComp||0,   c:'#5b8cff'},
-      {l:'Pending',     v:capexData.capexPend||0,   c:'#ef4444'},
-    ], fmt);
-  }
-
-  // OPEX Monthly Booking
-  if (capexData.opexEntries && capexData.opexEntries.length) {
-    const opexMonthly = {};
-    capexData.opexEntries.forEach(e=>{
-      const k = (e.month||'')+(e.year?' '+e.year:'');
-      opexMonthly[k] = (opexMonthly[k]||0) + (parseFloat(e.amount)||0);
-    });
-    const opexKeys = Object.keys(opexMonthly);
-    if (opexKeys.length) {
-      renderBarChart('rpt-opex-monthly',
-        opexKeys.map((k,i)=>({l:k, v:opexMonthly[k], c:PIE_COLORS[i%PIE_COLORS.length]})), fmt);
-    }
-  }
-
-  // CAPEX Monthly Booking
-  if (capexData.capexEntries && capexData.capexEntries.length) {
-    const capexMonthly = {};
-    capexData.capexEntries.forEach(e=>{
-      const k = (e.month||'')+(e.year?' '+e.year:'');
-      capexMonthly[k] = (capexMonthly[k]||0) + (parseFloat(e.amount)||0);
-    });
-    const capexKeys = Object.keys(capexMonthly);
-    if (capexKeys.length) {
-      renderBarChart('rpt-capex-monthly',
-        capexKeys.map((k,i)=>({l:k, v:capexMonthly[k], c:PIE_COLORS[i%PIE_COLORS.length]})), fmt);
-    }
-  }
+  renderNablReport();
 
   // Rugby Budget charts
   renderBarChart('rpt-rugby-opex', [
@@ -4325,7 +4240,7 @@ function printSection(section) {
     const doneAll  = activeLabsPrint.length ? activeLabsPrint.reduce((s,l)=>s+l.done,0)  : p.testsDone||0;
     const comp = totalAll>0 ? Math.round(doneAll/totalAll*100) : null;
     const compColor = comp!==null ? (comp>=80?'#166534':comp>=50?'#92400e':'#991b1b') : '#666';
-    const statusColors = {'Planning':'#1e40af','In Progress':'#0e7490','Completed':'#166534','On Hold':'#854d0e'};
+    const statusColors = {'Planning':'#1d4ed8','In Progress':'#0f766e','Completed':'#166534','On Hold':'#92400e'};
     const sColor = statusColors[p.status]||'#374151';
     return '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;page-break-inside:avoid;border-left:4px solid '+sColor+';-webkit-print-color-adjust:exact;print-color-adjust:exact">'
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:4px;margin-bottom:8px;">'
@@ -5097,7 +5012,90 @@ document.addEventListener('click', function(e) {
 });
 
 // ── EDIT PROJECT ──────────────────────────────────────────────────────────
+function editProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  editingProjId = id;
+  document.getElementById('ep-name').value         = p.name      || '';
+  document.getElementById('ep-start').value        = p.start     || '';
+  document.getElementById('ep-end').value          = p.end       || '';
+  document.getElementById('ep-actual-start').value = p.actualStart|| '';
+  document.getElementById('ep-actual-end').value   = p.actualEnd || '';
+  document.getElementById('ep-ttm').value          = p.ttm       || '';
+  document.getElementById('ep-assigned').value     = p.assigned  || '';
+  document.getElementById('ep-type').value         = p.type      || '';
+  document.getElementById('ep-status').value       = p.status    || 'Planning';
+  document.getElementById('ep-issues').value       = p.issues    || '';
+  document.getElementById('ep-notes').value        = p.notes     || '';
+  // Open modal first so DOM elements are visible and queryable
+  openModal('edit-proj-modal');
+  // Then populate lab checkboxes and rows
+  setTimeout(() => {
+    if (p.labData && p.labData.length) {
+      populateLabRows('ep', p.labData);
+    } else if (p.lab) {
+      const legacyLabs = p.lab.split(',').map(l=>l.trim()).filter(Boolean);
+      populateLabRows('ep', legacyLabs.map(l=>({lab:l,total:0,done:0,notes:''})));
+    }
+  }, 100);
+}
 
+async function saveProjectEdit() {
+  const name = document.getElementById('ep-name').value.trim();
+  if (!name) { alert('Project name is required.'); return; }
+  // Read lab data directly from already-populated rows (populated by editProject's setTimeout)
+  const labData       = getLabData('ep');
+  const lab           = labData.length ? labData.map(l=>l.lab).join(', ') : '';
+  const totalTestsAll = labData.reduce((s,l)=>s+l.total,0);
+  const testsDoneAll  = labData.reduce((s,l)=>s+l.done,0);
+  const labDataJson   = JSON.stringify(labData);
+  const idx = projects.findIndex(x => x.id === editingProjId);
+  if (idx === -1) return;
+  const upd = {
+    name, lab,
+    lab_data:     labDataJson,
+    start_date:   getDate('ep-start'),
+    end_date:     getDate('ep-end'),
+    actual_start: getDate('ep-actual-start'),
+    actual_end:   getDate('ep-actual-end'),
+    ttm:          getDate('ep-ttm'),
+    assigned:     document.getElementById('ep-assigned').value.trim(),
+    type:         document.getElementById('ep-type').value,
+    status:       document.getElementById('ep-status').value,
+    issues:       document.getElementById('ep-issues').value.trim(),
+    total_tests:  totalTestsAll,
+    tests_done:   testsDoneAll,
+    notes:        document.getElementById('ep-notes').value.trim(),
+  };
+  try {
+    await supaFetch('projects?id=eq.'+editingProjId, {
+      method:'PATCH', body: JSON.stringify(upd), prefer:'return=minimal', noJson:true
+    });
+    // Update local array with correct field mapping
+    projects[idx] = {
+      ...projects[idx],
+      name:        upd.name,
+      lab:         upd.lab,
+      labData:     labData,
+      type:        upd.type,
+      status:      upd.status,
+      assigned:    upd.assigned,
+      start:       upd.start_date,
+      end:         upd.end_date,
+      actualStart: upd.actual_start,
+      actualEnd:   upd.actual_end,
+      ttm:         upd.ttm,
+      issues:      upd.issues,
+      notes:       upd.notes,
+      totalTests:  totalTestsAll,
+      testsDone:   testsDoneAll,
+    };
+  } catch(e) { alert('Update failed: '+e.message); return; }
+  closeModal('edit-proj-modal');
+  renderProjects();
+  renderDashboard();
+  alert('✅ Project updated!');
+}
 
 // ── EDIT OCCUPANCY ────────────────────────────────────────────────────────
 function editOccupancy(id) {
