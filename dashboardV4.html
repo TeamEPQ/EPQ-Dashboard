@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EPQ Dashboard </title>
+<title>EPQ Dashboard — Bosch GDC</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -472,7 +472,6 @@
 <aside class="sidebar">
   <div class="logo"><span>EPQ Dashboard</span><small>v2.0 ☁️ Cloud</small><div id="srv-status" style="font-size:10px;margin-top:8px;display:flex;align-items:center;gap:4px;color:var(--accent2)">🔵 <span>Connecting...</span></div></div>
   <nav class="nav">
-    <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">⬡</span><span>EPQ Dashboard</span></div>
     <div class="nav-item active" onclick="showPage('projects',this)"><span class="icon">◈</span><span>Projects</span></div>
     
     <div class="nav-item" onclick="showPage('reports',this)"><span class="icon">▦</span><span>Reports</span></div>
@@ -589,7 +588,7 @@
   <div class="table-card">
     <div class="table-header"><h2>All Projects</h2><span id="proj-count" style="font-size:12px;color:var(--muted)"></span></div>
     <table>
-      <thead><tr><th>Project</th><th>Type</th><th>Lab</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>TTM Date</th><th>Assigned To</th><th>Status</th><th>Issues</th><th>Action</th></tr></thead>
+      <thead><tr><th>Project</th><th>Type</th><th>Labs</th><th>Planned Start</th><th>Planned End</th><th>Actual Start</th><th>Actual End</th><th>TTM</th><th>Assigned To</th><th>Status</th><th>Progress</th><th>Issues</th><th>Actions</th></tr></thead>
       <tbody id="projects-table"></tbody>
     </table>
   </div>
@@ -1294,6 +1293,7 @@ let tasks = [];
 const SUPA_URL = 'https://mbimdmxxhekyriqnyvml.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1iaW1kbXh4aGVreXJpcW55dm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NDgyNDIsImV4cCI6MjA5NDEyNDI0Mn0.Yj5mufcDfxDXbXr-7Ag8T30RF9_5M5YFFE3bjvzZvKM';
 
+
 async function supaFetch(endpoint, options={}) {
   if (!SUPA_URL || SUPA_URL === 'YOUR_SUPABASE_URL') {
     console.warn('Supabase not configured — add URL and key');
@@ -1635,39 +1635,34 @@ function getLabData(prefix) {
 }
 
 function populateLabRows(prefix, labData) {
+  if (!labData || !labData.length) return;
+
   const container = document.getElementById(`${prefix}-lab-checks`);
-  if (!container) return;
+  const rowContainer = document.getElementById(`${prefix}-lab-rows`);
+  if (!container || !rowContainer) return;
 
-  // ── Tick checkboxes WITHOUT triggering onchange ───────────────────────
-  // Temporarily remove onchange handler
-  const savedOnchange = container.getAttribute('onchange');
-  container.removeAttribute('onchange');
-
+  // ── Step 1: Tick checkboxes silently (no onchange) ────────────────────
   container.querySelectorAll('input[type=checkbox]').forEach(cb => {
     cb.checked = labData.some(l => l.lab === cb.value);
   });
 
-  // Restore onchange after ticking
-  if (savedOnchange) setTimeout(() => container.setAttribute('onchange', savedOnchange), 200);
+  // ── Step 2: Build rows directly from labData (NOT from checkboxes) ────
+  // Filter only labs that were actually saved
+  const savedLabs = labData.filter(l => l.lab);
+  rowContainer.innerHTML = savedLabs.map(l => getLabRow(prefix, l.lab)).join('');
 
-  // ── Build rows only from saved labData (not from checkboxes) ──────────
-  const rowContainer = document.getElementById(`${prefix}-lab-rows`);
-  if (!rowContainer) return;
-
-  // Only show labs that have actual saved data
-  const activeLabs = labData.filter(l => l.lab);
-  rowContainer.innerHTML = activeLabs.map(l => getLabRow(prefix, l.lab)).join('');
-
-  // Populate saved values
-  rowContainer.querySelectorAll('[data-lab]').forEach(row => {
-    const lab = row.dataset.lab;
-    const d   = labData.find(l => l.lab === lab);
-    if (d) {
-      row.querySelector('.lab-total').value = d.total || '';
-      row.querySelector('.lab-done').value  = d.done  || '';
-      row.querySelector('.lab-notes').value = d.notes || '';
-    }
+  // ── Step 3: Fill in saved values ──────────────────────────────────────
+  savedLabs.forEach(d => {
+    const row = rowContainer.querySelector(`[data-lab="${d.lab}"]`);
+    if (!row) return;
+    const totalEl = row.querySelector('.lab-total');
+    const doneEl  = row.querySelector('.lab-done');
+    const notesEl = row.querySelector('.lab-notes');
+    if (totalEl) totalEl.value = (d.total !== undefined && d.total !== null && d.total !== 0) ? d.total : '';
+    if (doneEl)  doneEl.value  = (d.done  !== undefined && d.done  !== null && d.done  !== 0) ? d.done  : '';
+    if (notesEl) notesEl.value = d.notes || '';
   });
+
   calcLabProgress(prefix);
 }
 
@@ -1747,6 +1742,17 @@ function renderProjects(){
         +`<div style="background:var(--border);border-radius:3px;height:6px;overflow:hidden;">`
         +`<div style="width:${comp}%;height:100%;background:${compCol};border-radius:3px;-webkit-print-color-adjust:exact"></div></div>`
       : '—';
+    // Issues display — count badge + full description on hover
+    const issueList = p.issues ? p.issues.split(',').map(i=>i.trim()).filter(Boolean) : [];
+    const issueDisplay = issueList.length
+      ? `<span
+          style="cursor:pointer;color:var(--warn);font-weight:700;font-size:11px;white-space:nowrap;"
+          onmouseenter="showIssueTooltip(event,this.dataset.issues)"
+          onmouseleave="hideTooltip()"
+          data-issues="${(p.issues||'').replace(/"/g,'&quot;')}">
+          ⚠️ ${issueList.length} issue${issueList.length>1?'s':''}
+        </span>`
+      : '<span style="color:var(--muted);font-size:11px">—</span>';
     return `<tr>
       <td><strong>${p.name}</strong>${p.notes?`<br><small style="color:var(--muted)">${p.notes.substring(0,60)}${p.notes.length>60?'...':''}</small>`:''}</td>
       <td>${p.type?`<span class="badge badge-blue">${p.type}</span>`:'—'}</td>
@@ -1759,6 +1765,7 @@ function renderProjects(){
       <td>${p.assigned||'—'}</td>
       <td>${badge(p.status)}</td>
       <td style="min-width:100px">${progressBar}</td>
+      <td>${issueDisplay}</td>
       <td style="display:flex;gap:6px"><button class="btn-edit" onclick="editProject(${p.id})">✏️ Edit</button><button class="btn btn-danger" onclick="deleteProject(${p.id})">Delete</button></td>
     </tr>`;
   }).join('');
@@ -2214,6 +2221,23 @@ function moveTooltip(e) {
   const maxY = window.innerHeight - t.offsetHeight - 10;
   t.style.left = Math.min(x, maxX) + 'px';
   t.style.top  = Math.min(y, maxY) + 'px';
+}
+
+function showIssueTooltip(e, issueStr) {
+  const issues = issueStr.replace(/&apos;/g,"'").split(',').map(s=>s.trim()).filter(Boolean);
+  const rows = issues.map(i => ({label: '•', value: i, color: '#ef4444'}));
+  showTooltip(e, `⚠️ Issues (${issues.length})`, rows);
+}
+
+function showIssueTooltip(e, issueStr) {
+  if (!issueStr) return;
+  const issues = issueStr.replace(/&quot;/g,'"').split(',').map(s=>s.trim()).filter(Boolean);
+  const rows = issues.map((iss, i) => ({
+    label: `#${i+1}`,
+    value: iss,
+    color: '#ef4444'
+  }));
+  showTooltip(e, `⚠️ Issues (${issues.length})`, rows);
 }
 
 function hideTooltip() {
@@ -3814,15 +3838,15 @@ function editProject(id) {
   document.getElementById('ep-notes').value        = p.notes     || '';
   // Open modal first so DOM elements are visible and queryable
   openModal('edit-proj-modal');
-  // Then populate lab checkboxes and rows
+  // Then populate lab checkboxes and rows after modal is fully rendered
   setTimeout(() => {
     if (p.labData && p.labData.length) {
       populateLabRows('ep', p.labData);
     } else if (p.lab) {
       const legacyLabs = p.lab.split(',').map(l=>l.trim()).filter(Boolean);
-      populateLabRows('ep', legacyLabs.map(l=>({lab:l,total:0,done:0,notes:''})));
+      populateLabRows('ep', legacyLabs.map(l=>({lab:l,total:p.totalTests||0,done:p.testsDone||0,notes:''})));
     }
-  }, 100);
+  }, 150);
 }
 
 async function saveProjectEdit() {
