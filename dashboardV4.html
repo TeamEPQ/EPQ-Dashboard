@@ -39,6 +39,11 @@
 
   /* Tooltip */
   .kpi-tooltip { position: fixed; z-index: 9999; background: #1e3a5f; border: 1px solid #2d5a8e;
+    border-radius: 10px; padding: 14px 16px; min-width: 200px; max-width: 360px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4); opacity: 0; transition: opacity 0.15s; pointer-events: none; }
+  .kpi-tooltip-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 4px 0; color: #e2e8f0; gap: 8px; }
+  .kpi-tooltip-row span:first-child { color: #94a3b8; font-size: 11px; flex-shrink: 0; }
+  .kpi-tooltip-row span:last-child { text-align: right; word-break: break-word; }
     border-radius: 12px; padding: 14px 18px; min-width: 220px; max-width: 300px;
     box-shadow: 0 12px 40px rgba(0,0,0,0.5); pointer-events: none;
     opacity: 0; transition: opacity 0.15s; font-size: 12px; }
@@ -487,7 +492,7 @@
 <!-- DASHBOARD -->
 <!-- PROJECTS -->
 <div class="page active" id="page-projects">
-  <div class="page-header"><h1>Projects</h1><p>Add and manage projects</p></div>
+  <div class="page-header"><h1>Projects</h1><p>Add and manage research projects</p></div>
   <div class="form-card">
     <h2>➕ Add New Project</h2>
     <div class="form-grid">
@@ -1293,7 +1298,6 @@ let tasks = [];
 const SUPA_URL = 'https://mbimdmxxhekyriqnyvml.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1iaW1kbXh4aGVreXJpcW55dm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NDgyNDIsImV4cCI6MjA5NDEyNDI0Mn0.Yj5mufcDfxDXbXr-7Ag8T30RF9_5M5YFFE3bjvzZvKM';
 
-
 async function supaFetch(endpoint, options={}) {
   if (!SUPA_URL || SUPA_URL === 'YOUR_SUPABASE_URL') {
     console.warn('Supabase not configured — add URL and key');
@@ -1745,13 +1749,12 @@ function renderProjects(){
     // Issues display — count badge + full description on hover
     const issueList = p.issues ? p.issues.split(',').map(i=>i.trim()).filter(Boolean) : [];
     const issueDisplay = issueList.length
-      ? `<span
-          style="cursor:pointer;color:var(--warn);font-weight:700;font-size:11px;white-space:nowrap;"
-          onmouseenter="showIssueTooltip(event,this.dataset.issues)"
-          onmouseleave="hideTooltip()"
-          data-issues="${(p.issues||'').replace(/"/g,'&quot;')}">
-          ⚠️ ${issueList.length} issue${issueList.length>1?'s':''}
-        </span>`
+      ? '<span style="cursor:pointer;color:var(--warn);font-weight:700;font-size:11px;white-space:nowrap;"'
+        +' onmouseenter="showIssueTooltip(event,this.dataset.issues)"'
+        +' onmouseleave="hideTooltip()"'
+        +' data-issues="'+(p.issues||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;')+'">'
+        +'⚠️ '+issueList.length+(issueList.length>1?' issues':' issue')
+        +'</span>'
       : '<span style="color:var(--muted);font-size:11px">—</span>';
     return `<tr>
       <td><strong>${p.name}</strong>${p.notes?`<br><small style="color:var(--muted)">${p.notes.substring(0,60)}${p.notes.length>60?'...':''}</small>`:''}</td>
@@ -2229,16 +2232,7 @@ function showIssueTooltip(e, issueStr) {
   showTooltip(e, `⚠️ Issues (${issues.length})`, rows);
 }
 
-function showIssueTooltip(e, issueStr) {
-  if (!issueStr) return;
-  const issues = issueStr.replace(/&quot;/g,'"').split(',').map(s=>s.trim()).filter(Boolean);
-  const rows = issues.map((iss, i) => ({
-    label: `#${i+1}`,
-    value: iss,
-    color: '#ef4444'
-  }));
-  showTooltip(e, `⚠️ Issues (${issues.length})`, rows);
-}
+
 
 function hideTooltip() {
   document.getElementById('kpi-tooltip').classList.remove('show');
